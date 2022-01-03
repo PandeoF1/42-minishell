@@ -46,7 +46,6 @@ char	*ft_get_file(int fd, int size, int len)
 		size += len;
 		value[size] = '\0';
 		len = 0;
-		//len = read(fd, buf, 2048);
 	}
 	if (len)
 		free(value);

@@ -18,4 +18,14 @@
 # include "../ft_printf/ft_printf.h"
 # include "../get_next_line/get_next_line.h"
 
+typedef struct s_process
+{
+	struct s_process	*next;
+	char				*command;
+	char				*path;
+	char				*args;
+	char				*output;
+	char				*type;
+}			t_process;
+
 #endif
