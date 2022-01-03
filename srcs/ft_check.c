@@ -12,47 +12,60 @@
 
 #include "../includes/minishell.h"
 
+static int	find_path(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], "PATH=", 5))
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
 /*
-* ft_check_commad(cmd, env)
-* desc : check if the command exist in the env
-* params : the command to check and env
-* error : leaks / normi
+*	ft_check_quote(str)
+*	desc : check if the string have correct quote
 */
 
-int	ft_check_command(char *cmd, char **env)
+int	ft_check_quote(char *str)
 {
-	int		i;
-	char	**tab;
-	char	*try;
+	int	x;
 
-	if (!access(cmd, F_OK))
+	x = 0;
+	while (str[x])
 	{
-		if (!access(cmd, R_OK))
-			return (1);
-		else
-			return (-1);
+		if (str[x] == '"')
+		{
+			x++;
+			while (str[x] && str[x] != '"')
+				x++;
+			if (!str[x] || str[x] != '"')
+				return (0);
+		}
+		else if (str[x] == '\'')
+		{
+			x++;
+			while (str[x] && str[x] != '\'')
+				x++;
+			if (!str[x] || str[x] != '\'')
+				return (0);
+		}
+		if (str[x])
+			x++;
 	}
-	cmd = ft_strjoin("/", cmd);
-	i = find_path(env);
-	tab = ft_split(env[i] + 5, ':');
-	i = -1;
-	while (tab[++i])
-	{
-		try = ft_strjoin(tab[i], cmd);
-		i = 0;
-		while (tab[i])
-			free(tab[i++]);
-		free(tab)
-		free(try)
-		free(cmd)
-		if (!access(try, X_OK))
-			return (1);
-	}
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab)
-	free(try)
-	free(cmd)
-	return (0);
+	return (1);
+}
+
+/*
+*	ft_check_inout(str)
+*	desc : check if the string have correct < > << >>
+*/
+
+int	ft_check_inout(char *str)
+{
+
 }

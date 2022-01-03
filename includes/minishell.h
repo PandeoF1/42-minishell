@@ -25,11 +25,21 @@ typedef struct s_process
 	char				*path;
 	char				*args;
 	char				*output;
+	char				*input;
 	char				*type;
 }			t_process;
 
+typedef struct s_check
+{
+	int	quote;
+	int	squote;
+	int	inside;
+}			t_check;
+
 char		*ft_get_input(int fd, int size, int len);
 t_process	*ft_parse_command(char *str, char **env);
-int			ft_check_command(char *cmd, char **env);
+int			ft_check_quote(char *str);
+int			ft_check_inout(char *str);
+void		ft_free_split(char **split);
 
 #endif

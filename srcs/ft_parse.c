@@ -12,6 +12,31 @@
 
 #include "../includes/minishell.h"
 
+
+/*
+* ft_space(str)
+* desc : compare number of space with strlen
+* params : string
+*/
+
+int	ft_space(char *str)
+{
+	int	i;
+	int	x;
+
+	i = 0;
+	x = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ')
+			x++;
+		i++;
+	}
+	if (x == i - 1)
+		return (0);
+	return (1);
+}
+
 /*
 * ft_parse_command(str)
 * desc : parse the command and return the struct
@@ -25,14 +50,20 @@ t_process	*ft_parse_command(char *str, char **env)
 	int			x;
 
 	x = 0;
-	split = ft_split(str, ' ');
-	if (ft_check_command(split[0], env) == 1)
+	if (ft_strlen(str) == 1 || ft_space(str) == 0)
+		return (NULL);
+	str[ft_strlen(str) - 1] = '\0';
+	if (ft_check_quote(str) && ft_check_inout(str))
 	{
-		ft_printf("gg %s\n", split[0]);
-		//process = ft_create_process(split[0], split, env);
-		//ft_free_split(split);
-		//return (process);
+		split = ft_split(str, '|');
+		if (ft_check_split(split, env))
+			ft_printf("gg\n");
+			//process = ft_create_process(split, str);
+		else
+			ft_printf("minishell: syntax error with open quotes\n");
 	}
+	else
+		ft_printf("%s: command not found\n", str);
 	while (split[x])
 		free(split[x++]);
 	free(split);
