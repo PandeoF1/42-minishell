@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/03 12:34:32 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/03 13:45:20 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /*
 *int	find_path(char **env)
 *env	env of the shell
+*do :	find the line "PATH" in the env
 */
 
 int	find_path(char **env)
@@ -36,6 +37,7 @@ int	find_path(char **env)
 *cmd	command to search in /bin
 *env	env of the shell
 *error	not norminette
+*do :	check if the command exist and if we have the rights to use it 
 */
 
 char	*ft_check_arg(char *cmd, char **env)
@@ -83,7 +85,8 @@ char	*ft_check_arg(char *cmd, char **env)
 *void	father_proc(t_data *data, char **argv, char **env)
 *data	my struct with all data needed
 *env	env of the shell
-*argv	tab of args received at launch of 
+*argv	tab of args received at launch of prog
+*do :	exec one of the cmd
 */
 
 void	father_proc(t_data *data, char **argv, char **env)
@@ -104,6 +107,14 @@ void	father_proc(t_data *data, char **argv, char **env)
 	if (execve(data->path_of_2, data->args_of_2, env) == -1)
 		ft_perror("failed to exec in father_proc");
 }
+
+/*
+*void	child_proc(t_data *data, char **argv, char **env)
+*data	my struct with all data needed
+*env	env of the shell
+*argv	tab of args received at launch of prog
+*do :	exec one of the cmd
+*/
 
 void	child_proc(t_data *data, char **argv, char **env)
 {
