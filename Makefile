@@ -16,7 +16,7 @@ RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
 
-SRCS		= minishell.c
+SRCS		= minishell.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
@@ -28,6 +28,7 @@ CC_FLAGS	= #-Wall -Werror -Wextra
 $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)srcs
+	@mkdir -p $(OBJS_DIR)get_next_line
 	@$(CC) $(CC_FLAGS) -c $< -o $@
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 

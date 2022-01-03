@@ -14,5 +14,8 @@
 # define MINISHELL_H
 
 # include <unistd.h>
+# include "../libft/libft.h"
+# include "../ft_printf/ft_printf.h"
+# include "../get_next_line/get_next_line.h"
 
 #endif
