@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/03 11:17:36 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/03 11:36:20 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	child_proc(t_data *data, char **argv, char **env)
 		ft_perror("failed to exec in child_proc");
 }
 
-int	main(int argc, char **argv, char **env)
+int	ft_execute_cmd(int argc, char **argv, char **env, t_talistechainee *lambda)
 {
 	int			pid1;
 	t_data		data;
