@@ -16,8 +16,6 @@
 # include <unistd.h>
 # include "../libft/libft.h"
 # include "../ft_printf/ft_printf.h"
-# include "../get_next_line/get_next_line.h"
-# include "./pipex.h"
 
 typedef struct s_process
 {
@@ -28,5 +26,9 @@ typedef struct s_process
 	char				*output;
 	char				*type;
 }			t_process;
+
+char		*ft_get_input(int fd, int size, int len);
+t_process	*ft_parse_command(char *str, char **env);
+int			ft_check_command(char *cmd, char **env);
 
 #endif

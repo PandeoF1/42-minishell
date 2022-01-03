@@ -16,7 +16,7 @@ RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
 
-SRCS		= minishell.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
+SRCS		= minishell.c srcs/ft_parse.c srcs/ft_get_input.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
