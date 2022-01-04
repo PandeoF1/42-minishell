@@ -53,19 +53,18 @@ t_process	*ft_parse_command(char *str, char **env)
 	if (ft_strlen(str) == 1 || ft_space(str) == 0)
 		return (NULL);
 	str[ft_strlen(str) - 1] = '\0';
-	if (ft_check_quote(str) && ft_check_inout(str))
+	if (ft_check_quote(str))
 	{
-		split = ft_split(str, '|');
-		if (ft_check_split(split, env))
+		if (ft_check_inout(str) && ft_check_inout_n(str))
+		{
+			split = ft_split(str, '|');
 			ft_printf("gg\n");
-			//process = ft_create_process(split, str);
+			ft_free_split(split);
+		}
 		else
-			ft_printf("minishell: syntax error with open quotes\n");
+			ft_printf("minishell: syntax error near unexpected token `newline'\n");
 	}
 	else
-		ft_printf("%s: command not found\n", str);
-	while (split[x])
-		free(split[x++]);
-	free(split);
+		ft_printf("minishell: syntax error with open quotes\n");
 	return (NULL);
 }

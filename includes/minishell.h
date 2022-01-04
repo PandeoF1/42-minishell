@@ -41,5 +41,6 @@ t_process	*ft_parse_command(char *str, char **env);
 int			ft_check_quote(char *str);
 int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
+int			ft_check_inout_n(char *str);
 
 #endif
