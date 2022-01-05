@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/05 09:57:13 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/05 13:56:47 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,31 @@ char	*ft_check_arg(char *cmd, char *env)
 // 		ft_perror("failed to exec in child_proc");
 // }
 
+static void	creat_pipes(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nb_cmd - 1)
+	{
+		if (pipe(data->fd + 2 * i) < 0)
+			ft_perror("fail , lets free\n");
+		i++;
+	}
+}
+
+void	close_pipes(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < (data->nb_cmd))
+	{
+		close(data->fd[i]);
+		i++;
+	}
+}
+
 void	test_proc(t_data *data, t_process *temp, char *env, int i)
 {
 	int	pid1;
@@ -168,20 +193,19 @@ void	test_proc(t_data *data, t_process *temp, char *env, int i)
 		}
 		else if (temp->in_prev != 0)
 		{
-			if (dup2(data->fd[0], STDIN_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n2 failed in child_proc");
 		}
 		if (temp->out_next != 0)
 		{
-			if (dup2(data->fd[1], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n3 failed in child_proc");
 		}
 		if (temp->input != NULL)
 			close(data->file1);
-		close(data->fd[0]);
-		close(data->fd[1]);
+		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
-			ft_perror("failed to exec in child_proc");
+			ft_perror("failed to exec in exec_proc");
 	}
 }
 
@@ -199,27 +223,32 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		i++;
 		temp = temp->next;
 	}
-	j = i;
+	data.fd = (int *)malloc(sizeof(int) * i);
+	if (!data.fd)
+		return (0);
+	data.nb_cmd = i;
 	data.tab_args = malloc(sizeof(char **) * i);
 	if (!data.tab_args)
 		return (0);
 	data.tab_paths = malloc(sizeof(char *) * i);
 	if (!data.tab_paths)
 		return (0);
-	if (pipe(data.fd) != 0)
-		ft_perror("pipe failed\n");
+	creat_pipes(&data);
 	i--;
+	j = i;
 	temp = proc;
+	data.ind = 0;
 	while (i >= 0)
 	{
 		test_proc(&data, temp, env, i);
 		temp = temp->next;
+		data.ind++;
 		i--;
 	}
-	j--;
+	//waitpid(-1, NULL, 0);
 	while (j > 0)
 	{
-		waitpid(0, NULL, 0);
+		wait(NULL);
 		j--;
 	}
 	//wait(NULL);
@@ -263,14 +292,14 @@ int	main(int args, char **argv)
 	//temp->next = NULL;
 	temp->next = malloc(sizeof(t_process));
 	temp->next->command = "grep";
-	temp->next->cmd_arg = "grep e";
+	temp->next->cmd_arg = "grep j";
 	temp->next->path = 0;
 	temp->next->args = 0;
 	temp->next->out_next = 1;
 	temp->next->input = 0;
 	temp->next->type = 0;
 	temp->next->in_prev = 1;
-	//temp->next->next = NULL;
+	temp->next->next = NULL;
 	temp->next->next = malloc(sizeof(t_process));
 	temp->next->next->command = "wc";
 	temp->next->next->cmd_arg = "wc -l";
