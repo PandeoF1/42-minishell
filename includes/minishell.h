@@ -31,9 +31,8 @@ typedef struct s_process
 
 typedef struct s_check
 {
-	int	quote;
-	int	squote;
-	int	inside;
+	int	output;
+	int	input;
 }			t_check;
 
 char		*ft_get_input(int fd, int size, int len);

@@ -15,7 +15,7 @@
 static void	action(int sig)
 {
 	ft_printf("\n$> ");
-	exit(0);
+	exit(0); 	
 }
 
 static void	sig_quit(int sig)
