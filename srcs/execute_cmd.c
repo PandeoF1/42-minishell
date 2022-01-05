@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/05 13:56:47 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/05 18:05:27 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,27 +171,16 @@ void	close_pipes(t_data *data)
 
 void	test_proc(t_data *data, t_process *temp, char *env, int i)
 {
-	int	pid1;
-
-	pid1 = fork();
-	if (pid1 < 0)
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
-	if (pid1 == 0)
+	if (data->pid1[i] == 0)
 	{
-		if (temp->input != NULL)
-		{
-			data->file1 = open(temp->args, O_RDONLY);
-			if (data->file1 < 0)
-				ft_perror("\033[2K\r\033[0;31mError\033[0m : couldn't find infile");
-		}
 		data->tab_args[i] = ft_split(temp->cmd_arg, ' ');
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
-		if (temp->input != NULL)
-		{
-			if (dup2(data->file1, STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in child_proc");
-		}
-		else if (temp->in_prev != 0)
+		ft_printf("%s\n", data->tab_paths[i]);
+		ft_printf("%s\n", data->tab_args[i][1]);
+		if (temp->in_prev != 0)
 		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n2 failed in child_proc");
@@ -201,12 +190,11 @@ void	test_proc(t_data *data, t_process *temp, char *env, int i)
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n3 failed in child_proc");
 		}
-		if (temp->input != NULL)
-			close(data->file1);
 		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
 			ft_perror("failed to exec in exec_proc");
 	}
+	ft_printf("%d\n", i);
 }
 
 int	ft_execute_cmd(t_process *proc, char *env)
@@ -233,6 +221,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	data.tab_paths = malloc(sizeof(char *) * i);
 	if (!data.tab_paths)
 		return (0);
+	data.pid1 = malloc(sizeof(pid_t) * i);
 	creat_pipes(&data);
 	i--;
 	j = i;
@@ -245,10 +234,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		data.ind++;
 		i--;
 	}
-	//waitpid(-1, NULL, 0);
-	while (j > 0)
+	close_pipes(&data);
+	int status;
+	while (j >= 0)
 	{
-		wait(NULL);
+		ft_printf("%d\n", data.pid1[j]);
+		waitpid(data.pid1[j], &status, 0);
 		j--;
 	}
 	//wait(NULL);
@@ -299,16 +290,25 @@ int	main(int args, char **argv)
 	temp->next->input = 0;
 	temp->next->type = 0;
 	temp->next->in_prev = 1;
-	temp->next->next = NULL;
+	//temp->next->next = NULL;
 	temp->next->next = malloc(sizeof(t_process));
-	temp->next->next->command = "wc";
-	temp->next->next->cmd_arg = "wc -l";
+	temp->next->next->command = "grep";
+	temp->next->next->cmd_arg = "grep e";
 	temp->next->next->path = 0;
 	temp->next->next->args = 0;
-	temp->next->next->out_next = 0;
+	temp->next->next->out_next = 1;
 	temp->next->next->input = 0;
 	temp->next->next->type = 0;
 	temp->next->next->in_prev = 1;
-	temp->next->next->next = NULL;
+	temp->next->next->next = malloc(sizeof(t_process));
+	temp->next->next->next->command = "grep";
+	temp->next->next->next->cmd_arg = "grep j";
+	temp->next->next->next->path = 0;
+	temp->next->next->next->args = 0;
+	temp->next->next->next->out_next = 0;
+	temp->next->next->next->input = 0;
+	temp->next->next->next->type = 0;
+	temp->next->next->next->in_prev = 1;
+	temp->next->next->next->next = NULL;
 	ft_execute_cmd(temp, env);
 }
