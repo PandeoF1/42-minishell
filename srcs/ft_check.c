@@ -98,13 +98,65 @@ int	ft_w_is_space(char *str)
 	return (x);
 }
 
-int	ft_check_command(char **split, int x, int y)
+int	ft_is_command(char *split)
 {
 	int	i;
 
 	i = 0;
 
 	return (i);
+}
+
+int	ft_is_out_file(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '>')
+		i++;
+	if (!str[i])
+		return (0);
+	i += ft_w_is_space(str + i + 1) + 1;
+	if (!str[i] && !ft_isalpha(str[i]))
+		return (0);
+	return (1);
+	/*i = ft_w_is_space(split[x]);
+	if (split[x][i] && (!ft_isalpha(split[x][i]) && split[x][i] != ' '))
+		return (0);
+	while (split[x][i] && (ft_isalpha(split[x][i] || split[x][i] == ' ')))
+		i++;
+	if (split[x][i] && split[x][i] == '>')
+		i++;
+	else
+		while (split[x][i] && split[x][i] != '<' || split[x][i] != '>')
+			i++;
+	if (!split[x][i])
+		return (0);
+	if (split[x][i] == '>')
+	{
+		return (-1);
+	}
+	else if (split[x][i] == '<')
+	{
+		if (ft_strlen(split[x][i]) == i)
+			return (0);
+		if (ft_strlen(split[x][i])  && split[x][i] == ' ')
+	}*/
+	return (1);
+}
+
+int	ft_contains(char *str, char c)
+{
+	int	x;
+
+	x = 0;
+	while (str[x])
+	{
+		if (str[x] == c)
+			return (1);
+		x++;
+	}
+	return (0);
 }
 
 /*
@@ -117,6 +169,10 @@ int	ft_check_command(char **split, int x, int y)
 int	ft_check_inout_n(char *str)
 {
 	char	**split;
+	char	**split1;
+	int		command;
+	int		out_file;
+	int		in_file;
 	int		x;
 	int		y;
 	t_check	check;
@@ -126,35 +182,46 @@ int	ft_check_inout_n(char *str)
 	while (split[++x])
 	{
 		y = -1;
-		while (split[x][++y])
+		if (ft_contains(split[x], '>'))
 		{
-			check.input = 0;
-			check.output = 0;
-			y += ft_w_is_space(split[x] + y);
-			if (split[x][y] == '<')
-				check.input = 1;
-			else if (split[x][y] == '>')
-				check.output = 1;
-			y++;
-			if (split[x][y] == '<' && check.input)
+			if (split[x][0] == '>')
+				y = 0;
+			else
+				y = 1;
+			if (ft_strlen(split[x]) <= 1)
 				return (0);
-			else if (split[x][y] == '>')
+			split1 = ft_split(split[x], '>');
+			while (split1[y])
 			{
-				check.output = 2;
+				out_file = ft_strlen(split1[y]) - ft_w_is_space(split1[y]);
+				if (out_file)
+					ft_printf("-- out file : %s --\n", split1[y]);
+				else
+					return (0);
 				y++;
 			}
-			ft_printf("log : '%s' %d '%c'\n", split[x] + y, y, split[x][y]);
-			y += ft_w_is_space(split[x] + y);
-			ft_printf("log : '%s' %d '%c'\n", split[x] + y, y, split[x][y]);
-			if ((!ft_isalpha(split[x][y]) && (check.output != 0 || check.input != 0)) || split[x][y] == '<' || split[x][y] == '>')
-				return (0);
-			if (!split[x][y])
-				return (1);
-			while (split[x][y] && split[x][y] != '<' && split[x][y] != '>')
-				y++;
-			ft_printf("log : %s\n", split[x] + y);
+			ft_free_split(split1);
 		}
-
+		if (ft_contains(split[x], '<'))
+		{
+			if (split[x][0] == '<')
+				y = 0;
+			else
+				y = 1;
+			if (ft_strlen(split[x]) <= 1)
+				return (0);
+			split1 = ft_split(split[x], '<');
+			while (split1[y])
+			{
+				in_file = ft_strlen(split1[y]) - ft_w_is_space(split1[y]);
+				if (out_file)
+					ft_printf("-- in file : %s --\n", split1[y]);
+				else
+					return (0);
+				y++;
+			}
+		}
 	}
+	ft_free_split(split);
 	return (1);
 }

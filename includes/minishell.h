@@ -41,5 +41,6 @@ int			ft_check_quote(char *str);
 int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
 int			ft_check_inout_n(char *str);
+char		**ft_splitd(char const *s, char c);
 
 #endif

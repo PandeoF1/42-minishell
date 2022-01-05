@@ -57,9 +57,6 @@ t_process	*ft_parse_command(char *str, char **env)
 	{
 		if (ft_check_inout(str) && ft_check_inout_n(str))
 		{
-			split = ft_split(str, '|');
-			ft_printf("gg\n");
-			ft_free_split(split);
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");
