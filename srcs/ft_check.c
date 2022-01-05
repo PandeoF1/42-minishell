@@ -200,7 +200,6 @@ int	ft_check_inout_n(char *str)
 					return (0);
 				y++;
 			}
-			ft_free_split(split1);
 		}
 		if (ft_contains(split[x], '<'))
 		{
