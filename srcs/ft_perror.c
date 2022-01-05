@@ -6,11 +6,11 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/28 14:11:51 by asaffroy          #+#    #+#             */
-/*   Updated: 2021/12/28 17:05:45 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/04 09:42:57 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "../includes/minishell.h"
 
 void	ft_perror(char *str)
 {

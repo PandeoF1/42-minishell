@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/03 13:45:20 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/05 09:57:13 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ int	find_path(char **env)
 *do :	check if the command exist and if we have the rights to use it 
 */
 
-char	*ft_check_arg(char *cmd, char **env)
+char	*ft_check_arg(char *cmd, char *env)
 {
-	int		i;
-	char	**tab;
-	char	*try;
+	int			i;
+	char		**tab;
+	char		*try;
 
 	if (!access(cmd, F_OK))
 	{
@@ -54,8 +54,8 @@ char	*ft_check_arg(char *cmd, char **env)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : permission denied");
 	}
 	cmd = ft_strjoin("/", cmd);
-	i = find_path(env);
-	tab = ft_split(env[i] + 5, ':');
+	//i = find_path(env);
+	tab = ft_split(env, ':');
 	i = 0;
 	while (tab[i])
 	{
@@ -89,24 +89,29 @@ char	*ft_check_arg(char *cmd, char **env)
 *do :	exec one of the cmd
 */
 
-void	father_proc(t_data *data, char **argv, char **env)
-{
-	close (data->fd[1]);
-	wait(NULL);
-	data->file2 = open(argv[4], O_RDWR | O_CREAT, 0644);
-	if (data->file2 < 0)
-		ft_perror("\033[2K\r\033[0;31mError\033[0m : outfile creation failed");
-	data->args_of_2 = ft_split(argv[3], ' ');
-	data->path_of_2 = ft_check_arg(data->args_of_2[0], env);
-	if (dup2(data->file2, STDOUT_FILENO) == -1)
-		ft_perror("dup2 n1 failed in father_proc");
-	if (dup2(data->fd[0], STDIN_FILENO) == -1)
-		ft_perror("dup2 n2 failed in father_proc");
-	close(data->fd[0]);
-	close(data->file2);
-	if (execve(data->path_of_2, data->args_of_2, env) == -1)
-		ft_perror("failed to exec in father_proc");
-}
+// void	father_proc(t_data *data, t_process *temp, char *env)
+// {
+// 	close (data->fd[1]);
+// 	if (temp->output != NULL)
+// 	{
+// 		data->file2 = open(temp->input, O_RDWR | O_TRUNC | O_CREAT, 0644);
+// 		if (data->file2 < 0)
+// 			ft_perror("\033[2K\r\033[0;31mError\033[0m : outfile creation failed");
+// 	}
+// 	data->args_of_2 = ft_split(temp->cmd_arg, ' ');
+// 	data->path_of_2 = ft_check_arg(temp->command, env);
+// 	if (temp->output != NULL)
+// 		if (dup2(data->file2, STDOUT_FILENO) == -1)
+// 			ft_perror("dup2 n1 failed in father_proc");
+// 	if (temp->input != NULL)
+// 		if (dup2(data->fd[0], STDIN_FILENO) == -1)
+// 			ft_perror("dup2 n2 failed in father_proc");
+// 	close(data->fd[0]);
+// 	if (temp->output != NULL)
+// 		close(data->file2);
+// 	if (execve(data->path_of_2, data->args_of_2, NULL) == -1)
+// 		ft_perror("failed to exec in father_proc");
+// }
 
 /*
 *void	child_proc(t_data *data, char **argv, char **env)
@@ -116,58 +121,165 @@ void	father_proc(t_data *data, char **argv, char **env)
 *do :	exec one of the cmd
 */
 
-void	child_proc(t_data *data, char **argv, char **env)
+// void	child_proc(t_data *data, t_process *temp, char *env)
+// {
+// 	close (data->fd[0]);
+// 	if (temp->input != NULL)
+// 	{
+// 		data->file1 = open(temp->args, O_RDONLY);
+// 		if (data->file1 < 0)
+// 			ft_perror("\033[2K\r\033[0;31mError\033[0m : couldn't find infile");
+// 	}
+// 	data->args_of_1 = ft_split(temp->cmd_arg, ' ');
+// 	data->path_of_1 = ft_check_arg(temp->command, env);
+// 	if (temp->input != NULL)
+// 		if (dup2(data->file1, STDIN_FILENO) == -1)
+// 			ft_perror("dup2 n1 failed in child_proc");
+// 	if (temp->output != NULL)
+// 		if (dup2(data->fd[1], STDOUT_FILENO) == -1)
+// 			ft_perror("dup2 n2 failed in child_proc");
+// 	close(data->fd[1]);
+// 	close(data->file1);
+// 	if (execve(data->path_of_1, data->args_of_1, NULL) == -1)
+// 		ft_perror("failed to exec in child_proc");
+// }
+
+void	test_proc(t_data *data, t_process *temp, char *env, int i)
 {
-	close (data->fd[0]);
-	data->file1 = open(argv[1], O_RDONLY);
-	if (data->file1 < 0)
-		ft_perror("\033[2K\r\033[0;31mError\033[0m : couldn't find infile");
-	data->args_of_1 = ft_split(argv[2], ' ');
-	data->path_of_1 = ft_check_arg(data->args_of_1[0], env);
-	if (dup2(data->file1, STDIN_FILENO) == -1)
-		ft_perror("dup2 n1 failed in child_proc");
-	if (dup2(data->fd[1], STDOUT_FILENO) == -1)
-		ft_perror("dup2 n2 failed in child_proc");
-	close(data->fd[1]);
-	close(data->file1);
-	if (execve(data->path_of_1, data->args_of_1, env) == -1)
-		ft_perror("failed to exec in child_proc");
+	int	pid1;
+
+	pid1 = fork();
+	if (pid1 < 0)
+		ft_perror("forking failed\n");
+	if (pid1 == 0)
+	{
+		if (temp->input != NULL)
+		{
+			data->file1 = open(temp->args, O_RDONLY);
+			if (data->file1 < 0)
+				ft_perror("\033[2K\r\033[0;31mError\033[0m : couldn't find infile");
+		}
+		data->tab_args[i] = ft_split(temp->cmd_arg, ' ');
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
+		if (temp->input != NULL)
+		{
+			if (dup2(data->file1, STDIN_FILENO) == -1)
+				ft_perror("dup2 n1 failed in child_proc");
+		}
+		else if (temp->in_prev != 0)
+		{
+			if (dup2(data->fd[0], STDIN_FILENO) == -1)
+				ft_perror("dup2 n2 failed in child_proc");
+		}
+		if (temp->out_next != 0)
+		{
+			if (dup2(data->fd[1], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n3 failed in child_proc");
+		}
+		if (temp->input != NULL)
+			close(data->file1);
+		close(data->fd[0]);
+		close(data->fd[1]);
+		if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+			ft_perror("failed to exec in child_proc");
+	}
 }
 
-int	ft_execute_cmd(int argc, char **argv, char **env, t_process *proc)
+int	ft_execute_cmd(t_process *proc, char *env)
 {
-	int			pid1;
 	t_data		data;
 	int			i;
+	t_process	*temp;
+	int			j;
 
-	if (argc != 5)
-		ft_perror
-		("\033[2K\r\033[0;35musage\033[0m : ./pipex file1 \"cmd1\" \"cmd2\" file2");
-	else
+	temp = proc;
+	i = 1;
+	while (temp->next != NULL)
 	{
-		if (pipe(data.fd) != 0)
-			ft_perror("pipe failed\n");
-		pid1 = fork();
-		if (pid1 < 0)
-			ft_perror("forking failed\n");
-		if (pid1 == 0)
-			child_proc(&data, argv, env);
-		else
-			father_proc(&data, argv, env);
-	}
-	i = -1;
-	while (data.args_of_1[++i])
-	{
-		free(data.args_of_1);
 		i++;
+		temp = temp->next;
 	}
-	i = -1;
-	while (data.args_of_2[++i])
+	j = i;
+	data.tab_args = malloc(sizeof(char **) * i);
+	if (!data.tab_args)
+		return (0);
+	data.tab_paths = malloc(sizeof(char *) * i);
+	if (!data.tab_paths)
+		return (0);
+	if (pipe(data.fd) != 0)
+		ft_perror("pipe failed\n");
+	i--;
+	temp = proc;
+	while (i >= 0)
 	{
-		free(data.args_of_2);
-		i++;
+		test_proc(&data, temp, env, i);
+		temp = temp->next;
+		i--;
 	}
-	free(data.path_of_1);
-	free(data.path_of_2);
+	j--;
+	while (j > 0)
+	{
+		waitpid(0, NULL, 0);
+		j--;
+	}
+	//wait(NULL);
+	//i = -1;
+	// while (data.args_of_1[++i])
+	// {
+	// 	free(data.args_of_1);
+	// 	i++;
+	// }
+	// free(data.path_of_1);
+	// if (temp != NULL)
+	// {
+	// 	i = -1;
+	// 	while (data.args_of_2[++i])
+	// 	{
+	// 		free(data.args_of_2);
+	// 		i++;
+	// 	}
+	// 	free(data.path_of_2);
+	// }
+		//if ('|')
 	return (0);
+}
+
+int	main(int args, char **argv)
+{
+	//t_process	proc;
+	t_process	*temp;
+	char		*env;
+
+	env = getenv("PATH");
+	temp = malloc(sizeof(t_process));
+	temp->command = "cat";
+	temp->cmd_arg = "cat t";
+	temp->path = 0;
+	temp->args = 0;
+	temp->out_next = 1;
+	temp->input = 0;
+	temp->type = "|";
+	temp->in_prev = 0;
+	//temp->next = NULL;
+	temp->next = malloc(sizeof(t_process));
+	temp->next->command = "grep";
+	temp->next->cmd_arg = "grep e";
+	temp->next->path = 0;
+	temp->next->args = 0;
+	temp->next->out_next = 1;
+	temp->next->input = 0;
+	temp->next->type = 0;
+	temp->next->in_prev = 1;
+	//temp->next->next = NULL;
+	temp->next->next = malloc(sizeof(t_process));
+	temp->next->next->command = "wc";
+	temp->next->next->cmd_arg = "wc -l";
+	temp->next->next->path = 0;
+	temp->next->next->args = 0;
+	temp->next->next->out_next = 0;
+	temp->next->next->input = 0;
+	temp->next->next->type = 0;
+	temp->next->next->in_prev = 1;
+	temp->next->next->next = NULL;
+	ft_execute_cmd(temp, env);
 }

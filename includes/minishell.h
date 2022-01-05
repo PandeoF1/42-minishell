@@ -22,9 +22,12 @@ typedef struct s_process
 {
 	struct s_process	*next;
 	char				*command;
+	char				*cmd_arg;
 	char				*path;
 	char				*args;
-	char				*output;
+	int					out_next;
+	char				*input;
+	int					in_prev;
 	char				*type;
 }			t_process;
 
