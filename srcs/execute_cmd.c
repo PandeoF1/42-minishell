@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/05 18:05:27 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/05 18:19:32 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void	close_pipes(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < (data->nb_cmd))
+	while (i < 2 * (data->nb_cmd - 1))
 	{
 		close(data->fd[i]);
 		i++;
@@ -178,8 +178,6 @@ void	test_proc(t_data *data, t_process *temp, char *env, int i)
 	{
 		data->tab_args[i] = ft_split(temp->cmd_arg, ' ');
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
-		ft_printf("%s\n", data->tab_paths[i]);
-		ft_printf("%s\n", data->tab_args[i][1]);
 		if (temp->in_prev != 0)
 		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
@@ -191,10 +189,9 @@ void	test_proc(t_data *data, t_process *temp, char *env, int i)
 				ft_perror("dup2 n3 failed in child_proc");
 		}
 		close_pipes(data);
-		if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
 			ft_perror("failed to exec in exec_proc");
 	}
-	ft_printf("%d\n", i);
 }
 
 int	ft_execute_cmd(t_process *proc, char *env)
@@ -238,7 +235,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	int status;
 	while (j >= 0)
 	{
-		ft_printf("%d\n", data.pid1[j]);
 		waitpid(data.pid1[j], &status, 0);
 		j--;
 	}
