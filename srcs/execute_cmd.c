@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/06 10:27:17 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/06 15:49:58 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void	free_exec(t_data *data, t_process *proc)
 		temp = temp->next;
 	while (i > 0)
 	{
-		j = 0;
+		j = -1;
 		if (temp->cmd_arg != NULL)
 			free(temp->cmd_arg);
 		if (temp->command != NULL)
@@ -190,16 +190,14 @@ void	free_exec(t_data *data, t_process *proc)
 		free(temp);
 		i--;
 		temp = proc;
-		while (j < i - 1)
-		{
+		while (++j < i - 1)
 			temp = temp->next;
-			j++;
-		}
 	}
 	free(data->fd);
 	free(data->pid1);
 	free(data->tab_args);
 	free(data->tab_paths);
+	free(data->check);
 }
 
 void	child_proc(t_data *data, t_process *temp, char *env, int i)
@@ -209,7 +207,8 @@ void	child_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->tab_args[i] = ft_split(temp->cmd_arg, ' ');
+		data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+		ft_printf("t%s\n", data->tab_args[i][2]);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{
@@ -242,8 +241,11 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		i++;
 		temp = temp->next;
 	}
-	data.fd = (int *)malloc(sizeof(int) * i);
+	data.fd = (int *)malloc(sizeof(int) * i * 2);
 	if (!data.fd)
+		return (0);
+	data.check = (int *)malloc(sizeof(int) * i);
+	if (!data.check)
 		return (0);
 	data.nb_cmd = i;
 	data.tab_args = malloc(sizeof(char **) * i);
@@ -321,8 +323,8 @@ int	main(int args, char **argv)
 	temp->next->next->next-> type = ft_strdup("|");
 	temp->next->next->next->in_prev = 1;
 	temp->next->next->next->next = malloc(sizeof(t_process));
-	temp->next->next->next->next->command = ft_strdup("sleep");
-	temp->next->next->next->next->cmd_arg = ft_strdup("sleep 2");
+	temp->next->next->next->next->command = ft_strdup("mkdir");
+	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir test0 \"test1\" test'2' 'test3' test 4");
 	temp->next->next->next->next->path = 0;
 	temp->next->next->next->next->args = 0;
 	temp->next->next->next->next->out_next = 0;

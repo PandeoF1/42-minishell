@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/05 17:08:20 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/06 13:48:19 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <stdio.h>
 # include <sys/wait.h>
 
-void	ft_perror(char *str);
-
 typedef struct s_data
 {
 	int		*fd;
@@ -29,8 +27,13 @@ typedef struct s_data
 	int		file2;
 	int		nb_cmd;
 	int		ind;
+	int		*check;
 	pid_t	*pid1;
 	char	**tab_paths;
 	char	***tab_args;
 }	t_data;
+
+void	ft_perror(char *str);
+char	**ft_split_exec(char const *s, t_data *data, int a);
+
 #endif
