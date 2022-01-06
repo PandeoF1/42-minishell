@@ -61,7 +61,22 @@ t_process	*ft_parse_command(char *str, char **env)
 		process = ft_create_process(str, &yolo);
 		if (yolo)
 		{
-			ft_printf("parse : %s\n", process->command);
+			while (process)
+			{
+				ft_printf("---- parse ----\n");
+				ft_printf("command : %s\n", process->command);
+				ft_printf("cmd_arg : %s\n", process->cmd_arg);
+				ft_printf("path : %s\n", process->path);
+				ft_printf("args : %s\n", process->args);
+				ft_printf("inout : %s\n", process->inout_file);
+				ft_printf("out_next : %d\n", process->out_next);
+				ft_printf("input : %s\n", process->input);
+				ft_printf("in_prev : %d\n", process->in_prev);
+				ft_printf("type : %s\n", process->type);
+				ft_printf("---- end parse ----\n");
+				process = process->next;
+			}
+
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");
