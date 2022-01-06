@@ -12,6 +12,39 @@
 
 #include "../includes/minishell.h"
 
+int	ft_structlen(t_process *process)
+{
+	t_process	*tmp;
+	int			len;
+
+	tmp = process;
+	len = 0;
+	while (tmp)
+	{
+		len++;
+		tmp = tmp->next;
+	}
+	return (len);
+}
+void	ft_config_process(t_process *process)
+{
+	t_process	*tmp;
+	int	x;
+	int	len;
+
+	x = 0;
+	len = ft_structlen(process);
+	tmp = process;
+	ft_printf("len = %d\n", len);
+	while (tmp && x < len)
+	{
+		if (ft_strchr(tmp->type, '<') != 0)
+			ft_printf("yolo\n");
+		ft_printf("crash ici %d\n", x);
+		x++;
+		tmp = tmp->next;
+	}
+}
 
 /*
 * ft_space(str)
@@ -59,8 +92,11 @@ t_process	*ft_parse_command(char *str, char **env)
 	if (ft_check_quote(str))
 	{
 		process = ft_create_process(str, &yolo);
-		if (yolo)
+		if (yolo == 1)
 		{
+			ft_printf("config :\n");
+			ft_config_process(process);
+			ft_printf("config done\n");
 			while (process)
 			{
 				ft_printf("---- parse ----\n");
@@ -70,8 +106,10 @@ t_process	*ft_parse_command(char *str, char **env)
 				ft_printf("args : %s\n", process->args);
 				ft_printf("inout : %s\n", process->inout_file);
 				ft_printf("out_next : %d\n", process->out_next);
-				ft_printf("input : %s\n", process->input);
+				ft_printf("out_prev : %d\n", process->out_prev);
 				ft_printf("in_prev : %d\n", process->in_prev);
+				ft_printf("in_next : %d\n", process->in_next);
+				ft_printf("input : %s\n", process->input);
 				ft_printf("type : %s\n", process->type);
 				ft_printf("---- end parse ----\n");
 				process = process->next;

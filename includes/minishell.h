@@ -27,8 +27,10 @@ typedef struct s_process
 	char				*args;
 	char				*inout_file;
 	int					out_next;
+	int					out_prev;
 	char				*input;
 	int					in_prev;
+	int					in_next;
 	char				*type;
 }		t_process;
 
