@@ -88,7 +88,7 @@ int	ft_count_c(char *str, char c)
 	return (i);
 }*/
 
-int	ft_w_is_space(char *str)
+static int	ft_w_is_space(char *str)
 {
 	int	x;
 

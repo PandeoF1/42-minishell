@@ -41,6 +41,7 @@ int	ft_space(char *str)
 * ft_parse_command(str)
 * desc : parse the command and return the struct
 * params : str to parse
+* todo : free(process)
 */
 
 t_process	*ft_parse_command(char *str, char **env)
@@ -48,15 +49,19 @@ t_process	*ft_parse_command(char *str, char **env)
 	t_process	*process;
 	char		**split;
 	int			x;
+	int			yolo;
 
 	x = 0;
+	yolo = 0;
 	if (ft_strlen(str) == 1 || ft_space(str) == 0)
 		return (NULL);
 	str[ft_strlen(str) - 1] = '\0';
 	if (ft_check_quote(str))
 	{
-		if (ft_check_inout(str) && ft_check_inout_n(str))
+		process = ft_create_process(str, &yolo);
+		if (yolo)
 		{
+			ft_printf("parse : %s\n", process->command);
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");

@@ -22,12 +22,15 @@ typedef struct s_process
 {
 	struct s_process	*next;
 	char				*command;
+	char				*cmd_arg;
 	char				*path;
 	char				*args;
-	char				*output;
+	char				*inout_file;
+	int					out_next;
 	char				*input;
+	int					in_prev;
 	char				*type;
-}			t_process;
+}		t_process;
 
 typedef struct s_check
 {
@@ -42,5 +45,6 @@ int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
 int			ft_check_inout_n(char *str);
 char		**ft_splitd(char const *s, char c);
+t_process	*ft_create_process(char *str, int *status);
 
 #endif
