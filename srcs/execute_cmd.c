@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/05 18:19:32 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/06 10:27:17 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ char	*ft_check_arg(char *cmd, char *env)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : permission denied");
 	}
 	cmd = ft_strjoin("/", cmd);
-	//i = find_path(env);
 	tab = ft_split(env, ':');
 	i = 0;
 	while (tab[i])
@@ -144,7 +143,7 @@ char	*ft_check_arg(char *cmd, char *env)
 // 		ft_perror("failed to exec in child_proc");
 // }
 
-static void	creat_pipes(t_data *data)
+void	create_pipes(t_data *data)
 {
 	int	i;
 
@@ -169,7 +168,41 @@ void	close_pipes(t_data *data)
 	}
 }
 
-void	test_proc(t_data *data, t_process *temp, char *env, int i)
+void	free_exec(t_data *data, t_process *proc)
+{
+	t_process	*temp;
+	int			i;
+	int			j;
+
+	temp = proc;
+	i = 0;
+	while (++i && temp->next != NULL)
+		temp = temp->next;
+	while (i > 0)
+	{
+		j = 0;
+		if (temp->cmd_arg != NULL)
+			free(temp->cmd_arg);
+		if (temp->command != NULL)
+			free(temp->command);
+		if (temp->type != NULL)
+			free(temp->type);
+		free(temp);
+		i--;
+		temp = proc;
+		while (j < i - 1)
+		{
+			temp = temp->next;
+			j++;
+		}
+	}
+	free(data->fd);
+	free(data->pid1);
+	free(data->tab_args);
+	free(data->tab_paths);
+}
+
+void	child_proc(t_data *data, t_process *temp, char *env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -181,16 +214,16 @@ void	test_proc(t_data *data, t_process *temp, char *env, int i)
 		if (temp->in_prev != 0)
 		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
-				ft_perror("dup2 n2 failed in child_proc");
+				ft_perror("dup2 n1 failed in child_proc");
 		}
 		if (temp->out_next != 0)
 		{
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n3 failed in child_proc");
+				ft_perror("dup2 n2 failed in child_proc");
 		}
 		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
-			ft_perror("failed to exec in exec_proc");
+			ft_perror("failed to exec in child_proc");
 	}
 }
 
@@ -200,6 +233,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	int			i;
 	t_process	*temp;
 	int			j;
+	int			status;
 
 	temp = proc;
 	i = 1;
@@ -219,92 +253,82 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	if (!data.tab_paths)
 		return (0);
 	data.pid1 = malloc(sizeof(pid_t) * i);
-	creat_pipes(&data);
+	create_pipes(&data);
 	i--;
 	j = i;
 	temp = proc;
 	data.ind = 0;
 	while (i >= 0)
 	{
-		test_proc(&data, temp, env, i);
+		child_proc(&data, temp, env, i);
 		temp = temp->next;
 		data.ind++;
 		i--;
 	}
 	close_pipes(&data);
-	int status;
+	i = -1;
 	while (j >= 0)
 	{
 		waitpid(data.pid1[j], &status, 0);
 		j--;
 	}
-	//wait(NULL);
-	//i = -1;
-	// while (data.args_of_1[++i])
-	// {
-	// 	free(data.args_of_1);
-	// 	i++;
-	// }
-	// free(data.path_of_1);
-	// if (temp != NULL)
-	// {
-	// 	i = -1;
-	// 	while (data.args_of_2[++i])
-	// 	{
-	// 		free(data.args_of_2);
-	// 		i++;
-	// 	}
-	// 	free(data.path_of_2);
-	// }
-		//if ('|')
+	free_exec(&data, proc);
 	return (0);
 }
 
 int	main(int args, char **argv)
 {
-	//t_process	proc;
 	t_process	*temp;
 	char		*env;
 
 	env = getenv("PATH");
 	temp = malloc(sizeof(t_process));
-	temp->command = "cat";
-	temp->cmd_arg = "cat t";
+	temp->command = ft_strdup("cat");
+	temp->cmd_arg = ft_strdup("cat t");
 	temp->path = 0;
 	temp->args = 0;
 	temp->out_next = 1;
 	temp->input = 0;
-	temp->type = "|";
+	temp->type = ft_strdup("|");
 	temp->in_prev = 0;
 	//temp->next = NULL;
 	temp->next = malloc(sizeof(t_process));
-	temp->next->command = "grep";
-	temp->next->cmd_arg = "grep j";
+	temp->next->command = ft_strdup("grep");
+	temp->next->cmd_arg = ft_strdup("grep j");
 	temp->next->path = 0;
 	temp->next->args = 0;
 	temp->next->out_next = 1;
 	temp->next->input = 0;
-	temp->next->type = 0;
+	temp->next-> type = ft_strdup("|");
 	temp->next->in_prev = 1;
 	//temp->next->next = NULL;
 	temp->next->next = malloc(sizeof(t_process));
-	temp->next->next->command = "grep";
-	temp->next->next->cmd_arg = "grep e";
+	temp->next->next->command = ft_strdup("grep");
+	temp->next->next->cmd_arg = ft_strdup("grep e");
 	temp->next->next->path = 0;
 	temp->next->next->args = 0;
 	temp->next->next->out_next = 1;
 	temp->next->next->input = 0;
-	temp->next->next->type = 0;
+	temp->next->next-> type = ft_strdup("|");
 	temp->next->next->in_prev = 1;
 	temp->next->next->next = malloc(sizeof(t_process));
-	temp->next->next->next->command = "grep";
-	temp->next->next->next->cmd_arg = "grep j";
+	temp->next->next->next->command = ft_strdup("grep");
+	temp->next->next->next->cmd_arg = ft_strdup("grep j");
 	temp->next->next->next->path = 0;
 	temp->next->next->next->args = 0;
-	temp->next->next->next->out_next = 0;
+	temp->next->next->next->out_next = 1;
 	temp->next->next->next->input = 0;
-	temp->next->next->next->type = 0;
+	temp->next->next->next-> type = ft_strdup("|");
 	temp->next->next->next->in_prev = 1;
-	temp->next->next->next->next = NULL;
+	temp->next->next->next->next = malloc(sizeof(t_process));
+	temp->next->next->next->next->command = ft_strdup("sleep");
+	temp->next->next->next->next->cmd_arg = ft_strdup("sleep 2");
+	temp->next->next->next->next->path = 0;
+	temp->next->next->next->next->args = 0;
+	temp->next->next->next->next->out_next = 0;
+	temp->next->next->next->next->input = 0;
+	temp->next->next->next->next-> type = 0;
+	temp->next->next->next->next->in_prev = 1;
+	temp->next->next->next->next->next = NULL;
 	ft_execute_cmd(temp, env);
 }
