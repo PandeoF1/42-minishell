@@ -20,7 +20,7 @@
  > - [norminette](https://github.com/42School/norminette) <br />
  > - [Makefile](https://github.com/PandeoF1/makefile) <br />
 
-## (づ｡◕‿‿◕｡)づ :
+## (づ｡◕‿‿◕｡)づ : This project is still ongoing, don't look too much into it.
 ```
 ██╗  ██╗██████╗ ██╗  ██╗   ██╗ ██████╗ ███╗   ██╗   ███████╗██████╗ 
 ██║  ██║╚════██╗██║  ╚██╗ ██╔╝██╔═══██╗████╗  ██║   ██╔════╝██╔══██╗
