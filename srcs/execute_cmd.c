@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/06 15:49:58 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/06 16:29:13 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,6 @@ void	child_proc(t_data *data, t_process *temp, char *env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
-		ft_printf("t%s\n", data->tab_args[i][2]);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{

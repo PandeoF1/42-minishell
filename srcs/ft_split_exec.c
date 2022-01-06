@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/06 16:22:42 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/06 16:28:48 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,19 +112,14 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 			data->check[a] = 0;
 		while (ft_is_charset((char)*s, charset, data, a) && data->check[a] != 1)
 			s++;
-		ft_printf("youhou n%d : %d\n", a, data->check[a]);
 		if (data->check[a] == 1)
 			s++;
 		j = ft_wordlen((char *)s, charset, data, a);
 		dest[i] = ft_strdupp((char *)s, j);
-		ft_printf("\n");
-		ft_printf("worldlen in n%d : %d\n", a, j);
 		s += j;
 		i++;
 		if (data->check[a] == 2)
 			s++;
-		ft_printf("youhouloi n%d : %d\n", a, data->check[a]);
-		ft_printf("\n");
 	}
 	dest[size] = 0;
 	return (dest);
