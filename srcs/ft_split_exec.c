@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/06 16:28:48 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/07 13:16:37 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	ft_is_charset(char str, char *charset, t_data *data, int a)
 {
-	int	x;
+	int			x;
 
 	x = 0;
 	while (charset[x])
@@ -32,8 +32,8 @@ static int	ft_is_charset(char str, char *charset, t_data *data, int a)
 
 static int	ft_wordlen(char *str, char *charset, t_data *data, int a)
 {
-	int	i;
-	int	y;
+	int			i;
+	int			y;
 
 	if (data->check[a] == 1)
 		y = 1;
@@ -44,7 +44,31 @@ static int	ft_wordlen(char *str, char *charset, t_data *data, int a)
 			|| (data->check[a] == 1 && y == 1)))
 		i++;
 	if (data->check[a] == 1)
-		data->check[a]=0;
+		data->check[a] = 0;
+	return (i);
+}
+
+static int	ft_wordlen2(char *str, char *charset, t_data *data, int a)
+{
+	int			i;
+	int			y;
+
+	if (data->check[a] == 1)
+		y = 1;
+	else
+		y = 0;
+	i = 0;
+	while (str[i] && ((ft_is_charset(str[i], charset, data, a) == 0)
+			|| (data->check[a] == 1 && y == 1)
+			|| (data->check[a] == 1 && i > 0 && str[i - 1] != ' ')
+			|| (data->check[a] == 2 && str[i + 1] && str[i + 1] != ' ')))
+	{
+		if (data->check[a] == 2)
+			data->check[a] = 0;
+		i++;
+	}
+	if (data->check[a] == 1)
+		data->check[a] = 0;
 	return (i);
 }
 
@@ -52,17 +76,21 @@ static int	ft_wordcount(char *str, char *charset, t_data *data, int a)
 {
 	int	i;
 	int	j;
+	int	x;
 
 	j = 0;
-	while (*str)
+	x = 0;
+	while (str[x])
 	{
-		while (*str && ft_is_charset(*str, charset, data, a) == 1
+		while (str[x] && ft_is_charset(str[x], charset, data, a) == 1
 			&& data->check[a] != 1)
-			str++;
+			x++;
 		if (data->check[a] == 1)
-			str++;
-		i = ft_wordlen(str, charset, data, a);
-		str += i;
+			x++;
+		i = ft_wordlen2(str + x, charset, data, a);
+		if (str[x + i] && str[x + i] != ' ' && data->check[a] != 2)
+			i += ft_wordcount(str + x + i, charset, data, a);
+		x += i;
 		if (i)
 			j++;
 	}
@@ -73,14 +101,33 @@ static char	*ft_strdupp(char *src, int j)
 {
 	char	*dst;
 	int		i;
+	int		nb_quote;
+	int		dec;
 
+	i = 0;
+	nb_quote = 0;
+	dec = 0;
+	while (src[i] && i < j)
+	{
+		if (src[i] == '\'' || src[i] == '\"')
+			nb_quote++;
+		i++;
+	}
+	j -= nb_quote;
 	i = 0;
 	dst = malloc((j + 1) * sizeof(char));
 	if (!dst)
 		return (0);
-	while (i < j && src[i])
+	while (src[i] && i < j)
 	{
-		dst[i] = src[i];
+		if (src[i] != '\'' && src[i] != '\"')
+			dst[i - dec] = src[i];
+		else
+		{
+			dec++;
+			j++;
+		}
+		//ft_printf("woooh to : %c\n\n", dst[i]);
 		i++;
 	}
 	dst[i] = '\0';
@@ -114,7 +161,7 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 			s++;
 		if (data->check[a] == 1)
 			s++;
-		j = ft_wordlen((char *)s, charset, data, a);
+		j = ft_wordlen2((char *)s, charset, data, a);
 		dest[i] = ft_strdupp((char *)s, j);
 		s += j;
 		i++;
