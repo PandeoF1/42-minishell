@@ -95,9 +95,9 @@ t_process	*ft_parse_command(char *str, char **env)
 		if (yolo == 1)
 		{
 			ft_printf("config :\n");
-			ft_config_process(process);
+			//ft_config_process(process);
 			ft_printf("config done\n");
-			while (process)
+			/*while (process)
 			{
 				ft_printf("---- parse ----\n");
 				ft_printf("command : %s\n", process->command);
@@ -113,7 +113,7 @@ t_process	*ft_parse_command(char *str, char **env)
 				ft_printf("type : %s\n", process->type);
 				ft_printf("---- end parse ----\n");
 				process = process->next;
-			}
+			}*/
 
 		}
 		else
