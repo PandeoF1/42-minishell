@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/07 13:16:37 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/10 12:27:16 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,6 @@ static int	ft_is_charset(char str, char *charset, t_data *data, int a)
 	return (0);
 }
 
-static int	ft_wordlen(char *str, char *charset, t_data *data, int a)
-{
-	int			i;
-	int			y;
-
-	if (data->check[a] == 1)
-		y = 1;
-	else
-		y = 0;
-	i = 0;
-	while (str[i] && ((ft_is_charset(str[i], charset, data, a) == 0)
-			|| (data->check[a] == 1 && y == 1)))
-		i++;
-	if (data->check[a] == 1)
-		data->check[a] = 0;
-	return (i);
-}
-
 static int	ft_wordlen2(char *str, char *charset, t_data *data, int a)
 {
 	int			i;
@@ -65,7 +47,8 @@ static int	ft_wordlen2(char *str, char *charset, t_data *data, int a)
 	{
 		if (data->check[a] == 2)
 			data->check[a] = 0;
-		i++;
+		else
+			i++;
 	}
 	if (data->check[a] == 1)
 		data->check[a] = 0;
@@ -97,7 +80,7 @@ static int	ft_wordcount(char *str, char *charset, t_data *data, int a)
 	return (j);
 }
 
-static char	*ft_strdupp(char *src, int j)
+static char	*ft_strdupp(char *src, int j, t_data *data)
 {
 	char	*dst;
 	int		i;
@@ -110,7 +93,10 @@ static char	*ft_strdupp(char *src, int j)
 	while (src[i] && i < j)
 	{
 		if (src[i] == '\'' || src[i] == '\"')
-			nb_quote++;
+		{
+			if (src[i] == data->type_char)
+				nb_quote++;
+		}
 		i++;
 	}
 	j -= nb_quote;
@@ -120,14 +106,26 @@ static char	*ft_strdupp(char *src, int j)
 		return (0);
 	while (src[i] && i < j)
 	{
-		if (src[i] != '\'' && src[i] != '\"')
-			dst[i - dec] = src[i];
+		if ((src[i] == '\'' || src[i] == '\"') && data->type_char != 0)
+		{
+			if (src[i] != data->type_char)
+				dst[i - dec] = src[i];
+			else
+			{
+				dec++;
+				j++;
+			}
+		}
 		else
 		{
-			dec++;
-			j++;
+			if (src[i] != '\'' && src[i] != '\"')
+				dst[i - dec] = src[i];
+			else
+			{
+				dec++;
+				j++;
+			}
 		}
-		//ft_printf("woooh to : %c\n\n", dst[i]);
 		i++;
 	}
 	dst[i] = '\0';
@@ -148,6 +146,7 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	charset[3] = '\0';
 	i = 0;
 	data->check[a] = 0;
+	data->type_nb = 0;
 	size = ft_wordcount((char *)s, charset, data, a);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
@@ -155,14 +154,18 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	data->check[a] = 0;
 	while (i < size)
 	{
+		data->type_char = 0;
 		if (data->check[a] > 1)
 			data->check[a] = 0;
 		while (ft_is_charset((char)*s, charset, data, a) && data->check[a] != 1)
 			s++;
 		if (data->check[a] == 1)
+		{
+			data->type_char = (char)*s;
 			s++;
+		}
 		j = ft_wordlen2((char *)s, charset, data, a);
-		dest[i] = ft_strdupp((char *)s, j);
+		dest[i] = ft_strdupp((char *)s, j, data);
 		s += j;
 		i++;
 		if (data->check[a] == 2)

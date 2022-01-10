@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/06 13:48:19 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/10 09:20:10 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef struct s_data
 	int		file2;
 	int		nb_cmd;
 	int		ind;
+	char	type_char;
+	int		type_nb;
 	int		*check;
 	pid_t	*pid1;
 	char	**tab_paths;
