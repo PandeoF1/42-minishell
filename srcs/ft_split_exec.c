@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/10 12:27:16 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/10 16:49:36 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,14 @@ static int	ft_wordlen2(char *str, char *charset, t_data *data, int a)
 	else
 		y = 0;
 	i = 0;
+	ft_printf("%c\n", str[i]);
 	while (str[i] && ((ft_is_charset(str[i], charset, data, a) == 0)
 			|| (data->check[a] == 1 && y == 1)
+			|| (data->type_char != 0 && str[i] != data->type_char)
 			|| (data->check[a] == 1 && i > 0 && str[i - 1] != ' ')
 			|| (data->check[a] == 2 && str[i + 1] && str[i + 1] != ' ')))
 	{
+		y = 0;
 		if (data->check[a] == 2)
 			data->check[a] = 0;
 		else
@@ -65,15 +68,22 @@ static int	ft_wordcount(char *str, char *charset, t_data *data, int a)
 	x = 0;
 	while (str[x])
 	{
+		data->check[a] = 0;
+		data->type_char = 0;
 		while (str[x] && ft_is_charset(str[x], charset, data, a) == 1
 			&& data->check[a] != 1)
 			x++;
 		if (data->check[a] == 1)
+		{
+			data->type_char = str[x];
+			ft_printf("aaah : %c\n", data->type_char);
 			x++;
+		}
 		i = ft_wordlen2(str + x, charset, data, a);
-		if (str[x + i] && str[x + i] != ' ' && data->check[a] != 2)
-			i += ft_wordcount(str + x + i, charset, data, a);
 		x += i;
+		if (str[x] == '\'' || str[x] == '\"')
+			x++;
+		ft_printf("in %d , there is |%c| , I is now %d and X is %d\n", a, str[x], i, x);
 		if (i)
 			j++;
 	}
@@ -148,6 +158,7 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	data->check[a] = 0;
 	data->type_nb = 0;
 	size = ft_wordcount((char *)s, charset, data, a);
+	ft_printf("mmmh : %d, %d\n", a, size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);
