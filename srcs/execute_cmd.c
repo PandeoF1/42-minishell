@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/10 16:50:42 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/11 11:13:45 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ int	main(int args, char **argv)
 	env = getenv("PATH");
 	temp = malloc(sizeof(t_process));
 	temp->command = ft_strdup("cat");
-	temp->cmd_arg = ft_strdup("cat t");
+	temp->cmd_arg = ft_strdup("cat ../t");
 	temp->path = 0;
 	temp->args = 0;
 	temp->out_next = 1;
@@ -321,9 +321,10 @@ int	main(int args, char **argv)
 	temp->next->next->next->input = 0;
 	temp->next->next->next-> type = ft_strdup("|");
 	temp->next->next->next->in_prev = 1;
+	//temp->next->next->next->next = NULL;
 	temp->next->next->next->next = malloc(sizeof(t_process));
 	temp->next->next->next->next->command = ft_strdup("mkdir");
-	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir a '\"b\" ' \"  'c'\" \"d \" test0 \"te st1\" test'2' 'test3 ' test 4");
+	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"e't\"he\"o'\"");
 	temp->next->next->next->next->path = 0;
 	temp->next->next->next->next->args = 0;
 	temp->next->next->next->next->out_next = 0;

@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/10 16:49:36 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/11 11:14:34 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static int	ft_wordlen2(char *str, char *charset, t_data *data, int a)
 	else
 		y = 0;
 	i = 0;
-	ft_printf("%c\n", str[i]);
 	while (str[i] && ((ft_is_charset(str[i], charset, data, a) == 0)
 			|| (data->check[a] == 1 && y == 1)
 			|| (data->type_char != 0 && str[i] != data->type_char)
@@ -76,36 +75,44 @@ static int	ft_wordcount(char *str, char *charset, t_data *data, int a)
 		if (data->check[a] == 1)
 		{
 			data->type_char = str[x];
-			ft_printf("aaah : %c\n", data->type_char);
 			x++;
 		}
 		i = ft_wordlen2(str + x, charset, data, a);
 		x += i;
 		if (str[x] == '\'' || str[x] == '\"')
 			x++;
-		ft_printf("in %d , there is |%c| , I is now %d and X is %d\n", a, str[x], i, x);
 		if (i)
 			j++;
 	}
 	return (j);
 }
 
-static char	*ft_strdupp(char *src, int j, t_data *data)
+static char	*ft_strdupp(char *src, int j, t_data *data, int a)
 {
 	char	*dst;
 	int		i;
 	int		nb_quote;
 	int		dec;
+	char	temp;
 
 	i = 0;
 	nb_quote = 0;
 	dec = 0;
+	temp = data->type_char;
 	while (src[i] && i < j)
 	{
 		if (src[i] == '\'' || src[i] == '\"')
 		{
-			if (src[i] == data->type_char)
+			if (src[i] == data->type_char || data->check[a] == 0)
+			{
+				if (src[i] == data->type_char)
+					data->check[a]++;
+				if (data->check[a] == 0)
+					data->type_char = src[i];
+				if (data->check[a] == 2)
+					data->check[a] = 0;
 				nb_quote++;
+			}
 		}
 		i++;
 	}
@@ -114,10 +121,20 @@ static char	*ft_strdupp(char *src, int j, t_data *data)
 	dst = malloc((j + 1) * sizeof(char));
 	if (!dst)
 		return (0);
+	data->type_char = temp;
+	data->check[a] = 0;
+	if (data->type_nb == 1)
+		data->check[a]++;
 	while (src[i] && i < j)
 	{
-		if ((src[i] == '\'' || src[i] == '\"') && data->type_char != 0)
+		if (src[i] == '\'' || src[i] == '\"')
 		{
+			if (src[i] == data->type_char)
+				data->check[a]++;
+			if (data->check[a] == 0)
+				data->type_char = src[i];
+			if (data->check[a] == 2)
+				data->check[a] = 0;
 			if (src[i] != data->type_char)
 				dst[i - dec] = src[i];
 			else
@@ -156,30 +173,32 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	charset[3] = '\0';
 	i = 0;
 	data->check[a] = 0;
-	data->type_nb = 0;
 	size = ft_wordcount((char *)s, charset, data, a);
-	ft_printf("mmmh : %d, %d\n", a, size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);
 	data->check[a] = 0;
 	while (i < size)
 	{
+		data->type_nb = 0;
 		data->type_char = 0;
-		if (data->check[a] > 1)
+		if (data->check[a] > 0)
 			data->check[a] = 0;
 		while (ft_is_charset((char)*s, charset, data, a) && data->check[a] != 1)
 			s++;
 		if (data->check[a] == 1)
 		{
+			data->type_nb = 1;
 			data->type_char = (char)*s;
 			s++;
 		}
 		j = ft_wordlen2((char *)s, charset, data, a);
-		dest[i] = ft_strdupp((char *)s, j, data);
+		if (data->type_nb == 1)
+			data->check[a]++;
+		dest[i] = ft_strdupp((char *)s, j, data, a);
 		s += j;
 		i++;
-		if (data->check[a] == 2)
+		if (data->check[a] > 0)
 			s++;
 	}
 	dest[size] = 0;
