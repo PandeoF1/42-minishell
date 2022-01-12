@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 10:47:04 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/12 14:55:14 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ void	free_exec(t_data *data, t_process *proc)
 	free(data->check);
 	free(data->type_char);
 	free(data->type_nb);
+	free(data->i);
+	free(data->dec);
 }
 
 void	child_proc(t_data *data, t_process *temp, char *env, int i)
@@ -250,6 +252,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		return (0);
 	data.type_nb = (int *)malloc(sizeof(int) * i);
 	if (!data.type_nb)
+		return (0);
+	data.i = (int *)malloc(sizeof(int) * i);
+	if (!data.i)
+		return (0);
+	data.dec = (int *)malloc(sizeof(int) * i);
+	if (!data.dec)
 		return (0);
 	data.type_char = malloc(sizeof(char) * i);
 	if (!data.type_char)
@@ -336,7 +344,7 @@ int	main(void)
 	//temp->next->next->next->next = NULL;
 	temp->next->next->next->next = malloc(sizeof(t_process));
 	temp->next->next->next->next->command = ft_strdup("mkdir");
-	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb'hv'ur\"");
+	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb\"hv\"ur\" gythb yb hu hbuyb'j'ub 'hh'");
 	temp->next->next->next->next->path = 0;
 	temp->next->next->next->next->args = 0;
 	temp->next->next->next->next->out_next = 0;
