@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 14:55:14 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/12 17:04:03 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,15 +170,15 @@ void	close_pipes(t_data *data)
 
 void	free_exec(t_data *data, t_process *proc)
 {
-	t_process	*temp;
+	//t_process	*temp;
 	int			i;
 	int			j;
 
-	temp = proc;
+	//temp = proc;
 	i = 0;
-	while (++i && temp->next != NULL)
-		temp = temp->next;
-	while (i > 0)
+	//while (++i && temp->next != NULL)
+		//temp = temp->next;
+	/*while (i > 0)
 	{
 		j = -1;
 		if (temp->cmd_arg != NULL)
@@ -192,7 +192,7 @@ void	free_exec(t_data *data, t_process *proc)
 		temp = proc;
 		while (++j < i - 1)
 			temp = temp->next;
-	}
+	}*/
 	free(data->fd);
 	free(data->pid1);
 	free(data->tab_args);
@@ -296,7 +296,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	free_exec(&data, proc);
 	return (0);
 }
-
+/*
 int	main(void)
 {
 	t_process	*temp;
@@ -354,3 +354,4 @@ int	main(void)
 	temp->next->next->next->next->next = NULL;
 	ft_execute_cmd(temp, env);
 }
+*/

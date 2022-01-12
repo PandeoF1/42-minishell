@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include <unistd.h>
+# include <stdlib.h>
 # include "../libft/libft.h"
 # include "../ft_printf/ft_printf.h"
 # include "pipex.h"
@@ -43,7 +44,7 @@ typedef struct s_check
 }			t_check;
 
 char		*ft_get_input(int fd, int size, int len);
-void		ft_parse_command(char *str, char **env);
+void		ft_parse_command(char *str, char *env);
 int			ft_check_quote(char *str);
 int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
@@ -51,5 +52,6 @@ int			ft_check_inout_n(char *str);
 char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(char *str, int *status);
 void		ft_free(t_process **process);
+int			ft_execute_cmd(t_process *proc, char *env);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 15:12:25 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/12 17:03:12 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 
 # include "../ft_printf/ft_printf.h"
 # include "../libft/libft.h"
+# include "minishell.h"
 # include <fcntl.h>
+# include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/wait.h>

@@ -23,12 +23,12 @@ static void	sig_quit(int sig)
 	ft_printf("\b\b  \b\b");
 }
 
-int	main(int argc, char **argv, char **env)
+int	main(void)
 {
 	char	*tmp;
+	char	*env;
 
-	(void)argc;
-	(void)argv;
+	env = getenv("PATH");
 	signal(SIGINT, action);
 	signal(SIGQUIT, sig_quit);
 	while (1)

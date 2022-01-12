@@ -103,7 +103,7 @@ int	ft_space(char *str)
 * todo : free(process)
 */
 
-void	ft_parse_command(char *str, char **env)
+void	ft_parse_command(char *str, char *env)
 {
 	t_process	*process;
 	t_process	*tmp;
@@ -123,6 +123,7 @@ void	ft_parse_command(char *str, char **env)
 		//ft_printf("yolo = %d\n", yolo);
 		if (yolo == 1)
 		{
+			ft_execute_cmd(process, env);
 			/*ft_printf("config :\n");
 			ft_config_process(process);
 			ft_printf("config done\n");
