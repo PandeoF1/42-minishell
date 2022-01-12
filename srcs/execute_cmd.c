@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/11 11:13:45 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/12 10:47:04 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,8 @@ void	free_exec(t_data *data, t_process *proc)
 	free(data->tab_args);
 	free(data->tab_paths);
 	free(data->check);
+	free(data->type_char);
+	free(data->type_nb);
 }
 
 void	child_proc(t_data *data, t_process *temp, char *env, int i)
@@ -246,13 +248,23 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	data.check = (int *)malloc(sizeof(int) * i);
 	if (!data.check)
 		return (0);
-	data.nb_cmd = i;
+	data.type_nb = (int *)malloc(sizeof(int) * i);
+	if (!data.type_nb)
+		return (0);
+	data.type_char = malloc(sizeof(char) * i);
+	if (!data.type_char)
+		return (0);
 	data.tab_args = malloc(sizeof(char **) * i);
 	if (!data.tab_args)
 		return (0);
 	data.tab_paths = malloc(sizeof(char *) * i);
 	if (!data.tab_paths)
 		return (0);
+	data.charset[0] = '\'';
+	data.charset[1] = '\"';
+	data.charset[2] = ' ';
+	data.charset[3] = '\0';
+	data.nb_cmd = i;
 	data.pid1 = malloc(sizeof(pid_t) * i);
 	create_pipes(&data);
 	i--;
@@ -277,7 +289,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	return (0);
 }
 
-int	main(int args, char **argv)
+int	main(void)
 {
 	t_process	*temp;
 	char		*env;
@@ -324,7 +336,7 @@ int	main(int args, char **argv)
 	//temp->next->next->next->next = NULL;
 	temp->next->next->next->next = malloc(sizeof(t_process));
 	temp->next->next->next->next->command = ft_strdup("mkdir");
-	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"e't\"he\"o'\"");
+	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb'hv'ur\"");
 	temp->next->next->next->next->path = 0;
 	temp->next->next->next->next->args = 0;
 	temp->next->next->next->next->out_next = 0;
