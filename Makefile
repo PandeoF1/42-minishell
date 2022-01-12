@@ -16,14 +16,14 @@ RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
 
-SRCS		= minishell.c srcs/ft_parse.c srcs/ft_get_input.c
+SRCS		= minishell.c srcs/ft_process.c srcs/ft_parse.c srcs/ft_free.c srcs/ft_get_input.c srcs/ft_check.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
 OBJS		= $(SRCS:.c=.o)
 OBJECTS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
 CC			= gcc
-CC_FLAGS	= #-Wall -Werror -Wextra
+CC_FLAGS	= #-fsanitize=address#-Wall -Werror -Wextra
 
 $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)
