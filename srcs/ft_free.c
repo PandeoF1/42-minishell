@@ -24,3 +24,30 @@ void	ft_free_split(char **split)
 	}
 	free(split);
 }
+
+void	ft_free(t_process **process)
+{
+	t_process	*tmp;
+
+	while (*process)
+	{
+		tmp = (*process)->next;
+		if ((*process)->command)
+			free((*process)->command);
+		if ((*process)->cmd_arg)
+			free((*process)->cmd_arg);
+		if ((*process)->path)
+			free((*process)->path);
+		if ((*process)->args)
+			free((*process)->args);
+		if ((*process)->input)
+			free((*process)->input);
+		if ((*process)->inout_file)
+			free((*process)->inout_file);
+		if ((*process)->type)
+			free((*process)->type);
+		free(*process);
+		*process = tmp;
+	}
+	ft_printf("fin du free\n");
+}

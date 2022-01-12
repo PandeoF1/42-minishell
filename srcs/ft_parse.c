@@ -26,6 +26,7 @@ int	ft_structlen(t_process *process)
 	}
 	return (len);
 }
+
 void	ft_config_process(t_process *process)
 {
 	t_process	*tmp;
@@ -33,13 +34,25 @@ void	ft_config_process(t_process *process)
 	int	len;
 
 	x = 0;
-	len = ft_structlen(process);
 	tmp = process;
+	len = ft_structlen(tmp);
 	ft_printf("len = %d\n", len);
 	while (tmp && x < len)
 	{
-		if (ft_strchr(tmp->type, '<') != 0)
-			ft_printf("yolo\n");
+		if (tmp->type)
+		{
+			if (tmp->type[0] && tmp->type[1] && tmp->type[0] == '<' && tmp->type[1] == '<')
+				ft_printf("<<\n");
+			else if (tmp->type[0] && tmp->type[1] && tmp->type[0] == '>' && tmp->type[1] == '>')
+				ft_printf(">>\n");
+			else if (tmp->type[0] && tmp->type[0] == '<')
+				ft_printf("<\n");
+			else if (tmp->type[0] && tmp->type[0] == '>')
+				ft_printf(">\n");
+
+		}
+		else
+			ft_printf("no type\n");
 		ft_printf("crash ici %d\n", x);
 		x++;
 		tmp = tmp->next;
@@ -77,21 +90,24 @@ int	ft_space(char *str)
 * todo : free(process)
 */
 
-t_process	*ft_parse_command(char *str, char **env)
+
+void	ft_parse_command(char *str, char **env)
 {
 	t_process	*process;
-	char		**split;
 	int			x;
 	int			yolo;
 
 	x = 0;
 	yolo = 0;
 	if (ft_strlen(str) == 1 || ft_space(str) == 0)
-		return (NULL);
+		return ;
 	str[ft_strlen(str) - 1] = '\0';
 	if (ft_check_quote(str))
 	{
+		ft_printf("yolo = %p\n", &yolo);
 		process = ft_create_process(str, &yolo);
+		ft_printf("yolo = %p\n", &yolo);
+		ft_printf("yolo = %d\n", yolo);
 		if (yolo == 1)
 		{
 			ft_printf("config :\n");
@@ -114,12 +130,11 @@ t_process	*ft_parse_command(char *str, char **env)
 				ft_printf("---- end parse ----\n");
 				process = process->next;
 			}*/
-
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");
 	}
 	else
 		ft_printf("minishell: syntax error with open quotes\n");
-	return (NULL);
+	ft_free(&process);
 }

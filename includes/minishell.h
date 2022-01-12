@@ -41,12 +41,13 @@ typedef struct s_check
 }			t_check;
 
 char		*ft_get_input(int fd, int size, int len);
-t_process	*ft_parse_command(char *str, char **env);
+void		ft_parse_command(char *str, char **env);
 int			ft_check_quote(char *str);
 int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
 int			ft_check_inout_n(char *str);
 char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(char *str, int *status);
+void		ft_free(t_process **process);
 
 #endif
