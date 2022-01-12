@@ -48,15 +48,17 @@ static int ft_word_len(char *str)
  * params : prev to add next malloced
  */
 
-static void ft_malloc_process(t_process **prev)
+static void	ft_malloc_process(t_process **prev)
 {
-	t_process *new;
+	t_process	*new;
 
 	new = malloc(sizeof(t_process));
 	if (!new)
 		return ;
 	new->command = NULL;
 	new->cmd_arg = NULL;
+	new->in_file = NULL;
+	new->out_file = NULL;
 	new->inout_file = NULL;
 	new->path = NULL;
 	new->args = NULL;
@@ -66,7 +68,11 @@ static void ft_malloc_process(t_process **prev)
 	new->in_prev = 0;
 	new->in_next = 0;
 	new->type = NULL;
-	(*prev)->next = new;
+	new->next = NULL;
+	if (*prev)
+		(*prev)->next = new;
+	else
+		(*prev)= new;
 }
 
 /*
@@ -81,9 +87,9 @@ static char *ft_add_char(char *str, char c)
 	int x;
 
 	x = 0;
-	//ft_printf("on cherche le crash : %s\n", str);
+	////ft_printf("on cherche le crash : %s\n", str);
 	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	//ft_printf("on cherche le crash\n");
+	////ft_printf("on cherche le crash\n");
 	if (!new)
 		return (NULL);
 	while (str[x])
@@ -119,40 +125,60 @@ int ft_len_next(char *str)
  * todo : free(process) if err ?
  */
 
-int ft_quote(t_process **process, int x, int y, char **split)
+int	ft_quote(t_process **process, int x, int y, char **split)
 {
-	char c;
+	char	c;
+	int		i;
 
+	i = 0;
 	c = split[x][y];
-	(*process)->type = malloc(sizeof(char));
-	(*process)->type = ft_add_char((*process)->type, c);
+	if ((*process)->command != NULL)
+	{
+		ft_malloc_process(&(*process));
+		(*process) = (*process)->next;
+	}
+	if (split[x][y + 1] && (split[x][y + 1] == c))
+	{
+		(*process)->type = malloc(sizeof(char) * 3);
+		(*process)->type[0] = c;
+		(*process)->type[1] = c;
+		(*process)->type[2] = '\0';
+		y++;
+	}
+	else
+	{
+		(*process)->type = malloc(sizeof(char) * 2);
+		(*process)->type[0] = c;
+		(*process)->type[1] = '\0';
+	}
 	y += ft_w_is_space(split[x] + y + 1) + 1;
 	if (ft_word_len(split[x] + y) != 0)
 	{
 		(*process)->inout_file = malloc(sizeof(char) * ft_len_next(split[x] + y) + 1);
 		ft_strlcpy((*process)->inout_file, split[x] + y, ft_len_next(split[x] + y) + 1);
-		//ft_printf("(3) inout : %s\n", (*process)->inout_file);
-		//ft_printf("(3.4) test : %s\n", split[x] + y);
-		//ft_printf("(4) len : %d\n", ft_len_next(split[x] + y));
+		////ft_printf("(3) inout : %s\n", (*process)->inout_file);
+		////ft_printf("(3.4) test : %s\n", split[x] + y);
+		////ft_printf("(4) len : %d\n", ft_len_next(split[x] + y));
 		y += ft_len_next(split[x] + y);
 		/*y += ft_word_len(split[x] + y) + 1;
 		y += ft_w_is_space(split[x] + y);*/
-		//ft_printf("(4) str pos : %s\n", split[x] + y);
+		////ft_printf("(4) str pos : %s\n", split[x] + y);
 		if (!split[x][y] && !split[x + 1])
 		{
-			//ft_printf("je sort laa 1\n");
+			////ft_printf("je sort laa 1\n");
 			return (-1);
 		}
 		while (split[x][y] == c)
 		{
 			ft_malloc_process(&(*process));
 			(*process) = (*process)->next;
-			if (ft_quote(&(*process), x, y, split) == -1)
+			i = ft_quote(&(*process), x, y, split);
+			if (i == -1)
 			{
-				//ft_printf("je sort laa 2\n");
+				////ft_printf("je sort laa 2\n");
 				return (-1);
 			}
-			y += ft_quote(&(*process), x, y, split);
+			y += i;
 		}
 	}
 	else
@@ -179,6 +205,7 @@ char *ft_strnjoin(char *s1, char *s2, int n) // free s1
 		str[i++] = s2[k++];
 	}
 	str[i] = '\0';
+	free(s1);
 	return (str);
 }
 
@@ -193,6 +220,7 @@ char *ft_strnjoin(char *s1, char *s2, int n) // free s1
 t_process *ft_create_process(char *str, int *status)
 {
 	t_process *process;
+	int	test;
 	t_process *tmp;
 	char **split;
 	int x;
@@ -200,14 +228,25 @@ t_process *ft_create_process(char *str, int *status)
 	int i;
 	char a;
 
+	tmp = malloc(sizeof(t_process));
 	x = 0;
+	test = 0;
 	a = 0;
 	split = ft_split(str, '|');
 	while (split[x])
 	{
 		(*status) = 0;
-		ft_malloc_process(&process);
-		process = process->next;
+		if (x == 0)
+		{
+			ft_malloc_process(&tmp);
+			process = tmp->next;
+			free(tmp);
+		}
+		else
+		{
+			ft_malloc_process(&process);
+			process = process->next;
+		}
 		if (x == 0)
 			tmp = process;
 		y = 0;
@@ -220,7 +259,7 @@ t_process *ft_create_process(char *str, int *status)
 			(*status) = ft_quote(&process, x, y, split);
 			if ((*status) == -2)
 			{
-				ft_printf("gg1\n");
+				//ft_printf("gg1\n");
 				(*status) = 0;
 				ft_free_split(split);
 				return (tmp);
@@ -235,14 +274,14 @@ t_process *ft_create_process(char *str, int *status)
 			if (!process->command)
 				return (NULL);
 			ft_strlcpy(process->command, split[x] + y, ft_word_len(split[x] + y) + 1);
-			//ft_printf("(0) command : %s\n", process->command);
+			////ft_printf("(0) command : %s\n", process->command);
 			y += ft_word_len(split[x] + y);
 			y += ft_w_is_space(split[x] + y);
-			// //ft_printf("(1) str pos : %s\n", split[x] + y);
+			// ////ft_printf("(1) str pos : %s\n", split[x] + y);
 			if (x == -1 && (split[x][y] == '<' || split[x][y] == '>'))
 			{
 				// cas de l'output
-				//ft_printf("cas pas coder\n");
+				////ft_printf("cas pas coder\n");
 			}
 			else
 			{
@@ -268,7 +307,7 @@ t_process *ft_create_process(char *str, int *status)
 						(*status) = ft_quote(&process, x, y, split);
 						if ((*status) == -2)
 						{
-							ft_printf("gg2\n");
+							//ft_printf("gg2\n");
 							(*status) = 0;
 							ft_free_split(split);
 							return (tmp);
@@ -280,21 +319,19 @@ t_process *ft_create_process(char *str, int *status)
 					else if (split[x][y] && process->command && ((*status)) != -2)
 					{ // process->cmd_arg = ft_add_char(process->cmd_arg, split[x][y]);
 						process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_next(split[x] + y) - 1);
-						//ft_printf("je copie : %d - %s\n", ft_len_next(split[x] + y), process->cmd_arg);
+						////ft_printf("je copie : %d - %s\n", ft_len_next(split[x] + y), process->cmd_arg);
 						y += ft_len_next(split[x] + y) - 1;
-						//ft_printf("(2) str pos : %s\n", split[x] + y);
+						////ft_printf("(2) str pos : %s\n", split[x] + y);
 					}
 					y++;
 				}
-				//ft_printf("(2) cmd_arg : %s\n", process->cmd_arg);
+				////ft_printf("(2) cmd_arg : %s\n", process->cmd_arg);
 			}
 		}
 		x++;
 	}
-	ft_printf("gg3\n");
+	//ft_printf("gg3\n");
 	ft_free_split(split);
 	(*status) = 1;
-	ft_printf("status = %p\n", status);
-	ft_printf("status = %d\n", (*status));
 	return (tmp);
 }

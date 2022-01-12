@@ -36,11 +36,11 @@ int	main(int argc, char **argv, char **env)
 		ft_putstr("$> ");
 		tmp = ft_get_input(0, 0, 0);
 		//ft_printf("log : str = %s", tmp);
-		ft_printf("a\n");
+		//ft_printf("a\n");
+		if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
+			break ;
 		ft_parse_command(tmp, env);
-		ft_printf("b\n");
-		//if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
-		//	break ;
+		//ft_printf("b\n");
 		free(tmp);
 	}
 	if (tmp)

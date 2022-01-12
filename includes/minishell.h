@@ -25,6 +25,8 @@ typedef struct s_process
 	char				*cmd_arg;
 	char				*path;
 	char				*args;
+	char				*in_file;
+	char				*out_file;
 	char				*inout_file;
 	int					out_next;
 	int					out_prev;
