@@ -19,9 +19,17 @@
 # include "../ft_printf/ft_printf.h"
 # include "pipex.h"
 
+typedef struct s_inout
+{
+	int				type;
+	char			*file;
+	struct s_inout	*next;
+}			t_inout;
+
 typedef struct s_process
 {
 	struct s_process	*next;
+	struct s_inout		*inout;
 	char				*command;
 	char				*cmd_arg;
 	char				*path;

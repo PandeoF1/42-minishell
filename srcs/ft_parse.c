@@ -107,6 +107,7 @@ void	ft_parse_command(char *str, char *env)
 {
 	t_process	*process;
 	t_process	*tmp;
+	t_inout		*tmpi;
 	int			x;
 	int			yolo;
 
@@ -123,8 +124,8 @@ void	ft_parse_command(char *str, char *env)
 		//ft_printf("yolo = %d\n", yolo);
 		if (yolo == 1)
 		{
-			ft_execute_cmd(process, env);
-			/*ft_printf("config :\n");
+			//ft_execute_cmd(process, env);
+			ft_printf("config :\n");
 			ft_config_process(process);
 			ft_printf("config done\n");
 			tmp = process;
@@ -144,10 +145,22 @@ void	ft_parse_command(char *str, char *env)
 				ft_printf("in_next : %d.\n", process->in_next);
 				ft_printf("input : %s.\n", process->input);
 				ft_printf("type : %s.\n", process->type);
+				if (process->inout)
+				{
+					tmpi = process->inout;
+					while (tmpi)
+					{
+						ft_printf("-------\n");
+						ft_printf("inout : %s.\n", tmpi->file);
+						ft_printf("type : %d.\n", tmpi->type);
+						ft_printf("-------\n");
+						tmpi = tmpi->next;
+					}
+				}
 				ft_printf("---- end parse ----\n");
 				process = process->next;
-			}*/
-			//process = tmp;
+			}
+			process = tmp;
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");

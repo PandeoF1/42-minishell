@@ -51,22 +51,24 @@ static int	ft_wordcount(char *str, char *charset)
 	return (j);
 }
 
-static char	*ft_strdupp(char *src, int j)
+static char	*ft_strndup(const char *s, size_t n)
 {
-	char	*dst;
-	int		i;
+	char			*res;
+	unsigned int	i;
 
 	i = 0;
-	dst = malloc((j + 1) * sizeof(char));
-	if (!dst)
-		return (0);
-	while (i < j && src[i])
+	res = malloc(sizeof(char) * (n + 1));
+	if (!res)
+		return (NULL);
+	if (res == NULL)
+		return (NULL);
+	while (i < n)
 	{
-		dst[i] = src[i];
+		res[i] = s[i];
 		i++;
 	}
-	dst[i] = '\0';
-	return (dst);
+	res[i] = '\0';
+	return (res);
 }
 
 char	**ft_split(char const *s, char c)
@@ -89,7 +91,7 @@ char	**ft_split(char const *s, char c)
 		while (ft_is_charset((char)*s, charset))
 			s++;
 		j = ft_wordlen((char *)s, charset);
-		dest[i] = ft_strdupp((char *)s, j);
+		dest[i] = ft_strndup((char *)s, j);
 		s += j;
 		i++;
 	}
