@@ -55,6 +55,7 @@ static void	ft_malloc_process(t_process **prev)
 	new = malloc(sizeof(t_process));
 	if (!new)
 		return ;
+	new->inout = NULL;
 	new->command = NULL;
 	new->cmd_arg = NULL;
 	new->in_file = NULL;
@@ -72,7 +73,7 @@ static void	ft_malloc_process(t_process **prev)
 	if (*prev)
 		(*prev)->next = new;
 	else
-		(*prev)= new;
+		(*prev) = new;
 }
 
 /*
@@ -109,13 +110,49 @@ static char *ft_add_char(char *str, char c)
  * params : str to count
  */
 
-int ft_len_next(char *str)
+int	ft_len_quote(char *str)
 {
-	int x;
+	int		x;
+	char	c;
 
 	x = 0;
-	while (str[x] && str[x] != '<' && str[x] != '>')
-		x++;
+	ft_printf("inside ft_len_quote first char : .%c.\n", str[x]);
+	while (str[x] && (str[x] != ' ' || str[x] == '<' || str[x] == '>'))
+	{
+		ft_printf("a %d\n", x);
+		if (str[x] == '\'' || str[x] == '"')
+		{
+			c = str[x++];
+			while (str[x] && str[x] != c)
+				x++;
+		}
+		else
+			x++;
+	}
+	ft_printf("quit ft_len_quote\n");
+	return (x);
+}
+
+int	ft_len_next(char *str)
+{
+	int		x;
+	char	c;
+
+	x = 0;
+	ft_printf("inside ft_len_next first char : .%c.\n", str[x]);
+	while (str[x] && str[x] != ' ')
+	{
+		ft_printf("a %d\n", x);
+		if (str[x] == '\'' || str[x] == '"')
+		{
+			c = str[x++];
+			while (str[x] && str[x] != c)
+				x++;
+		}
+		else
+			x++;
+	}
+	ft_printf("quit ft_len_next\n");
 	return (x);
 }
 
@@ -158,6 +195,21 @@ char	*ft_strndup(const char *s, size_t n)
 	return (res);
 }
 
+void	ft_push_inout(t_inout **inout, t_inout *new)
+{
+	t_inout	*tmp;
+
+	tmp = *inout;
+	if (!tmp)
+	{
+		*inout = new;
+		return ;
+	}
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
 /*
  * int ft_quote(t_process **process, int x, int y, char **split)
  * desc : parse the curent line after the <> and return the new process
@@ -173,40 +225,46 @@ int	ft_quote(t_process **process, int x, int *y, char **split)
 	i = 0;
 	ft_printf("y : %d\n", *y);
 	c = split[x][(*y)];
-	(*process)->inout = ft_create_inout();
+	tmp = ft_create_inout();
 	if (split[x][(*y) + 1] && (split[x][(*y) + 1] == c))
 	{
 		if (c == '<')
-			(*process)->inout->type = 3;
+			tmp->type = 3;
 		else if (c == '>')
-			(*process)->inout->type = 4;
+			tmp->type = 4;
 		(*y)++;
 	}
 	else
 	{
 		if (c == '<')
-			(*process)->inout->type = 1;
+			tmp->type = 1;
 		else if (c == '>')
-			(*process)->inout->type = 2;
+			tmp->type = 2;
 	}
 	(*y) += ft_w_is_space(split[x] + (*y) + 1) + 1;
-	if (ft_word_len(split[x] + (*y)) != 0)
-	{
-		ft_printf("y : %d len : %d str : %s\n", (*y), 
+	//if (ft_word_len(split[x] + (*y)) != 0)
+	//{
+	ft_printf("debut ft_quote\n");
+	tmp->file = ft_strndup(split[x] + (*y), ft_len_quote(split[x] + (*y)));
+	(*y) += ft_len_next(split[x] + (*y));
+	ft_printf("test %s\n", tmp->file);
+		/*ft_printf("y : %d len : %d str : %s\n", (*y), 
 			ft_len_next(split[x] + (*y)) + 1, split[x] + (*y));
 		(*process)->inout->file = ft_strndup(split[x] + (*y), 
 			ft_word_len(split[x] + (*y)) + 1);
 		(*y) += ft_word_len(split[x] + (*y));
 		ft_printf("inout : %s\n", (*process)->inout->file);
 		(*y) += ft_word_len(split[x] + (*y));
-		(*y) += ft_w_is_space(split[x] + (*y));
+		(*y) += ft_w_is_space(split[x] + (*y));*//*
 		if (!split[x][(*y)])
 		{
 			////ft_printf("je sort laa 1\n");
+			tmp->next = (*process)->inout;
+			(*process)->inout = tmp;
 			return (-1);
-		}
-		tmp = (*process)->inout;
-		while (split[x][(*y)] == c)
+		}*/
+		//tmp = (*process)->inout;
+		/*while (split[x][(*y)] == c)
 		{
 			ft_printf("uwu\n");
 			ft_printf("atest : %s\n", (*process)->inout->file);
@@ -219,17 +277,20 @@ int	ft_quote(t_process **process, int x, int *y, char **split)
 				return (-1);
 			}
 			ft_printf("test : %s\n", (*process)->inout->file);
-		}
-		tmp->next = (*process)->inout;
-		(*process)->inout = tmp;
-	}
-	else
-		return (-2);
+		}*/
+		//tmp->next = (*process)->inout;
+		//(*process)->inout = tmp;
+	//}
+	//else
+	//	return (-2);
 	/*if ((*process)->type && (*process)->type != NULL)
 	{
 		free((*process)->type);
 		(*process)->type = NULL;
 	}*/
+	ft_printf("gg\n");
+	ft_push_inout(&(*process)->inout, tmp);
+	ft_printf("gg\n");
 	return (-1);
 }
 
@@ -365,10 +426,11 @@ t_process *ft_create_process(char *str, int *status)
 						(*status) = -2;
 					}
 					else if (split[x][y] && process->command && ((*status)) != -2)
-					{ // process->cmd_arg = ft_add_char(process->cmd_arg, split[x][y]);
-						process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_next(split[x] + y) - 1);
+					{ // process->cmd_arg = ft_add_char(process->cmd_arg, split[x][y])
+						ft_printf("y : %d, len next : %d / %s\n", y, ft_len_next(split[x] + y), split[x] + y);
+						process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_next(split[x] + y));
 						////ft_printf("je copie : %d - %s\n", ft_len_next(split[x] + y), process->cmd_arg);
-						y += ft_len_next(split[x] + y) - 1;
+						y += ft_len_next(split[x] + y);
 						////ft_printf("(2) str pos : %s\n", split[x] + y);
 					}
 					//else //pas sur de la dinguerie
