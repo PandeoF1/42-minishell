@@ -116,20 +116,19 @@ int	ft_len_quote(char *str)
 	char	c;
 
 	x = 0;
-	//ft_printf("inside ft_len_quote first char : .%c.\n", str[x]);
-	while (str[x] && (str[x] != ' ' || str[x] == '<' || str[x] == '>'))
+	while (str[x] && str[x] != ' ' && str[x] != '<' && str[x] != '>')
 	{
-		//ft_printf("a %d\n", x);
 		if (str[x] == '\'' || str[x] == '"')
 		{
 			c = str[x++];
 			while (str[x] && str[x] != c)
 				x++;
+			if (str[x] && (str[x] != ' ' && str[x] != '<' && str[x] != '>'))
+				x++;
 		}
 		else
 			x++;
 	}
-	//ft_printf("quit ft_len_quote\n");
 	return (x);
 }
 
@@ -337,13 +336,13 @@ t_process *ft_create_process(char *str, int *status)
 			else if (split[x][y])
 			{
 				//ft_printf("debut join : .%s.\n", split[x] + y);
+				//ft_printf("je start sur : %s\n", split[x] + y);
 				process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_quote(split[x] + y));
 				process->cmd_arg = ft_strnjoin(process->cmd_arg, " ", 1);
-				y += ft_word_len(split[x] + y);
+				y += ft_len_quote(split[x] + y);
 				//ft_printf("fin join : .%s.\n", split[x] + y);
 				//ft_printf("arg : .%s.\n", process->cmd_arg);
 			}
-			y++;
 		}
 		/*y += ft_w_is_space(split[x]);
 		if (!split[x][y] || ft_strlen(split[x]) == 0)

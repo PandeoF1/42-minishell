@@ -14,8 +14,9 @@
 
 static void	action(int sig)
 {
+	ft_printf("\b\b  \b\b");
 	ft_printf("\n$> ");
-	exit(0); 	
+	exit(0);
 }
 
 static void	sig_quit(int sig)
@@ -35,12 +36,11 @@ int	main(void)
 	{
 		ft_putstr("$> ");
 		tmp = ft_get_input(0, 0, 0);
-		//ft_printf("log : str = %s", tmp);
-		//ft_printf("a\n");
+		//tmp = ft_env(env, tmp);
+		//ft_printf()
 		if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
 			break ;
 		ft_parse_command(tmp, env);
-		//ft_printf("b\n");
 		free(tmp);
 	}
 	if (tmp)
