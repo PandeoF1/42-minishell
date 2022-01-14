@@ -56,11 +56,11 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_putstr("$> ");
 		tmp = ft_get_input(0, 0, 0);
-		//tmp = ft_env(penv, tmp);
-		ft_printf("str : %s\n", tmp);
-		if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
-			break ;
-		ft_parse_command(tmp, env);
+		tmp = ft_env(penv, tmp);
+		//ft_printf("str : %s\n", tmp);
+		//if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
+		//	break ;
+		//ft_parse_command(tmp, env);
 		free(tmp);
 	}
 	if (tmp)
