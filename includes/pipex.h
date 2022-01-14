@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 17:03:12 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/14 13:25:00 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@
 typedef struct s_data
 {
 	int		*fd;
-	int		file1;
-	int		file2;
+	int		**file;
 	int		nb_cmd;
 	int		ind;
 	int		*i;
@@ -39,13 +38,5 @@ typedef struct s_data
 	char	**tab_paths;
 	char	***tab_args;
 }	t_data;
-
-void	ft_perror(char *str);
-char	**ft_split_exec(char const *s, t_data *data, int a);
-int		ft_wordlen(char *str, t_data *data, int a);
-int		ft_is_charset(char str, t_data *data, int a);
-int		ft_wordcount(char *str, t_data *data, int a);
-int		ft_strdupp_util2(t_data *data, int a, char *dst, char *src);
-int		ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
 
 #endif

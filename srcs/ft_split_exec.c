@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 15:08:30 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/13 09:13:59 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_strdupp_util2(t_data *data, int a, char *dst, char *src)
 	return (j);
 }
 
-static char	*ft_strdupp(char *src, int j, t_data *data, int a)
+char	*ft_strdupp(char *src, int j, t_data *data, int a)
 {
 	char	*dst;
 	char	temp;

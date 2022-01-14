@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/minishell.h"
+
 static int	ft_is_charset(char str, char *charset)
 {
 	while (*charset)

@@ -64,4 +64,12 @@ int			ft_execute_cmd(t_process *proc, char *env);
 char		*ft_env(char *env, char *str);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 
+void		ft_perror(char *str);
+char		**ft_split_exec(char const *s, t_data *data, int a);
+int			ft_wordlen(char *str, t_data *data, int a);
+int			ft_is_charset(char str, t_data *data, int a);
+int			ft_wordcount(char *str, t_data *data, int a);
+int			ft_strdupp_util2(t_data *data, int a, char *dst, char *src);
+int			ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
+
 #endif
