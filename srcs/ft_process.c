@@ -88,9 +88,9 @@ static char *ft_add_char(char *str, char c)
 	int x;
 
 	x = 0;
-	////ft_printf("on cherche le crash : %s\n", str);
+	//////ft_printf("on cherche le crash : %s\n", str);
 	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	////ft_printf("on cherche le crash\n");
+	//////ft_printf("on cherche le crash\n");
 	if (!new)
 		return (NULL);
 	while (str[x])
@@ -116,10 +116,10 @@ int	ft_len_quote(char *str)
 	char	c;
 
 	x = 0;
-	ft_printf("inside ft_len_quote first char : .%c.\n", str[x]);
+	//ft_printf("inside ft_len_quote first char : .%c.\n", str[x]);
 	while (str[x] && (str[x] != ' ' || str[x] == '<' || str[x] == '>'))
 	{
-		ft_printf("a %d\n", x);
+		//ft_printf("a %d\n", x);
 		if (str[x] == '\'' || str[x] == '"')
 		{
 			c = str[x++];
@@ -129,7 +129,7 @@ int	ft_len_quote(char *str)
 		else
 			x++;
 	}
-	ft_printf("quit ft_len_quote\n");
+	//ft_printf("quit ft_len_quote\n");
 	return (x);
 }
 
@@ -139,10 +139,10 @@ int	ft_len_next(char *str)
 	char	c;
 
 	x = 0;
-	ft_printf("inside ft_len_next first char : .%c.\n", str[x]);
+	//ft_printf("inside ft_len_next first char : .%c.\n", str[x]);
 	while (str[x] && str[x] != ' ')
 	{
-		ft_printf("a %d\n", x);
+		//ft_printf("a %d\n", x);
 		if (str[x] == '\'' || str[x] == '"')
 		{
 			c = str[x++];
@@ -152,7 +152,7 @@ int	ft_len_next(char *str)
 		else
 			x++;
 	}
-	ft_printf("quit ft_len_next\n");
+	//ft_printf("quit ft_len_next\n");
 	return (x);
 }
 
@@ -223,7 +223,7 @@ int	ft_quote(t_process **process, int x, int *y, char **split)
 	t_inout	*tmp;
 
 	i = 0;
-	ft_printf("y : %d\n", *y);
+	//ft_printf("y : %d\n", *y);
 	c = split[x][(*y)];
 	tmp = ft_create_inout();
 	if (split[x][(*y) + 1] && (split[x][(*y) + 1] == c))
@@ -242,55 +242,13 @@ int	ft_quote(t_process **process, int x, int *y, char **split)
 			tmp->type = 2;
 	}
 	(*y) += ft_w_is_space(split[x] + (*y) + 1) + 1;
-	//if (ft_word_len(split[x] + (*y)) != 0)
-	//{
-	ft_printf("debut ft_quote\n");
-	tmp->file = ft_strndup(split[x] + (*y), ft_len_quote(split[x] + (*y)));
+	//ft_printf("debut ft_quote\n");
+	tmp->file = ft_strndup(split[x] + (*y), ft_len_quote(split[x] + (*y)));	
 	(*y) += ft_len_next(split[x] + (*y));
-	ft_printf("test %s\n", tmp->file);
-		/*ft_printf("y : %d len : %d str : %s\n", (*y), 
-			ft_len_next(split[x] + (*y)) + 1, split[x] + (*y));
-		(*process)->inout->file = ft_strndup(split[x] + (*y), 
-			ft_word_len(split[x] + (*y)) + 1);
-		(*y) += ft_word_len(split[x] + (*y));
-		ft_printf("inout : %s\n", (*process)->inout->file);
-		(*y) += ft_word_len(split[x] + (*y));
-		(*y) += ft_w_is_space(split[x] + (*y));*//*
-		if (!split[x][(*y)])
-		{
-			////ft_printf("je sort laa 1\n");
-			tmp->next = (*process)->inout;
-			(*process)->inout = tmp;
-			return (-1);
-		}*/
-		//tmp = (*process)->inout;
-		/*while (split[x][(*y)] == c)
-		{
-			ft_printf("uwu\n");
-			ft_printf("atest : %s\n", (*process)->inout->file);
-			(*process)->inout = (*process)->inout->next;
-			if (ft_quote(&(*process), x, y, split) == -1)
-			{
-				ft_printf("btest : %s\n", (*process)->inout->file);
-				tmp->next = (*process)->inout;
-				(*process)->inout = tmp;
-				return (-1);
-			}
-			ft_printf("test : %s\n", (*process)->inout->file);
-		}*/
-		//tmp->next = (*process)->inout;
-		//(*process)->inout = tmp;
-	//}
-	//else
-	//	return (-2);
-	/*if ((*process)->type && (*process)->type != NULL)
-	{
-		free((*process)->type);
-		(*process)->type = NULL;
-	}*/
-	ft_printf("gg\n");
+	//ft_printf("test %s\n", tmp->file);
+	//ft_printf("gg\n");
 	ft_push_inout(&(*process)->inout, tmp);
-	ft_printf("gg\n");
+	//ft_printf("gg\n");
 	return (-1);
 }
 
@@ -357,7 +315,37 @@ t_process *ft_create_process(char *str, int *status)
 		if (x == 0)
 			tmp = process;
 		y = 0;
-		y += ft_w_is_space(split[x]);
+		y += ft_w_is_space(split[x] + y);
+		process->command = ft_strndup(split[x] + y, ft_word_len(split[x] + y));
+		process->cmd_arg = ft_strdup(process->command);
+		process->cmd_arg = ft_strnjoin(process->cmd_arg, " ", 1);
+		y += ft_word_len(split[x] + y);
+		//ft_printf("%s\n", process->command);
+		while (split[x][y])
+		{
+			y += ft_w_is_space(split[x] + y);
+			if (split[x][y] == '<' || split[x][y] == '>')
+			{
+				//ft_printf("\n\n\n\n\n\n\n\n\n\n\nft_quote\n\n\n\n\n\n\n\n\n\n\n\n\n");
+				if (ft_quote(&process, x, &y, split) == -2)
+				{
+					(*status) = 0;
+					ft_free_split(split);
+					return (tmp);
+				}
+			}
+			else
+			{
+				//ft_printf("debut join : .%s.\n", split[x] + y);
+				process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_quote(split[x] + y));
+				process->cmd_arg = ft_strnjoin(process->cmd_arg, " ", 1);
+				y += ft_word_len(split[x] + y);
+				//ft_printf("fin join : .%s.\n", split[x] + y);
+				//ft_printf("arg : .%s.\n", process->cmd_arg);
+			}
+			y++;
+		}
+		/*y += ft_w_is_space(split[x]);
 		if (!split[x][y] || ft_strlen(split[x]) == 0)
 			return (NULL);
 		if (split[x][y] == '<' || split[x][y] == '>') // to remove car pas use sous macos
@@ -366,11 +354,11 @@ t_process *ft_create_process(char *str, int *status)
 			(*status) = ft_quote(&process, x, &y, split);
 			if ((*status) == -2)
 			{
-				//ft_printf("gg1\n");
+				////ft_printf("gg1\n");
 				(*status) = 0;
 				ft_free_split(split);
 				return (tmp);
-			}
+			}q
 			//else if ((*status) != -1)
 			//	y += (*status);
 			(*status) = -2;
@@ -381,14 +369,14 @@ t_process *ft_create_process(char *str, int *status)
 			if (!process->command)
 				return (NULL);
 			ft_strlcpy(process->command, split[x] + y, ft_word_len(split[x] + y) + 1);
-			////ft_printf("(0) command : %s\n", process->command);
+			//////ft_printf("(0) command : %s\n", process->command);
 			y += ft_word_len(split[x] + y);
 			y += ft_w_is_space(split[x] + y);
-			// ////ft_printf("(1) str pos : %s\n", split[x] + y);
+			// //////ft_printf("(1) str pos : %s\n", split[x] + y);
 			if (x == -1 && (split[x][y] == '<' || split[x][y] == '>'))
 			{
 				// cas de l'output
-				////ft_printf("cas pas coder\n");
+				//////ft_printf("cas pas coder\n");
 			}
 			else
 			{
@@ -397,6 +385,7 @@ t_process *ft_create_process(char *str, int *status)
 					process->cmd_arg = ft_strjoin(process->command, " ");
 				while (split[x][y]) // stack smashing
 				{
+					s
 					if (split[x][y] == '\'' || split[x][y] == '\"')
 					{
 						if (a == split[x][y] && i == 0)
@@ -411,12 +400,12 @@ t_process *ft_create_process(char *str, int *status)
 					}
 					if (split[x][y] && (split[x][y] == '<' || split[x][y] == '>') && i == 0)
 					{
-						ft_printf("2y : %d %d here : %s\n", y, (*status), split[x] + y);
+						//ft_printf("2y : %d %d here : %s\n", y, (*status), split[x] + y);
 						(*status) = ft_quote(&process, x, &y, split);
-						ft_printf("2y : %d %d here : %s\n", y, (*status), split[x] + y);
+						//ft_printf("2y : %d %d here : %s\n", y, (*status), split[x] + y);
 						if ((*status) == -2)
 						{
-							//ft_printf("gg2\n");
+							////ft_printf("gg2\n");
 							(*status) = 0;
 							ft_free_split(split);
 							return (tmp);
@@ -427,23 +416,22 @@ t_process *ft_create_process(char *str, int *status)
 					}
 					else if (split[x][y] && process->command && ((*status)) != -2)
 					{ // process->cmd_arg = ft_add_char(process->cmd_arg, split[x][y])
-						ft_printf("y : %d, len next : %d / %s\n", y, ft_len_next(split[x] + y), split[x] + y);
+						//ft_printf("y : %d, len next : %d / %s\n", y, ft_len_next(split[x] + y), split[x] + y);
 						process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_next(split[x] + y));
-						////ft_printf("je copie : %d - %s\n", ft_len_next(split[x] + y), process->cmd_arg);
+						//////ft_printf("je copie : %d - %s\n", ft_len_next(split[x] + y), process->cmd_arg);
 						y += ft_len_next(split[x] + y);
-						////ft_printf("(2) str pos : %s\n", split[x] + y);
+						//////ft_printf("(2) str pos : %s\n", split[x] + y);
 					}
 					//else //pas sur de la dinguerie
 					y++;
 				}
-				////ft_printf("(2) cmd_arg : %s\n", process->cmd_arg);
-			}
-		}
+				//ft_printf("(2) cmd_arg : %s\n", process->cmd_arg);
+			}*/
 		if (split[x + 1])
 			process->type = ft_strdup("|");
 		x++;
 	}
-	//ft_printf("gg3\n");
+	////ft_printf("gg3\n");
 	ft_free_split(split);
 	(*status) = 1;
 	return (tmp);

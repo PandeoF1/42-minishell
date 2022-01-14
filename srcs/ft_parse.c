@@ -125,9 +125,9 @@ void	ft_parse_command(char *str, char *env)
 		if (yolo == 1)
 		{
 			//ft_execute_cmd(process, env);
-			ft_printf("config :\n");
-			ft_config_process(process);
-			ft_printf("config done\n");
+			//ft_printf("config :\n");
+			//ft_config_process(process);
+			//ft_printf("config done\n");
 			tmp = process;
 			while (process)
 			{
