@@ -30,44 +30,28 @@ int	ft_structlen(t_process *process)
 void	ft_config_process(t_process *process)
 {
 	t_process	*tmp;
-	int	x;
-	int	len;
+	int			x;
+	int			len;
+	int			next;
 
-	x = 0;
+	x = -1;
+	next = 0;
 	tmp = process;
 	len = ft_structlen(tmp);
-	ft_printf("len = %d\n", len);
-	while (tmp && x < len)
+	while (tmp && ++x < len)
 	{
-		if (tmp->type)
+		if (tmp->type && tmp->type[0] == '|')
 		{
-			ft_printf("\n\ntype = %c%c\n", tmp->type[0], tmp->type[1]);
-			if (tmp->type[0] && tmp->type[1] && tmp->type[0] == '<' && tmp->type[1] == '<')
-			{	
-				ft_printf("<<\n");
-			}
-			else if (tmp->type[0] && tmp->type[1] && tmp->type[0] == '>' && tmp->type[1] == '>')
-			{
-				ft_printf(">>\n");
-			}
-			else if (tmp->type[0] && tmp->type[0] == '<')
-			{
-				ft_printf("<\n");
-			}
-			else if (tmp->type[0] && tmp->type[0] == '>')
-			{
-				ft_printf(">\n");
-			}
-			else if (tmp->type[0] && tmp->type[0] == '|')
-			{
-				ft_printf("|\n");
-			}
+			if (x != 0)
+				tmp->in_prev = 1;
+			tmp->out_next = 1;
+			next = 1;
 		}
-
-		else
-			ft_printf("no type\n");
-		ft_printf("\n\ncrash ici %d\n", x);
-		x++;
+		else if (next)
+		{
+			tmp->in_prev = 1;
+			next = 0;
+		}
 		tmp = tmp->next;
 	}
 }
@@ -125,7 +109,7 @@ void	ft_parse_command(char *str, char *env)
 		if (yolo == 1)
 		{
 			//ft_printf("config :\n");
-			//ft_config_process(process);
+			ft_config_process(process);
 			//ft_printf("config done\n");
 			tmp = process;
 			while (process)

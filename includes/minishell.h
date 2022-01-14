@@ -61,5 +61,7 @@ char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(char *str, int *status);
 void		ft_free(t_process **process);
 int			ft_execute_cmd(t_process *proc, char *env);
+char		*ft_env(char *env, char *str);
+char		*ft_strnjoin(char *s1, char *s2, int n);
 
 #endif
