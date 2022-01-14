@@ -334,7 +334,7 @@ t_process *ft_create_process(char *str, int *status)
 					return (tmp);
 				}
 			}
-			else
+			else if (split[x][y])
 			{
 				//ft_printf("debut join : .%s.\n", split[x] + y);
 				process->cmd_arg = ft_strnjoin(process->cmd_arg, split[x] + y, ft_len_quote(split[x] + y));
