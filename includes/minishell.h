@@ -62,4 +62,12 @@ t_process	*ft_create_process(char *str, int *status);
 void		ft_free(t_process **process);
 int			ft_execute_cmd(t_process *proc, char *env);
 
+void		ft_perror(char *str);
+char		**ft_split_exec(char const *s, t_data *data, int a);
+int			ft_wordlen(char *str, t_data *data, int a);
+int			ft_is_charset(char str, t_data *data, int a);
+int			ft_wordcount(char *str, t_data *data, int a);
+int			ft_strdupp_util2(t_data *data, int a, char *dst, char *src);
+int			ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
+
 #endif

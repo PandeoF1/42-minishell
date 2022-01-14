@@ -36,12 +36,12 @@ void	ft_config_process(t_process *process)
 	x = 0;
 	tmp = process;
 	len = ft_structlen(tmp);
-	ft_printf("len = %d\n", len);
+	//ft_printf("len = %d\n", len);
 	while (tmp && x < len)
 	{
 		if (tmp->type)
 		{
-			ft_printf("\n\ntype = %c%c\n", tmp->type[0], tmp->type[1]);
+			//ft_printf("\n\ntype = %c%c\n", tmp->type[0], tmp->type[1]);
 			if (tmp->type[0] && tmp->type[1] && tmp->type[0] == '<' && tmp->type[1] == '<')
 			{	
 				ft_printf("<<\n");
@@ -120,13 +120,14 @@ void	ft_parse_command(char *str, char *env)
 	{
 		//ft_printf("yolo = %p\n", &yolo);
 		process = ft_create_process(str, &yolo);
+		ft_printf("test\n");
 		//ft_printf("yolo = %p\n", &yolo);
 		//ft_printf("yolo = %d\n", yolo);
 		if (yolo == 1)
 		{
-			//ft_printf("config :\n");
-			//ft_config_process(process);
-			//ft_printf("config done\n");
+			// ft_printf("config :\n");
+			// //ft_config_process(process);
+			// ft_printf("config done\n");
 			tmp = process;
 			while (process)
 			{
@@ -150,10 +151,12 @@ void	ft_parse_command(char *str, char *env)
 					ft_printf("--- INOUT ----\n");
 					while (tmpi)
 					{
-						ft_printf("inout : %s.\n", tmpi->file);
-						ft_printf("type : %d.\n", tmpi->type);
-						if (tmpi->next)
-							ft_printf("-- next --\n");
+						ft_printf("-------\n");
+						if (tmpi->file)
+							ft_printf("inout : %s.\n", tmpi->file);
+						if (tmpi->type)
+							ft_printf("type : %d.\n", tmpi->type);
+						ft_printf("-------\n");
 						tmpi = tmpi->next;
 					}
 					ft_printf("--- INOUT ----\n");
@@ -162,7 +165,7 @@ void	ft_parse_command(char *str, char *env)
 				process = process->next;
 			}
 			process = tmp;
-			//ft_execute_cmd(process, env);
+			ft_execute_cmd(process, env);
 		}
 		else
 			ft_printf("minishell: syntax error near unexpected token `newline'\n");

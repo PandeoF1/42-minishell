@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 17:04:03 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/14 14:19:36 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,14 +168,12 @@ void	close_pipes(t_data *data)
 	}
 }
 
-void	free_exec(t_data *data, t_process *proc)
+void	free_exec(t_data *data, int i)
 {
-	//t_process	*temp;
-	int			i;
 	int			j;
 
 	//temp = proc;
-	i = 0;
+	j = 0;
 	//while (++i && temp->next != NULL)
 		//temp = temp->next;
 	/*while (i > 0)
@@ -193,18 +191,40 @@ void	free_exec(t_data *data, t_process *proc)
 		while (++j < i - 1)
 			temp = temp->next;
 	}*/
-	free(data->fd);
-	free(data->pid1);
-	free(data->tab_args);
-	free(data->tab_paths);
-	free(data->check);
-	free(data->type_char);
-	free(data->type_nb);
-	free(data->i);
-	free(data->dec);
+	if (data->fd)
+		free(data->fd);
+	if (data->pid1)
+		free(data->pid1);
+	if (data->tab_args)
+		free(data->tab_args);
+	// if (data->tab_paths) need to be free
+	// {
+	// 	while (data->tab_paths[j] != NULL)
+	// 	{
+	// 		free(data->tab_paths[j]);
+	// 		ft_printf("freed\n");
+	// 		j++;
+	// 	}
+	// }
+	// if (data->tab_paths) need to be free
+	// 	free(data->tab_paths);
+	if (data->check)
+		free(data->check);
+	if (data->type_char)
+		free(data->type_char);
+	if (data->type_nb)
+		free(data->type_nb);
+	if (data->i)
+		free(data->i);
+	if (data->dec)
+		free(data->dec);
+	// j = -1; need to be free
+	// while (data->file[++j])
+	// 	free(data->file[j]);
+	// free(data->file);
 }
 
-void	child_proc(t_data *data, t_process *temp, char *env, int i)
+void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -229,71 +249,162 @@ void	child_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
+void	one_proc(t_data *data, t_process *temp, char *env, int i)
+{
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
+		ft_perror("forking failed\n");
+	if (data->pid1[i] == 0)
+	{
+		close_pipes(data);
+		data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
+		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
+			ft_perror("failed to exec in child_proc");
+	}
+}
+
+void	red_proc(t_data *data, t_process *temp, char *env, int i)
+{
+	int	j;
+
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
+		ft_perror("forking failed\n");
+	if (data->pid1[i] == 0)
+	{
+		j = 0;
+		data->file[i][j] = open(temp->inout->file,
+				O_RDWR | O_TRUNC | O_CREAT, 0644);
+		if (data->file[i][j] < 0)
+			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
+		if (dup2(data->file[i][j], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red_proc");
+		close_pipes(data);
+		while (--j >= 0)
+			close(data->file[i][j]);
+		if (temp->command != NULL)
+		{
+			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+			data->tab_paths[i] = ft_check_arg(temp->command, env);
+			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				ft_perror("failed to exec in red_proc\n");
+		}
+		exit (0);
+	}
+}
+
+int ft_malloc_struct(t_data *data, int	i)
+{
+	int	j;
+
+	j = -1;
+	data->fd = (int *)malloc(sizeof(int) * i * 2);
+	if (!data->fd)
+		return (0);
+	data->check = (int *)malloc(sizeof(int) * i);
+	if (!data->check)
+		return (0);
+	data->type_nb = (int *)malloc(sizeof(int) * i);
+	if (!data->type_nb)
+		return (0);
+	data->i = (int *)malloc(sizeof(int) * i);
+	if (!data->i)
+		return (0);
+	data->dec = malloc(sizeof(int) * i);
+	if (!data->dec)
+		return (0);
+	data->type_char = malloc(sizeof(char) * i);
+	if (!data->type_char)
+		return (0);
+	data->tab_args = malloc(sizeof(char **) * i);
+	if (!data->tab_args)
+		return (0);
+	data->tab_paths = malloc(sizeof(char *) * i);
+	if (!data->tab_paths)
+		return (0);
+	data->file = malloc(sizeof(int *) * i);
+	if (!data->file)
+		return (0);
+	while (++j < i)
+		data->file[j] = malloc(sizeof(int) * i);
+	data->charset[0] = '\'';
+	data->charset[1] = '\"';
+	data->charset[2] = ' ';
+	data->charset[3] = '\0';
+	data->nb_cmd = i;
+	data->pid1 = malloc(sizeof(pid_t) * i);
+	return (1);
+}
+
 int	ft_execute_cmd(t_process *proc, char *env)
 {
 	t_data		data;
 	int			i;
 	t_process	*temp;
+	t_inout		*temp2;
 	int			j;
 	int			status;
 
 	temp = proc;
-	i = 1;
+	temp2 = temp->inout;
+	i = 0;
+	while (temp->inout != 0)
+	{
+		i++;
+		temp->inout = temp->inout->next;
+	}
+	temp->inout = temp2;
 	while (temp->next != NULL)
 	{
 		i++;
 		temp = temp->next;
+		temp2 = temp->inout;
+		while (temp->inout != 0)
+		{
+			i++;
+			temp->inout = temp->inout->next;
+		}
+		temp->inout = temp2;
 	}
-	data.fd = (int *)malloc(sizeof(int) * i * 2);
-	if (!data.fd)
-		return (0);
-	data.check = (int *)malloc(sizeof(int) * i);
-	if (!data.check)
-		return (0);
-	data.type_nb = (int *)malloc(sizeof(int) * i);
-	if (!data.type_nb)
-		return (0);
-	data.i = (int *)malloc(sizeof(int) * i);
-	if (!data.i)
-		return (0);
-	data.dec = (int *)malloc(sizeof(int) * i);
-	if (!data.dec)
-		return (0);
-	data.type_char = malloc(sizeof(char) * i);
-	if (!data.type_char)
-		return (0);
-	data.tab_args = malloc(sizeof(char **) * i);
-	if (!data.tab_args)
-		return (0);
-	data.tab_paths = malloc(sizeof(char *) * i);
-	if (!data.tab_paths)
-		return (0);
-	data.charset[0] = '\'';
-	data.charset[1] = '\"';
-	data.charset[2] = ' ';
-	data.charset[3] = '\0';
-	data.nb_cmd = i;
-	data.pid1 = malloc(sizeof(pid_t) * i);
-	create_pipes(&data);
-	i--;
-	j = i;
 	temp = proc;
-	data.ind = 0;
-	while (i >= 0)
+	if (i == 0 && temp->inout == 0)
+		i++;
+	if (!ft_malloc_struct(&data, i))
+		ft_perror("malloc failed\n");
+	create_pipes(&data);
+	if (i == 1 && temp->inout == 0)
+		one_proc(&data, temp, env, i);
+	else
 	{
-		child_proc(&data, temp, env, i);
-		temp = temp->next;
-		data.ind++;
 		i--;
+		j = i;
+		data.ind = 0;
+		while (i >= 0)
+		{
+			while (i >= 0 && !ft_strncmp("|", temp->type, 1) && temp->inout == 0)
+			{
+				pipe_proc(&data, temp, env, i);
+				temp = temp->next;
+				data.ind++;
+				i--;
+			}
+			while (i >= 0 && temp->inout != 0 && temp->inout->type == 2)
+			{
+				red_proc(&data, temp, env, i);
+				temp->inout = temp->inout->next;
+				i--;
+			}
+		}
 	}
+	i = j;
 	close_pipes(&data);
-	i = -1;
 	while (j >= 0)
 	{
 		waitpid(data.pid1[j], &status, 0);
 		j--;
 	}
-	free_exec(&data, proc);
+	free_exec(&data, i);
 	return (0);
 }
 /*
@@ -308,50 +419,52 @@ int	main(void)
 	temp->cmd_arg = ft_strdup("cat ../t");
 	temp->path = 0;
 	temp->args = 0;
-	temp->out_next = 1;
+	temp->out_next = 0;
 	temp->input = 0;
-	temp->type = ft_strdup("|");
+	temp->out_file = ft_strdup("b");
+	temp->type = ft_strdup(">");
 	temp->in_prev = 0;
 	//temp->next = NULL;
 	temp->next = malloc(sizeof(t_process));
-	temp->next->command = ft_strdup("grep");
-	temp->next->cmd_arg = ft_strdup("grep j");
+	temp->next->command = NULL;
+	temp->next->cmd_arg = NULL;
 	temp->next->path = 0;
 	temp->next->args = 0;
 	temp->next->out_next = 1;
 	temp->next->input = 0;
-	temp->next-> type = ft_strdup("|");
+	temp->next-> type = 0;
+	temp->out_file = 0;
 	temp->next->in_prev = 1;
-	//temp->next->next = NULL;
-	temp->next->next = malloc(sizeof(t_process));
-	temp->next->next->command = ft_strdup("grep");
-	temp->next->next->cmd_arg = ft_strdup("grep e");
-	temp->next->next->path = 0;
-	temp->next->next->args = 0;
-	temp->next->next->out_next = 1;
-	temp->next->next->input = 0;
-	temp->next->next-> type = ft_strdup("|");
-	temp->next->next->in_prev = 1;
-	temp->next->next->next = malloc(sizeof(t_process));
-	temp->next->next->next->command = ft_strdup("grep");
-	temp->next->next->next->cmd_arg = ft_strdup("grep j");
-	temp->next->next->next->path = 0;
-	temp->next->next->next->args = 0;
-	temp->next->next->next->out_next = 1;
-	temp->next->next->next->input = 0;
-	temp->next->next->next-> type = ft_strdup("|");
-	temp->next->next->next->in_prev = 1;
-	//temp->next->next->next->next = NULL;
-	temp->next->next->next->next = malloc(sizeof(t_process));
-	temp->next->next->next->next->command = ft_strdup("mkdir");
-	temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb\"hv\"ur\" gythb yb hu hbuyb'j'ub 'hh'");
-	temp->next->next->next->next->path = 0;
-	temp->next->next->next->next->args = 0;
-	temp->next->next->next->next->out_next = 0;
-	temp->next->next->next->next->input = 0;
-	temp->next->next->next->next-> type = 0;
-	temp->next->next->next->next->in_prev = 1;
-	temp->next->next->next->next->next = NULL;
+	temp->next->next = NULL;
+	// temp->next->next = malloc(sizeof(t_process));
+	// temp->next->next->command = ft_strdup("grep");
+	// temp->next->next->cmd_arg = ft_strdup("grep e");
+	// temp->next->next->path = 0;
+	// temp->next->next->args = 0;
+	// temp->next->next->out_next = 1;
+	// temp->next->next->input = 0;
+	// temp->next->next-> type = ft_strdup("|");
+	// temp->next->next->in_prev = 1;
+	// temp->next->next->next = malloc(sizeof(t_process));
+	// temp->next->next->next->command = ft_strdup("grep");
+	// temp->next->next->next->cmd_arg = ft_strdup("grep j");
+	// temp->next->next->next->path = 0;
+	// temp->next->next->next->args = 0;
+	// temp->next->next->next->out_next = 1;
+	// temp->next->next->next->input = 0;
+	// temp->next->next->next-> type = ft_strdup("|");
+	// temp->next->next->next->in_prev = 1;
+	// //temp->next->next->next->next = NULL;
+	// temp->next->next->next->next = malloc(sizeof(t_process));
+	// temp->next->next->next->next->command = ft_strdup("mkdir");
+	// temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb\"hv\"ur\" gythb yb hu hbuyb'j'ub 'hh'");
+	// temp->next->next->next->next->path = 0;
+	// temp->next->next->next->next->args = 0;
+	// temp->next->next->next->next->out_next = 0;
+	// temp->next->next->next->next->input = 0;
+	// temp->next->next->next->next-> type = 0;
+	// temp->next->next->next->next->in_prev = 1;
+	// temp->next->next->next->next->next = NULL;
 	ft_execute_cmd(temp, env);
 }
 */
