@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/14 17:15:52 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/17 03:44:41 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,10 @@ char	*ft_env(char *env, char *str)
 	char	*var;
 	int		x;
 	int		y;
+	char	*test;
 
 	x = 0;
+	test = str;
 	tmp = malloc(sizeof(char));
 	var = malloc(sizeof(char));
 	while (str[x])
@@ -173,19 +175,23 @@ char	*ft_env(char *env, char *str)
 			{
 				while (str[x] && ft_is_env_char(str[x]))
 					var = ft_strnjoin(var, str + x++, 1);
-				ft_printf("str : %s, x : %d y : %d\n", var, x, y);
+				//ft_printf("str : %s, x : %d y : %d\n", var, x, y);
 				tmp = ft_search_env(env, var, tmp);
 				if (!tmp)
 					tmp = ft_strdup("");
-				ft_printf("tmp : .%s.\n", tmp);
+				//ft_printf("tmp : .%s.\n", tmp);
 				tmp = ft_replace(str, tmp, x, y);
-				tmp[ft_strlen(tmp) - 1] = '\0';
-				ft_printf("result : %s\n", tmp);
+				//tmp[ft_strlen(tmp) - 1] = '\0';
+				//ft_printf("result : %s\n", tmp);
 				var[0] = '\0';
+				free(var);
+				str = tmp;
+				x = y;
 			}
 		}
 		x++;
 	}
-	free(str);
+	free();
+	ft_printf("result : %s\n", tmp);
 	return (tmp);
 }
