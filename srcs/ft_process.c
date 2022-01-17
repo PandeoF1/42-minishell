@@ -77,34 +77,6 @@ static void	ft_malloc_process(t_process **prev)
 }
 
 /*
- * ft_add_char(char *str, char c)
- * desc : desc malloc a string and add a char at the end of it
- * params : str to add c
- */
-
-static char *ft_add_char(char *str, char c)
-{
-	char *new;
-	int x;
-
-	x = 0;
-	//////ft_printf("on cherche le crash : %s\n", str);
-	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	//////ft_printf("on cherche le crash\n");
-	if (!new)
-		return (NULL);
-	while (str[x])
-	{
-		new[x] = str[x];
-		x++;
-	}
-	new[x] = c;
-	new[x + 1] = '\0';
-	free(str);
-	return (new);
-}
-
-/*
  * ft_len_next(char *str)
  * desc : count all char in str until next > <
  * params : str to count
