@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/14 14:19:36 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/17 15:05:34 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,30 +236,30 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		if (temp->in_prev != 0)
 		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in child_proc");
+				ft_perror("dup2 n1 failed in pipe_proc");
 		}
 		if (temp->out_next != 0)
 		{
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n2 failed in child_proc");
+				ft_perror("dup2 n2 failed in pipe_proc");
 		}
 		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
-			ft_perror("failed to exec in child_proc");
+			ft_perror("failed to exec in pipe_proc");
 	}
 }
 
-void	one_proc(t_data *data, t_process *temp, char *env, int i)
+void	one_proc(t_data *data, t_process *temp, char *env)
 {
-	data->pid1[i] = fork();
-	if (data->pid1[i] < 0)
+	data->pid1[0] = fork();
+	if (data->pid1[0] < 0)
 		ft_perror("forking failed\n");
-	if (data->pid1[i] == 0)
+	if (data->pid1[0] == 0)
 	{
 		close_pipes(data);
-		data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
-		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
+		data->tab_args[0] = ft_split_exec(temp->cmd_arg, data, 0);
+		data->tab_paths[0] = ft_check_arg(temp->command, env);
+		if (execve(data->tab_paths[0], data->tab_args[0], NULL) == -1)
 			ft_perror("failed to exec in child_proc");
 	}
 }
@@ -278,8 +278,43 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->file[i][j] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
+		if (temp->in_prev != 0)
+		{
+			data->fd1[i] = data->fd[2 * data->ind - 2];
+			if (dup2(data->fd1[i], STDIN_FILENO) == -1)
+				ft_perror("dup2 n1 failed in pipe_proc");
+		}
 		if (dup2(data->file[i][j], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_proc");
+		close_pipes(data);
+		while (--j >= 0)
+			close(data->file[i][j]);
+		if (temp->command != NULL)
+		{
+			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+			data->tab_paths[i] = ft_check_arg(temp->command, env);
+			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				ft_perror("failed to exec in red_proc\n");
+		}
+		exit(0);
+	}
+}
+
+void	red2_proc(t_data *data, t_process *temp, char *env, int i)
+{
+	int	j;
+
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
+		ft_perror("forking failed\n");
+	if (data->pid1[i] == 0)
+	{
+		j = 0;
+		data->file[i][j] = open(temp->inout->file, O_RDWR);
+		if (data->file[i][j] < 0)
+			ft_perror("minishell: no such file or directory");
+		if (dup2(data->file[i][j], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red2_proc");
 		close_pipes(data);
 		while (--j >= 0)
 			close(data->file[i][j]);
@@ -326,6 +361,9 @@ int ft_malloc_struct(t_data *data, int	i)
 	data->file = malloc(sizeof(int *) * i);
 	if (!data->file)
 		return (0);
+	data->fd1 = malloc(sizeof(int *) * i);
+	if (!data->file)
+		return (0);
 	while (++j < i)
 		data->file[j] = malloc(sizeof(int) * i);
 	data->charset[0] = '\'';
@@ -344,11 +382,14 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	t_process	*temp;
 	t_inout		*temp2;
 	int			j;
+	int			check;
 	int			status;
 
 	temp = proc;
 	temp2 = temp->inout;
 	i = 0;
+	if (temp->next != NULL)
+		i = 1;
 	while (temp->inout != 0)
 	{
 		i++;
@@ -357,8 +398,9 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	temp->inout = temp2;
 	while (temp->next != NULL)
 	{
-		i++;
 		temp = temp->next;
+		if (!temp->inout)
+			i++;
 		temp2 = temp->inout;
 		while (temp->inout != 0)
 		{
@@ -369,22 +411,38 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	}
 	temp = proc;
 	if (i == 0 && temp->inout == 0)
+	{
 		i++;
+		j = -1;
+	}
 	if (!ft_malloc_struct(&data, i))
 		ft_perror("malloc failed\n");
 	create_pipes(&data);
-	if (i == 1 && temp->inout == 0)
-		one_proc(&data, temp, env, i);
+	if (i == 1 && temp->inout == 0 && j == -1)
+	{
+		one_proc(&data, temp, env);
+		j = 0;
+	}
 	else
 	{
 		i--;
 		j = i;
 		data.ind = 0;
+		// check = 0;
+		// if (temp->inout)
+		// 	check = 1;
 		while (i >= 0)
 		{
-			while (i >= 0 && !ft_strncmp("|", temp->type, 1) && temp->inout == 0)
+			while (i >= 0 && (!temp->inout))
 			{
 				pipe_proc(&data, temp, env, i);
+				// if (!temp->inout)
+				// {
+				// 	check = 0;
+				// 	temp = temp->next;
+				// }
+				// else
+				// 	check = 1;
 				temp = temp->next;
 				data.ind++;
 				i--;
@@ -392,6 +450,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			while (i >= 0 && temp->inout != 0 && temp->inout->type == 2)
 			{
 				red_proc(&data, temp, env, i);
+				temp->inout = temp->inout->next;
+				i--;
+			}
+			while (i >= 0 && temp->inout != 0 && temp->inout->type == 1)
+			{
+				red2_proc(&data, temp, env, i);
 				temp->inout = temp->inout->next;
 				i--;
 			}
