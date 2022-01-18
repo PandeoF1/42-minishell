@@ -15,15 +15,13 @@
 static void	action(int sig)
 {
 	ft_printf("\b\b  \b\b");
-	ft_printf("\n$> ");
+	ft_printf("\n%> ");
 	//exit(0);
 }
 
 static void	sig_quit(int sig)
 {
-	ft_putstr("\033[1C");
-	ft_putstr("\b\b \b");
-	ft_putstr("\033[1C");
+	ft_putstr("\b\b \b\b");
 }
 
 static char	*ft_export_env(char **env)
@@ -75,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	penv = ft_export_env(envp);
 	while (1)
 	{
-		tmp = readline(ft_readline(penv, "%> "));
+		tmp = readline("%> ");
 		if (ft_strlen(tmp) != 0)
 		{
 			if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
