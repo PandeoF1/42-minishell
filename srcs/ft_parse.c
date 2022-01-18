@@ -44,7 +44,8 @@ void	ft_config_process(t_process *process)
 		{
 			if (x != 0)
 				tmp->in_prev = 1;
-			tmp->out_next = 1;
+			if (!tmp->inout)
+				tmp->out_next = 1;
 			next = 1;
 		}
 		else if (next)
