@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/17 15:05:47 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/17 15:20:11 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_data
 {
 	int		*fd;
 	int		*fd1;
-	int		**file;
+	int		*file;
 	int		nb_cmd;
 	int		ind;
 	int		*i;

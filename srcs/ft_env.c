@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/18 11:08:05 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 13:31:53 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,7 @@ char	*ft_env(char *env, char *str)
 		}
 		x++;
 	}
-	if (test != str)
-		free(test);
-	ft_printf("result : %s\n", str);
+	//free();
+	ft_printf("result : %s\n", tmp);
 	return (str);
 }

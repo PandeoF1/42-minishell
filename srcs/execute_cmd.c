@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/17 15:05:34 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/17 15:30:46 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,29 +266,25 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 
 void	red_proc(t_data *data, t_process *temp, char *env, int i)
 {
-	int	j;
-
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		j = 0;
-		data->file[i][j] = open(temp->inout->file,
+		data->file[i] = open(temp->inout->file,
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
-		if (data->file[i][j] < 0)
+		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
 		{
-			data->fd1[i] = data->fd[2 * data->ind - 2];
+			data->fd1[i] = dup(data->fd[2 * data->ind - 2]);
 			if (dup2(data->fd1[i], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
 		}
-		if (dup2(data->file[i][j], STDOUT_FILENO) == -1)
+		if (dup2(data->file[i], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
-		while (--j >= 0)
-			close(data->file[i][j]);
+		close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
@@ -302,22 +298,18 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 
 void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 {
-	int	j;
-
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		j = 0;
-		data->file[i][j] = open(temp->inout->file, O_RDWR);
-		if (data->file[i][j] < 0)
+		data->file[i] = open(temp->inout->file, O_RDWR);
+		if (data->file[i] < 0)
 			ft_perror("minishell: no such file or directory");
-		if (dup2(data->file[i][j], STDIN_FILENO) == -1)
+		if (dup2(data->file[i], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red2_proc");
 		close_pipes(data);
-		while (--j >= 0)
-			close(data->file[i][j]);
+		close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
@@ -358,14 +350,12 @@ int ft_malloc_struct(t_data *data, int	i)
 	data->tab_paths = malloc(sizeof(char *) * i);
 	if (!data->tab_paths)
 		return (0);
-	data->file = malloc(sizeof(int *) * i);
+	data->file = malloc(sizeof(int) * i);
 	if (!data->file)
 		return (0);
-	data->fd1 = malloc(sizeof(int *) * i);
+	data->fd1 = malloc(sizeof(int) * i);
 	if (!data->file)
 		return (0);
-	while (++j < i)
-		data->file[j] = malloc(sizeof(int) * i);
 	data->charset[0] = '\'';
 	data->charset[1] = '\"';
 	data->charset[2] = ' ';
