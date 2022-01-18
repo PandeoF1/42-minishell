@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/17 03:44:41 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 11:08:05 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		ft_w_is_eon(char *str)
 	return (i);
 }
 
-char	*ft_search_env(char *env, char *var, char *tmp)
+char	*ft_search_env(char *env, char *var)
 {
 	int		x;
 	int		y;
@@ -175,14 +175,10 @@ char	*ft_env(char *env, char *str)
 			{
 				while (str[x] && ft_is_env_char(str[x]))
 					var = ft_strnjoin(var, str + x++, 1);
-				//ft_printf("str : %s, x : %d y : %d\n", var, x, y);
-				tmp = ft_search_env(env, var, tmp);
+				tmp = ft_search_env(env, var);
 				if (!tmp)
 					tmp = ft_strdup("");
-				//ft_printf("tmp : .%s.\n", tmp);
 				tmp = ft_replace(str, tmp, x, y);
-				//tmp[ft_strlen(tmp) - 1] = '\0';
-				//ft_printf("result : %s\n", tmp);
 				var[0] = '\0';
 				free(var);
 				str = tmp;
@@ -191,7 +187,8 @@ char	*ft_env(char *env, char *str)
 		}
 		x++;
 	}
-	free();
-	ft_printf("result : %s\n", tmp);
-	return (tmp);
+	if (test != str)
+		free(test);
+	ft_printf("result : %s\n", str);
+	return (str);
 }

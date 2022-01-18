@@ -33,7 +33,7 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 
 $(NAME): $(OBJECTS_PREFIXED) maker
-	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) libft/libft.a ft_printf/libftprintf.a
+	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) libft/libft.a ft_printf/libftprintf.a -lreadline 
 	@printf "\033[2K\r\033[0;32m[END]\033[0m $(NAME)$(END)\n"
 
 all: $(NAME)

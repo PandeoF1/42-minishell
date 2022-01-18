@@ -19,6 +19,8 @@
 # include "../libft/libft.h"
 # include "../ft_printf/ft_printf.h"
 # include "pipex.h"
+# include "readline/history.h"
+# include "readline/readline.h"
 
 typedef struct s_inout
 {

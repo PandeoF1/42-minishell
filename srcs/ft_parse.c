@@ -75,7 +75,7 @@ int	ft_space(char *str)
 			x++;
 		i++;
 	}
-	if (x == i - 1)
+	if (x == i)
 		return (0);
 	return (1);
 }
@@ -97,14 +97,13 @@ void	ft_parse_command(char *str, char *env)
 
 	x = 0;
 	yolo = 0;
-	if (ft_strlen(str) == 1 || ft_space(str) == 0)
+	if (ft_strlen(str) == 0 || ft_space(str) == 0)
 		return ;
-	str[ft_strlen(str) - 1] = '\0';
+	//str[ft_strlen(str) - 1] = '\0';
 	if (ft_check_quote(str))
 	{
 		//ft_printf("yolo = %p\n", &yolo);
 		process = ft_create_process(str, &yolo);
-		ft_printf("test\n");
 		//ft_printf("yolo = %p\n", &yolo);
 		//ft_printf("yolo = %d\n", yolo);
 		if (yolo == 1)
@@ -115,7 +114,7 @@ void	ft_parse_command(char *str, char *env)
 			tmp = process;
 			while (process)
 			{
-				ft_printf("---- parse ----\n");
+				/*ft_printf("---- parse ----\n");
 				ft_printf("command : %s.\n", process->command);
 				ft_printf("cmd_arg : %s.\n", process->cmd_arg);
 				ft_printf("path : %s.\n", process->path);
@@ -145,7 +144,7 @@ void	ft_parse_command(char *str, char *env)
 					}
 					ft_printf("--- INOUT ----\n");
 				}
-				ft_printf("---- end parse ----\n");
+				ft_printf("---- end parse ----\n");*/
 				process = process->next;
 			}
 			process = tmp;
