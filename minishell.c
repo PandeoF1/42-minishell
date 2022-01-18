@@ -16,12 +16,14 @@ static void	action(int sig)
 {
 	ft_printf("\b\b  \b\b");
 	ft_printf("\n$> ");
-	exit(0);
+	//exit(0);
 }
 
 static void	sig_quit(int sig)
 {
-	ft_printf("\b\b  \b\b");
+	ft_putstr("\033[1C");
+	ft_putstr("\b\b \b");
+	ft_putstr("\033[1C");
 }
 
 static char	*ft_export_env(char **env)
@@ -40,6 +42,25 @@ static char	*ft_export_env(char **env)
 	return (str);
 }
 
+char	*ft_readline(char *penv, char *str)
+{
+	char	*tmp;
+	char	*var;
+	char	test[UCHAR_MAX];
+	char	*a;
+
+	tmp = malloc(sizeof(char));
+	var = ft_search_env(penv, "USER");
+	tmp = ft_strnjoin(tmp, "\e[0;34m", ft_strlen("\e[0;34m"));
+	tmp = ft_strnjoin(tmp, var, ft_strlen(var));
+	//free(var);
+	tmp = ft_strnjoin(tmp, "\e[0m@\e[0;35m", ft_strlen("\e[0m@\e[0;35m"));
+	getcwd(test, UCHAR_MAX);
+	tmp = ft_strnjoin(tmp, test, ft_strlen(test));
+	tmp = ft_strnjoin(tmp, "\e[0m%> ", ft_strlen("> \e[0m"));
+	return (tmp);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*tmp;
@@ -54,7 +75,7 @@ int	main(int argc, char **argv, char **envp)
 	penv = ft_export_env(envp);
 	while (1)
 	{
-		tmp = readline("%> ");
+		tmp = readline(ft_readline(penv, "%> "));
 		if (ft_strlen(tmp) != 0)
 		{
 			if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)

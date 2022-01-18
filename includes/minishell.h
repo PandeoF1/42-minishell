@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <signal.h>
+# include <limits.h>
 # include "../libft/libft.h"
 # include "../ft_printf/ft_printf.h"
 # include "pipex.h"
@@ -67,6 +68,7 @@ int			ft_execute_cmd(t_process *proc, char *env);
 char		*ft_env(char *env, char *str);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);
+char		*ft_search_env(char *env, char *var);
 
 void		ft_perror(char *str);
 char		**ft_split_exec(char const *s, t_data *data, int a);
