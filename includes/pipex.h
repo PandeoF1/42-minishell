@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/17 15:20:11 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 14:15:38 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,21 @@
 
 typedef struct s_data
 {
-	int		*fd;
-	int		*fd1;
-	int		*file;
-	int		nb_cmd;
-	int		ind;
-	int		*i;
-	int		*dec;
-	char	*type_char;
-	char	charset[4];
-	int		*type_nb;
-	int		*check;
-	pid_t	*pid1;
-	char	**tab_paths;
-	char	***tab_args;
+	int				*fd;
+	int				*fd1;
+	int				*file;
+	int				nb_cmd;
+	int				ind;
+	int				*i;
+	int				*dec;
+	char			*type_char;
+	char			charset[4];
+	int				*type_nb;
+	int				*check;
+	pid_t			*pid1;
+	char			**tab_paths;
+	char			***tab_args;
+	struct s_inout	*inout;
 }	t_data;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/17 15:30:46 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 14:41:32 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,7 +271,7 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(temp->inout->file,
+		data->file[i] = open(data->inout->file,
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
@@ -303,7 +303,7 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(temp->inout->file, O_RDWR);
+		data->file[i] = open(data->inout->file, O_RDWR);
 		if (data->file[i] < 0)
 			ft_perror("minishell: no such file or directory");
 		if (dup2(data->file[i], STDIN_FILENO) == -1)
@@ -423,7 +423,8 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		// 	check = 1;
 		while (i >= 0)
 		{
-			while (i >= 0 && (!temp->inout))
+			data.inout = temp->inout;
+			while (i >= 0 && (!data.inout))
 			{
 				pipe_proc(&data, temp, env, i);
 				// if (!temp->inout)
@@ -436,19 +437,23 @@ int	ft_execute_cmd(t_process *proc, char *env)
 				temp = temp->next;
 				data.ind++;
 				i--;
+				if (temp)
+					data.inout = temp->inout;
 			}
-			while (i >= 0 && temp->inout != 0 && temp->inout->type == 2)
+			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
 				red_proc(&data, temp, env, i);
-				temp->inout = temp->inout->next;
+				data.inout = data.inout->next;
 				i--;
 			}
-			while (i >= 0 && temp->inout != 0 && temp->inout->type == 1)
+			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
 				red2_proc(&data, temp, env, i);
-				temp->inout = temp->inout->next;
+				data.inout = data.inout->next;
 				i--;
 			}
+			if (temp && temp->inout)
+				temp = temp->next;
 		}
 	}
 	i = j;

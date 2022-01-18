@@ -44,8 +44,7 @@ void	ft_config_process(t_process *process)
 		{
 			if (x != 0)
 				tmp->in_prev = 1;
-			if (!tmp->inout)
-				tmp->out_next = 1;
+			tmp->out_next = 1;
 			next = 1;
 		}
 		else if (next)
@@ -115,7 +114,7 @@ void	ft_parse_command(char *str, char *env)
 			tmp = process;
 			while (process)
 			{
-				/*ft_printf("---- parse ----\n");
+				ft_printf("---- parse ----\n");
 				ft_printf("command : %s.\n", process->command);
 				ft_printf("cmd_arg : %s.\n", process->cmd_arg);
 				ft_printf("path : %s.\n", process->path);
@@ -145,7 +144,7 @@ void	ft_parse_command(char *str, char *env)
 					}
 					ft_printf("--- INOUT ----\n");
 				}
-				ft_printf("---- end parse ----\n");*/
+				ft_printf("---- end parse ----\n");
 				process = process->next;
 			}
 			process = tmp;
