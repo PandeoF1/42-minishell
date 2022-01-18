@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/18 13:38:25 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 15:30:08 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,11 @@ char	*ft_env(char *env, char *str)
 		if (str[x] == '$')
 		{
 			y = x++;
-			if (str[x] && !ft_isdigit(str[x]))
+			if (str[x] && str[x] == '?')
+			{
+				//do la merde
+			}
+			else if (str[x] && !ft_isdigit(str[x]))
 			{
 				while (str[x] && ft_is_env_char(str[x]))
 					var = ft_strnjoin(var, str + x++, 1);
@@ -180,12 +184,18 @@ char	*ft_env(char *env, char *str)
 					tmp = ft_strdup("");
 				tmp = ft_replace(str, tmp, x, y);
 				var[0] = '\0';
-				free(var);
 				str = tmp;
 				x = y;
+			}
+			else
+			{
+				//remove ce ptn de $while is	
 			}
 		}
 		x++;
 	}
+	free(var);
+	if (test != str)
+		free(test);
 	return (str);
 }
