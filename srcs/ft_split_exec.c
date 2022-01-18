@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/13 09:13:59 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/18 16:05:07 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,17 @@ int	ft_split_exec2(t_data *data, char **s, int a)
 	if (data->check[a] > 0)
 		data->check[a] = 0;
 	while (ft_is_charset(**s, data, a) && data->check[a] != 1)
-	{
 		(*s)++;
-	}
 	if (data->check[a] == 1)
 	{
 		data->type_nb[a] = 1;
 		data->type_char[a] = **s;
 		(*s)++;
+	}
+	while (ft_is_charset(**s, data, a) && **s == data->type_char[a])
+	{
+		(*s)++;
+		data->check[a] = 1;
 	}
 	j = ft_wordlen(*s, data, a);
 	if (data->type_nb[a] == 1)
