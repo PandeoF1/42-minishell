@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/19 14:30:25 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 16:11:37 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,18 +160,23 @@ char	*ft_replace(char *str, char *tmp, int x, int y)
 	return (new);
 }
 
-char	*ft_env(char *env, char *str) //encore des truc a patch
+char	*ft_env(char *env, char *str, int x, int b) //encore des truc a patch
 {
 	char	*tmp;
 	char	*var;
-	int		x;
+	int		c[2];
 	int		y;
-	int		b;
 
-	x = 0;
-	b = 0;
 	while (str[x])
 	{
+		if (str[x] == '\"' && c[0] == 0 && c[1] == 0)
+			c[0] = 1;
+		else if (str[x] == '\'' && c[0] == 0 && c[1] == 0)
+			c[1] = 1;
+		else if (str[x] == '\"' && c[0] == 1 && c[1] == 0)
+			c[0] = 0;
+		else if (str[x] == '\'' && c[0] == 0 && c[1] == 1)
+			c[1] = 0;
 		if (str[x] == '$')
 		{
 			b = 0;
@@ -180,7 +185,7 @@ char	*ft_env(char *env, char *str) //encore des truc a patch
 			{
 				//do la merde
 			}
-			else if (str[x] && !ft_isdigit(str[x]))
+			else if (str[x] && c[1] == 0 && !ft_isdigit(str[x]))
 			{
 				while (str[x + b] && ft_is_env_char(str[x + b]))
 					b++;
@@ -195,7 +200,7 @@ char	*ft_env(char *env, char *str) //encore des truc a patch
 				str = tmp;
 				x = y;
 			}
-			else if (str[x] && ft_isdigit(str[x]))
+			else if (str[x] && c[1] == 0 && ft_isdigit(str[x]))
 			{
 				while (str[x + b] && ft_isdigit(str[x + b]))
 					b++;
@@ -207,13 +212,12 @@ char	*ft_env(char *env, char *str) //encore des truc a patch
 				x = y;
 			}
 		}
-		else if (str[x] == '~' && ft_is_tild(str, x))
+		else if (str[x] == '~' && c[0] == 0 && c[1] == 0 && ft_is_tild(str, x))
 		{
 			var = ft_search_env(env, "HOME");
 			tmp = ft_strndup(str, x++);
 			tmp = ft_strnjoin(tmp, var, ft_strlen(var));
 			tmp = ft_strnjoin(tmp, str + x, ft_strlen(str + x));
-			ft_printf("%s\n", tmp);
 			free(var);
 			free(str);
 			str = tmp;

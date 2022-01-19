@@ -81,7 +81,7 @@ int	main(int argc, char **argv, char **envp)
 			if (ft_strncmp(tmp, "exit\n", ft_strlen(tmp)) == 0)
 				break ;
 			add_history(tmp);
-			tmp = ft_env(penv, tmp); // ajout du ~ si dans ' pas de $USER
+			tmp = ft_env(penv, tmp, 0, 0); // ajout du ~ si dans ' pas de $USER
 			//tmp[ft_strlen(tmp) - 1] = '\0';
 			ft_parse_command(tmp, env);
 		}

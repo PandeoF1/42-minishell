@@ -255,20 +255,15 @@ char *ft_strnjoin(char *s1, char *s2, int n)
 
 t_process *ft_create_process(char *str, int *status)
 {
-	t_process *process;
-	int	test;
-	t_process *tmp;
-	char **split;
-	int x;
-	int y;
-	int i;
-	char a;
+	t_process	*process;
+	t_process	*tmp;
+	char		**split;
+	int			x;
+	int			y;
 
 	tmp = malloc(sizeof(t_process));
 	x = 0;
-	test = 0;
-	a = 0;
-	split = ft_split(str, '|');
+	split = ft_splitd(str, '|', 0, 0);
 	while (split[x])
 	{
 		(*status) = 0;
