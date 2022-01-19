@@ -81,12 +81,15 @@ static char	*ft_strduppd(char *src, int j)
 	return (dst);
 }
 
-char	**ft_splitd(char const *s, char c, int i, int j)
+char	**ft_splitd(char const *s, char c)
 {
 	char		**dest;
 	int			size;
+	int			j;
+	int			i;
 	char		charset[2];
 
+	i = 0;
 	charset[0] = c;
 	charset[1] = '\0';
 	size = ft_wordcountd((char *)s, charset);
@@ -99,7 +102,6 @@ char	**ft_splitd(char const *s, char c, int i, int j)
 		while (ft_is_charsetd((char)*s, charset))
 			s++;
 		j = ft_wordlend((char *)s, charset);
-		ft_printf("word len : %d\n", j);
 		dest[i] = ft_strduppd((char *)s, j);
 		s += j;
 		i++;
