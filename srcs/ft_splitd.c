@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-static int	ft_is_charset(char str, char *charset)
+static int	ft_is_charsetd(char str, char *charset)
 {
 	while (*charset)
 	{
@@ -23,35 +23,47 @@ static int	ft_is_charset(char str, char *charset)
 	return (0);
 }
 
-static int	ft_wordlen(char *str, char *charset)
+static int	ft_wordlend(char *str, char *charset)
 {
-	int	i;
+	int		i;
+	char	c;
 
 	i = 0;
-	while (str[i] && ft_is_charset(str[i], charset) == 0)
+	c = '\0';
+	while (str[i])
+	{
+		if (c == '\0' && (str[i] == '\'' || str[i] == '"'))
+			c = str[i];
+		else if (c == str[i])
+			c = '\0';
+		if (c == '\0' && ft_is_charsetd(str[i], charset))
+			return (i);
 		i++;
+	}
 	return (i);
 }
 
-static int	ft_wordcount(char *str, char *charset)
+static int	ft_wordcountd(char *str, char *charset)
 {
-	int	i;
-	int	j;
+	int		j;
+	char	c;
 
-	j = 0;
+	j = 1;
+	c = '\0';
 	while (*str)
 	{
-		while (*str && ft_is_charset(*str, charset) == 1)
-			str++;
-		i = ft_wordlen(str, charset);
-		str += i;
-		if (i)
+		if (c == '\0' && (*str == '\'' || *str == '\"'))
+			c = *str;
+		else if (c == *str)
+			c = '\0';
+		if (ft_is_charsetd(*str, charset) && c == '\0')
 			j++;
+		str++;
 	}
 	return (j);
 }
 
-static char	*ft_strdupp(char *src, int j)
+static char	*ft_strduppd(char *src, int j)
 {
 	char	*dst;
 	int		i;
@@ -69,27 +81,26 @@ static char	*ft_strdupp(char *src, int j)
 	return (dst);
 }
 
-char	**ft_splitd(char const *s, char c)
+char	**ft_splitd(char const *s, char c, int i, int j)
 {
 	char		**dest;
 	int			size;
-	int			i;
-	int			j;
 	char		charset[2];
 
 	charset[0] = c;
 	charset[1] = '\0';
-	i = 0;
-	size = ft_wordcount((char *)s, charset);
+	size = ft_wordcountd((char *)s, charset);
+	ft_printf("%d\n", size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);
 	while (i < size)
 	{
-		while (ft_is_charset((char)*s, charset))
+		while (ft_is_charsetd((char)*s, charset))
 			s++;
-		j = ft_wordlen((char *)s, charset);
-		dest[i] = ft_strdupp((char *)s, j);
+		j = ft_wordlend((char *)s, charset);
+		ft_printf("word len : %d\n", j);
+		dest[i] = ft_strduppd((char *)s, j);
 		s += j;
 		i++;
 	}
