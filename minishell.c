@@ -33,8 +33,8 @@ static char	*ft_export_env(char **env)
 	str = ft_strdup(env[0]);
 	while (env[x])
 	{
-		str = ft_strjoin(str, "\n");
-		str = ft_strjoin(str, env[x]);
+		str = ft_strnjoin(str, "\n", 1);
+		str = ft_strnjoin(str, env[x], ft_strlen(env[x]));
 		x++;
 	}
 	return (str);
@@ -73,6 +73,8 @@ int	main(int argc, char **argv, char **envp)
 	penv = ft_export_env(envp);
 	while (1)
 	{
+		//ft_printf("%> ");
+		//tmp = ft_get_input(0, 0, 0);
 		tmp = readline("%> ");
 		if (ft_strlen(tmp) != 0)
 		{
@@ -80,6 +82,7 @@ int	main(int argc, char **argv, char **envp)
 				break ;
 			add_history(tmp);
 			tmp = ft_env(penv, tmp); // ajout du ~ si dans ' pas de $USER
+			//tmp[ft_strlen(tmp) - 1] = '\0';
 			ft_parse_command(tmp, env);
 		}
 		//rl_clear_history();

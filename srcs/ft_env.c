@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/18 15:30:08 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 14:30:25 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,20 @@ int	ft_is_env_char(char c)
 	return (0);
 }
 
+int	ft_is_tild(char *str, int x)
+{
+	if (str[x] == '~')
+	{	
+		if (str[x + 1])
+			if (str [x + 1] == '~')
+				return (0);
+		if (str[x - 1]) 
+			if (str[x - 1] == '~')
+				return (0);
+	}
+	return (1);
+}
+
 char	*ft_replace(char *str, char *tmp, int x, int y)
 {
 	char	*new;
@@ -127,7 +141,7 @@ char	*ft_replace(char *str, char *tmp, int x, int y)
 	i = 0;
 	j = 0;
 	b = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	new = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(tmp)) + 1);
 	if (!new)
 		return (NULL);
 	while (str[b])
@@ -135,41 +149,32 @@ char	*ft_replace(char *str, char *tmp, int x, int y)
 		if (i == y)
 		{
 			while (tmp[j])
-			{
-				new[i] = tmp[j];
-				i++;
-				j++;
-			}
+				new[i++] = tmp[j++];
 			b += (x - y);
 		}
 		else
-		{
-			new[i] = str[b];
-			i++;
-			b++;
-		}
+			new[i++] = str[b++];
 	}
 	new[i] = '\0';
 	free(tmp);
 	return (new);
 }
 
-char	*ft_env(char *env, char *str)
+char	*ft_env(char *env, char *str) //encore des truc a patch
 {
 	char	*tmp;
 	char	*var;
 	int		x;
 	int		y;
-	char	*test;
+	int		b;
 
 	x = 0;
-	test = str;
-	tmp = malloc(sizeof(char));
-	var = malloc(sizeof(char));
+	b = 0;
 	while (str[x])
 	{
 		if (str[x] == '$')
 		{
+			b = 0;
 			y = x++;
 			if (str[x] && str[x] == '?')
 			{
@@ -177,25 +182,43 @@ char	*ft_env(char *env, char *str)
 			}
 			else if (str[x] && !ft_isdigit(str[x]))
 			{
-				while (str[x] && ft_is_env_char(str[x]))
-					var = ft_strnjoin(var, str + x++, 1);
+				while (str[x + b] && ft_is_env_char(str[x + b]))
+					b++;
+				var = ft_strndup(str + x, b);
+				x += b;
 				tmp = ft_search_env(env, var);
+				free(var);
 				if (!tmp)
 					tmp = ft_strdup("");
 				tmp = ft_replace(str, tmp, x, y);
-				var[0] = '\0';
+				free(str);
 				str = tmp;
 				x = y;
 			}
-			else
+			else if (str[x] && ft_isdigit(str[x]))
 			{
-				//remove ce ptn de $while is	
+				while (str[x + b] && ft_isdigit(str[x + b]))
+					b++;
+				tmp = ft_strndup(str, x - 1);
+				tmp = ft_strnjoin(tmp, str + x + b, ft_strlen(str + x + b));
+				x += b;
+				free(str);
+				str = tmp;
+				x = y;
 			}
+		}
+		else if (str[x] == '~' && ft_is_tild(str, x))
+		{
+			var = ft_search_env(env, "HOME");
+			tmp = ft_strndup(str, x++);
+			tmp = ft_strnjoin(tmp, var, ft_strlen(var));
+			tmp = ft_strnjoin(tmp, str + x, ft_strlen(str + x));
+			ft_printf("%s\n", tmp);
+			free(var);
+			free(str);
+			str = tmp;
 		}
 		x++;
 	}
-	free(var);
-	if (test != str)
-		free(test);
 	return (str);
 }
