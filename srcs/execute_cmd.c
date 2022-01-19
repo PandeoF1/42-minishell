@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/19 18:09:23 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 17:54:42 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,22 +418,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		i--;
 		j = i;
 		data.ind = 0;
-		// check = 0;
-		// if (temp->inout)
-		// 	check = 1;
 		while (i >= 0)
 		{
 			data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
 				pipe_proc(&data, temp, env, i);
-				// if (!temp->inout)
-				// {
-				// 	check = 0;
-				// 	temp = temp->next;
-				// }
-				// else
-				// 	check = 1;
 				temp = temp->next;
 				data.ind++;
 				i--;
