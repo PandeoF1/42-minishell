@@ -6,7 +6,11 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/01/19 17:54:42 by asaffroy         ###   ########lyon.fr   */
+=======
+/*   Updated: 2022/01/19 18:28:10 by tnard            ###   ########lyon.fr   */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +261,7 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 	if (data->pid1[0] == 0)
 	{
 		close_pipes(data);
-		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '));
+		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
 		if (execve(data->tab_paths[0], data->tab_args[0], NULL) == -1)
 			ft_perror("failed to exec in child_proc");
