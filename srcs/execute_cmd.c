@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/01/19 17:54:42 by asaffroy         ###   ########lyon.fr   */
-=======
-/*   Updated: 2022/01/19 18:28:10 by tnard            ###   ########lyon.fr   */
->>>>>>> main
+/*   Updated: 2022/01/19 18:32:08 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
