@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:52:49 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/19 18:15:24 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 18:27:42 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,17 @@ char	*ft_remove(char *str, int c)
 	return (new);
 }
 
-char	**ft_dquote(char **split)
+char	**ft_dquote(char **split, int x, int y)
 {
-	int		x;
 	int		a;
-	int		y;
 	char	c;
 
 	c = '\0';
-	x = 0;
-	y = 0;
-	while (split[y])
+	y = -1;
+	while (split[++y])
 	{
-		x = 0;
-		while (split[y][x])
+		x = -1;
+		while (split[y][++x])
 		{
 			if (c == '\0' && (split[y][x] == '\'' || split[y][x] == '"'))
 			{
@@ -59,9 +56,7 @@ char	**ft_dquote(char **split)
 				split[y] = ft_remove(split[y], x - 1);
 				x -= 2;
 			}
-			x++;
 		}
-		y++;
 	}
 	return (split);
 }
