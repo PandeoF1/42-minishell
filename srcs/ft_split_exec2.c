@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:05:03 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/19 14:45:11 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 16:35:21 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,20 @@ int	ft_wordcount(char *str, t_data *data, int a)
 			x++;
 		if (data->check[a] == 1)
 			data->type_char[a] = str[x++];
-		while (str[x] && ft_is_charset(str[x], data, a)
-			&& str[x] == data->type_char[a])
-		{
-			x++;
-			data->check[a] = 1;
-		}
+		ft_printf("lol : %c\n", data->type_char[a]);
+		// if (str[x] && ft_is_charset(str[x], data, a)
+		// 	&& str[x] == data->type_char[a])
+		// {
+		// 	x++;
+		// 	data->check[a] = 1;
+		// }
+		ft_printf("s : %s\n", str + x);
 		i = ft_wordlen(str + x, data, a);
-		x += i;
+		ft_printf("i : %d\n", i);
+		if (x == 0)
+			x += i;
+		else
+			x += i + 1;
 		// if (str[x] == '\'' || str[x] == '\"')
 		// 	x++;
 		if (i)

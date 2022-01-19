@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 13:02:58 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/19 15:06:50 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 15:57:38 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	i = 0;
 	data->check[a] = 0;
 	size = ft_wordcount((char *)s, data, a);
+	ft_printf("size : %d\n", size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);
@@ -155,9 +156,16 @@ char	**ft_split_exec(char const *s, t_data *data, int a)
 	{
 		data->type_char[a] = 0;
 		j = ft_split_exec2(data, (char **)&s, a);
+		ft_printf("j : %d\n", j);
 		dest[i] = ft_strdupp((char *)s, j, data, a);
-		s += j;
+		if (i == 0)
+			s += j;
+		else
+			s += j + 1;
 		i++;
+		ft_printf("j : %c\n", *s);
+		if (data->check[a] == 1)
+			s += 1;
 	}
 	dest[size] = 0;
 	return (dest);
