@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/12 15:05:03 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/12 15:20:12 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 14:45:11 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,15 @@ int	ft_is_charset(char str, t_data *data, int a)
 	x = 0;
 	while (data->charset[x])
 	{
-		//ft_printf("%c\n", str);
 		if (str == data->charset[x])
 		{
 			if (str == '\'' || str == '\"')
-				data->check[a]++;
+			{
+				if (data->type_char[a] && str == data->type_char[a])
+					data->check[a]++;
+				else if (!data->type_char[a])
+					data->check[a]++;
+			}
 			return (1);
 		}
 		x++;
@@ -35,25 +39,32 @@ int	ft_wordlen(char *str, t_data *data, int a)
 {
 	int			i;
 	int			y;
+	int			g;
 
 	if (data->check[a] == 1)
 		y = 1;
 	else
 		y = 0;
 	i = 0;
+	g = 0;
 	while (str[i] && ((ft_is_charset(str[i], data, a) == 0)
-			|| (data->check[a] == 1 && y == 1)
-			|| (data->type_char[a] != 0 && str[i] != data->type_char[a])
-			|| (data->check[a] == 1 && i > 0 && str[i - 1] != ' ')
-			|| (data->check[a] == 2 && str[i + 1] && str[i + 1] != ' ')))
+			|| (data->check[a] == 1 && !data->type_char[a])
+			|| (data->check[a] == 1 && str[i] != data->type_char[a])
+			|| (data->type_char[a] != 0 && (str[i] == '\'' || str[i] == '\"'))
+			|| (data->check[a] == 1 && i > 0 && str[i - 1] != ' ')))
 	{
-		y = 0;
+		if (data->check[a] == 1 && !data->type_char[a])
+			data->type_char[a] = str[i];
+		if (str[i] != data->type_char[a])
+			g++;
 		if (data->check[a] == 2)
+		{
+			data->type_char[a] = 0;
 			data->check[a] = 0;
-		else
-			i++;
+		}
+		i++;
 	}
-	if (data->check[a] == 1)
+	if (data->check[a] > 0)
 		data->check[a] = 0;
 	return (i);
 }
@@ -70,15 +81,20 @@ int	ft_wordcount(char *str, t_data *data, int a)
 	{
 		data->check[a] = 0;
 		data->type_char[a] = 0;
-		while (str[x] && ft_is_charset(str[x], data, a) == 1
-			&& data->check[a] != 1)
+		while (str[x] && ft_is_charset(str[x], data, a) && data->check[a] != 1)
 			x++;
 		if (data->check[a] == 1)
 			data->type_char[a] = str[x++];
+		while (str[x] && ft_is_charset(str[x], data, a)
+			&& str[x] == data->type_char[a])
+		{
+			x++;
+			data->check[a] = 1;
+		}
 		i = ft_wordlen(str + x, data, a);
 		x += i;
-		if (str[x] == '\'' || str[x] == '\"')
-			x++;
+		// if (str[x] == '\'' || str[x] == '\"')
+		// 	x++;
 		if (i)
 			j++;
 	}
