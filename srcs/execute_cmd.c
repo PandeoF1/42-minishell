@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/18 14:41:32 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 17:14:26 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+		data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{
@@ -257,7 +257,7 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 	if (data->pid1[0] == 0)
 	{
 		close_pipes(data);
-		data->tab_args[0] = ft_split_exec(temp->cmd_arg, data, 0);
+		data->tab_args[0] = ft_splitd(temp->cmd_arg, ' ');
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
 		if (execve(data->tab_paths[0], data->tab_args[0], NULL) == -1)
 			ft_perror("failed to exec in child_proc");
@@ -287,7 +287,7 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 		close(data->file[i]);
 		if (temp->command != NULL)
 		{
-			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+			data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
 			data->tab_paths[i] = ft_check_arg(temp->command, env);
 			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
 				ft_perror("failed to exec in red_proc\n");
