@@ -257,7 +257,7 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 	if (data->pid1[0] == 0)
 	{
 		close_pipes(data);
-		data->tab_args[0] = ft_splitd(temp->cmd_arg, ' ');
+		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '));
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
 		if (execve(data->tab_paths[0], data->tab_args[0], NULL) == -1)
 			ft_perror("failed to exec in child_proc");
