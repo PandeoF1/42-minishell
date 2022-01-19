@@ -45,10 +45,10 @@ static int	ft_wordlend(char *str, char *charset)
 
 static int	ft_wordcountd(char *str, char *charset)
 {
-	int		j;
+	int		a;
 	char	c;
 
-	j = 1;
+	a = 1;
 	c = '\0';
 	while (*str)
 	{
@@ -56,11 +56,12 @@ static int	ft_wordcountd(char *str, char *charset)
 			c = *str;
 		else if (c == *str)
 			c = '\0';
-		if (ft_is_charsetd(*str, charset) && c == '\0')
-			j++;
+		if (ft_is_charsetd(*str, charset)
+			&& c == '\0' && ft_strlen(str + 1) > 0)
+			a += 1;
 		str++;
 	}
-	return (j);
+	return (a);
 }
 
 static char	*ft_strduppd(char *src, int j)
@@ -93,7 +94,7 @@ char	**ft_splitd(char const *s, char c)
 	charset[0] = c;
 	charset[1] = '\0';
 	size = ft_wordcountd((char *)s, charset);
-	ft_printf("%d\n", size);
+	ft_printf("size : %d\n", size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/19 17:14:26 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/19 18:09:23 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		close(data->file[i]);
 		if (temp->command != NULL)
 		{
-			data->tab_args[i] = ft_split_exec(temp->cmd_arg, data, i);
+			data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
 			data->tab_paths[i] = ft_check_arg(temp->command, env);
 			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
 				ft_perror("failed to exec in red_proc\n");

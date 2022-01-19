@@ -69,9 +69,9 @@ char		*ft_env(char *env, char *str, int x, int b);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);
 char		*ft_search_env(char *env, char *var);
+char		**ft_dquote(char **split);
 
 void		ft_perror(char *str);
-char		**ft_split_exec(char const *s, t_data *data, int a);
 int			ft_wordlen(char *str, t_data *data, int a);
 int			ft_is_charset(char str, t_data *data, int a);
 int			ft_wordcount(char *str, t_data *data, int a);
