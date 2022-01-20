@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 14:09:21 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 14:40:00 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,60 +116,46 @@ char	*ft_check_arg(char *cmd, char *env)
 *do :	exec one of the cmd
 */
 
-// void	father_proc(t_data *data, t_process *temp, char *env)
-// {
-// 	close (data->fd[1]);
-// 	if (temp->output != NULL)
-// 	{
-// 		data->file2 = open(temp->input, O_RDWR | O_TRUNC | O_CREAT, 0644);
-// 		if (data->file2 < 0)
-// 			ft_perror("\033[2K\r\033[0;31mError\033[0m : outfile creation failed");
-// 	}
-// 	data->args_of_2 = ft_split(temp->cmd_arg, ' ');
-// 	data->path_of_2 = ft_check_arg(temp->command, env);
-// 	if (temp->output != NULL)
-// 		if (dup2(data->file2, STDOUT_FILENO) == -1)
-// 			ft_perror("dup2 n1 failed in father_proc");
-// 	if (temp->input != NULL)
-// 		if (dup2(data->fd[0], STDIN_FILENO) == -1)
-// 			ft_perror("dup2 n2 failed in father_proc");
-// 	close(data->fd[0]);
-// 	if (temp->output != NULL)
-// 		close(data->file2);
-// 	if (execve(data->path_of_2, data->args_of_2, NULL) == -1)
-// 		ft_perror("failed to exec in father_proc");
-// }
+int ft_malloc_struct(t_data *data, int	i)
+{
+	int	j;
 
-/*
-*void	child_proc(t_data *data, char **argv, char **env)
-*data	my struct with all data needed
-*env	env of the shell
-*argv	tab of args received at launch of prog
-*do :	exec one of the cmd
-*/
-
-// void	child_proc(t_data *data, t_process *temp, char *env)
-// {
-// 	close (data->fd[0]);
-// 	if (temp->input != NULL)
-// 	{
-// 		data->file1 = open(temp->args, O_RDONLY);
-// 		if (data->file1 < 0)
-// 			ft_perror("\033[2K\r\033[0;31mError\033[0m : couldn't find infile");
-// 	}
-// 	data->args_of_1 = ft_split(temp->cmd_arg, ' ');
-// 	data->path_of_1 = ft_check_arg(temp->command, env);
-// 	if (temp->input != NULL)
-// 		if (dup2(data->file1, STDIN_FILENO) == -1)
-// 			ft_perror("dup2 n1 failed in child_proc");
-// 	if (temp->output != NULL)
-// 		if (dup2(data->fd[1], STDOUT_FILENO) == -1)
-// 			ft_perror("dup2 n2 failed in child_proc");
-// 	close(data->fd[1]);
-// 	close(data->file1);
-// 	if (execve(data->path_of_1, data->args_of_1, NULL) == -1)
-// 		ft_perror("failed to exec in child_proc");
-// }
+	j = -1;
+	data->fd = (int *)malloc(sizeof(int) * i * 2);
+	if (!data->fd)
+		return (0);
+	data->check = (int *)malloc(sizeof(int) * i);
+	if (!data->check)
+		return (0);
+	data->type_nb = (int *)malloc(sizeof(int) * i);
+	if (!data->type_nb)
+		return (0);
+	data->i = (int *)malloc(sizeof(int) * i);
+	if (!data->i)
+		return (0);
+	data->dec = malloc(sizeof(int) * i);
+	if (!data->dec)
+		return (0);
+	data->type_char = malloc(sizeof(char) * i);
+	if (!data->type_char)
+		return (0);
+	data->tab_args = malloc(sizeof(char **) * i);
+	if (!data->tab_args)
+		return (0);
+	data->tab_paths = malloc(sizeof(char *) * i);
+	if (!data->tab_paths)
+		return (0);
+	data->file = malloc(sizeof(int) * i);
+	if (!data->file)
+		return (0);
+	data->charset[0] = '\'';
+	data->charset[1] = '\"';
+	data->charset[2] = ' ';
+	data->charset[3] = '\0';
+	data->nb_cmd = i;
+	data->pid1 = malloc(sizeof(pid_t) * i);
+	return (1);
+}
 
 void	create_pipes(t_data *data)
 {
@@ -385,46 +371,6 @@ void	red4_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-int ft_malloc_struct(t_data *data, int	i)
-{
-	int	j;
-
-	j = -1;
-	data->fd = (int *)malloc(sizeof(int) * i * 2);
-	if (!data->fd)
-		return (0);
-	data->check = (int *)malloc(sizeof(int) * i);
-	if (!data->check)
-		return (0);
-	data->type_nb = (int *)malloc(sizeof(int) * i);
-	if (!data->type_nb)
-		return (0);
-	data->i = (int *)malloc(sizeof(int) * i);
-	if (!data->i)
-		return (0);
-	data->dec = malloc(sizeof(int) * i);
-	if (!data->dec)
-		return (0);
-	data->type_char = malloc(sizeof(char) * i);
-	if (!data->type_char)
-		return (0);
-	data->tab_args = malloc(sizeof(char **) * i);
-	if (!data->tab_args)
-		return (0);
-	data->tab_paths = malloc(sizeof(char *) * i);
-	if (!data->tab_paths)
-		return (0);
-	data->file = malloc(sizeof(int) * i);
-	if (!data->file)
-		return (0);
-	data->charset[0] = '\'';
-	data->charset[1] = '\"';
-	data->charset[2] = ' ';
-	data->charset[3] = '\0';
-	data->nb_cmd = i;
-	data->pid1 = malloc(sizeof(pid_t) * i);
-	return (1);
-}
 
 int	ft_execute_cmd(t_process *proc, char *env)
 {
@@ -438,8 +384,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 
 	temp = proc;
 	temp2 = temp->inout;
-	// i = 0;
-	// if (temp->next == NULL)
 	i = 1;
 	while (temp2 && temp2->next != 0)
 	{
@@ -524,64 +468,3 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	free_exec(&data, i);
 	return (0);
 }
-/*
-int	main(void)
-{
-	t_process	*temp;
-	char		*env;
-
-	env = getenv("PATH");
-	temp = malloc(sizeof(t_process));
-	temp->command = ft_strdup("cat");
-	temp->cmd_arg = ft_strdup("cat ../t");
-	temp->path = 0;
-	temp->args = 0;
-	temp->out_next = 0;
-	temp->input = 0;
-	temp->out_file = ft_strdup("b");
-	temp->type = ft_strdup(">");
-	temp->in_prev = 0;
-	//temp->next = NULL;
-	temp->next = malloc(sizeof(t_process));
-	temp->next->command = NULL;
-	temp->next->cmd_arg = NULL;
-	temp->next->path = 0;
-	temp->next->args = 0;
-	temp->next->out_next = 1;
-	temp->next->input = 0;
-	temp->next-> type = 0;
-	temp->out_file = 0;
-	temp->next->in_prev = 1;
-	temp->next->next = NULL;
-	// temp->next->next = malloc(sizeof(t_process));
-	// temp->next->next->command = ft_strdup("grep");
-	// temp->next->next->cmd_arg = ft_strdup("grep e");
-	// temp->next->next->path = 0;
-	// temp->next->next->args = 0;
-	// temp->next->next->out_next = 1;
-	// temp->next->next->input = 0;
-	// temp->next->next-> type = ft_strdup("|");
-	// temp->next->next->in_prev = 1;
-	// temp->next->next->next = malloc(sizeof(t_process));
-	// temp->next->next->next->command = ft_strdup("grep");
-	// temp->next->next->next->cmd_arg = ft_strdup("grep j");
-	// temp->next->next->next->path = 0;
-	// temp->next->next->next->args = 0;
-	// temp->next->next->next->out_next = 1;
-	// temp->next->next->next->input = 0;
-	// temp->next->next->next-> type = ft_strdup("|");
-	// temp->next->next->next->in_prev = 1;
-	// //temp->next->next->next->next = NULL;
-	// temp->next->next->next->next = malloc(sizeof(t_process));
-	// temp->next->next->next->next->command = ft_strdup("mkdir");
-	// temp->next->next->next->next->cmd_arg = ft_strdup("mkdir \"te'st\" \"lb\"hv\"ur\" gythb yb hu hbuyb'j'ub 'hh'");
-	// temp->next->next->next->next->path = 0;
-	// temp->next->next->next->next->args = 0;
-	// temp->next->next->next->next->out_next = 0;
-	// temp->next->next->next->next->input = 0;
-	// temp->next->next->next->next-> type = 0;
-	// temp->next->next->next->next->in_prev = 1;
-	// temp->next->next->next->next->next = NULL;
-	ft_execute_cmd(temp, env);
-}
-*/
