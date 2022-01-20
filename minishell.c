@@ -51,7 +51,7 @@ static void	action(int sig)
 {
 	(void)sig;
 	static int x = 0;
-	ft_putstr_fd("\b\b  \b\b", 1);
+	ft_putstr_fd("\b\b", 1);
 	ft_putchar_fd('\n', 1);
 	ft_putstr_fd(ft_readline(), 1);
 	x++;
