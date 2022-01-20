@@ -28,16 +28,9 @@ static void	ft_malloc_process(t_process **prev)
 	new->inout = NULL;
 	new->command = NULL;
 	new->cmd_arg = NULL;
-	new->in_file = NULL;
-	new->out_file = NULL;
-	new->inout_file = NULL;
-	new->path = NULL;
-	new->args = NULL;
 	new->out_next = 0;
-	new->out_prev = 0;
-	new->input = NULL;
 	new->in_prev = 0;
-	new->in_next = 0;
+	new->red_prev = 0;
 	new->type = NULL;
 	new->next = NULL;
 	if (*prev)

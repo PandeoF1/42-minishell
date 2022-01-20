@@ -6,11 +6,31 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 11:28:24 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/20 12:38:36 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 12:44:59 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+/*
+* ft_push_inout(t_inout **inout, t_inout *new)
+* desc : je sais plus
+*/
+
+void	ft_push_inout(t_inout **inout, t_inout *new)
+{
+	t_inout	*tmp;
+
+	tmp = *inout;
+	if (!tmp)
+	{
+		*inout = new;
+		return ;
+	}
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
 
 /*
  * ft_len_next(char *str)
@@ -71,4 +91,5 @@ void	ft_quote(t_process **process, int x, int *y, char **split)
 	(*y) += ft_w_is_space(split[x] + (*y) + 1) + 1;
 	tmp->file = ft_strndup(split[x] + (*y), ft_len_quote(split[x] + (*y)));
 	(*y) += ft_len_next(split[x] + (*y));
+	ft_push_inout(&(*process)->inout, tmp);
 }

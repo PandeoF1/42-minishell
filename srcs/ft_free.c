@@ -41,28 +41,6 @@ void	ft_free_inout(t_inout **inout)
 	*inout = NULL;
 }
 
-void	ft_safe_free(t_process **process)
-{
-	if ((*process)->command)
-		free((*process)->command);
-	if ((*process)->cmd_arg)
-		free((*process)->cmd_arg);
-	if ((*process)->path)
-		free((*process)->path);
-	if ((*process)->args)
-		free((*process)->args);
-	if ((*process)->input)
-		free((*process)->input);
-	if ((*process)->inout_file)
-		free((*process)->inout_file);
-	if ((*process)->in_file)
-		free((*process)->in_file);
-	if ((*process)->out_file)
-		free((*process)->out_file);
-	if ((*process)->type)
-		free((*process)->type);
-}
-
 void	ft_free(t_process **process)
 {
 	t_process	*tmp;
@@ -70,7 +48,12 @@ void	ft_free(t_process **process)
 	while ((*process))
 	{
 		tmp = (*process)->next;
-		ft_safe_free(process);
+		if ((*process)->command)
+			free((*process)->command);
+		if ((*process)->cmd_arg)
+			free((*process)->cmd_arg);
+		if ((*process)->type)
+			free((*process)->type);
 		ft_free_inout(&(*process)->inout);
 		free(*process);
 		(*process) = tmp;

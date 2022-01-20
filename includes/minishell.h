@@ -36,16 +36,9 @@ typedef struct s_process
 	struct s_inout		*inout;
 	char				*command;
 	char				*cmd_arg;
-	char				*path;
-	char				*args;
-	char				*in_file;
-	char				*out_file;
-	char				*inout_file;
 	int					out_next;
-	int					out_prev;
-	char				*input;
+	int					red_prev;
 	int					in_prev;
-	int					in_next;
 	char				*type;
 }		t_process;
 

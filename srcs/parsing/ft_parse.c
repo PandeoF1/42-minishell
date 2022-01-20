@@ -37,15 +37,11 @@ int	ft_structlen(t_process *process)
 *	desc : configure the output and input on the process
 */
 
-void	ft_config_process(t_process *process)
+void	ft_config_process(t_process *process, int x, int next, int inout)
 {
 	t_process	*tmp;
-	int			x;
 	int			len;
-	int			next;
 
-	x = -1;
-	next = 0;
 	tmp = process;
 	len = ft_structlen(tmp);
 	while (tmp && ++x < len)
@@ -56,10 +52,15 @@ void	ft_config_process(t_process *process)
 				tmp->in_prev = 1;
 			tmp->out_next = 1;
 			next = 1;
+			if (tmp->inout)
+				inout = 1;
 		}
 		else if (next)
 		{
 			tmp->in_prev = 1;
+			if (inout)
+				tmp->red_prev = 1;
+			inout = 0;
 			next = 0;
 		}
 		tmp = tmp->next;
@@ -112,23 +113,16 @@ void	ft_parse_command(char *str, char *env)
 		process = ft_create_process(str, -1, 0, ft_splitd(str, '|'));
 		if (1)
 		{
-			ft_config_process(process);
+			ft_config_process(process, -1, 0, 0);
 			tmp = process;
 			while (process)
 			{
 				ft_printf("---- parse ----\n");
 				ft_printf("command : %s.\n", process->command);
 				ft_printf("cmd_arg : %s.\n", process->cmd_arg);
-				ft_printf("path : %s.\n", process->path);
-				ft_printf("args : %s.\n", process->args);
-				ft_printf("inout : %s.\n", process->inout_file);
-				ft_printf("in : %s.\n", process->inout_file);
-				ft_printf("out : %s.\n", process->inout_file);
+				ft_printf("red_prev : %d.\n", process->red_prev);
 				ft_printf("out_next : %d.\n", process->out_next);
-				ft_printf("out_prev : %d.\n", process->out_prev);
 				ft_printf("in_prev : %d.\n", process->in_prev);
-				ft_printf("in_next : %d.\n", process->in_next);
-				ft_printf("input : %s.\n", process->input);
 				ft_printf("type : %s.\n", process->type);
 				if (process->inout)
 				{
