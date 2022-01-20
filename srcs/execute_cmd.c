@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 11:20:07 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 11:54:55 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -443,27 +443,25 @@ int	ft_execute_cmd(t_process *proc, char *env)
 
 	temp = proc;
 	temp2 = temp->inout;
-	i = 0;
-	if (temp->next != NULL)
-		i = 1;
-	while (temp->inout != 0)
+	// i = 0;
+	// if (temp->next == NULL)
+	i = 1;
+	while (temp2 && temp2->next != 0)
 	{
 		i++;
-		temp->inout = temp->inout->next;
+		temp2 = temp2->next;
 	}
-	temp->inout = temp2;
 	while (temp->next != NULL)
 	{
 		temp = temp->next;
-		if (!temp->inout)
-			i++;
 		temp2 = temp->inout;
-		while (temp->inout != 0)
+		if (temp)
+			i++;
+		while (temp2)
 		{
 			i++;
-			temp->inout = temp->inout->next;
+			temp2 = temp2->next;
 		}
-		temp->inout = temp2;
 	}
 	temp = proc;
 	if (i == 0 && temp->inout == 0)
@@ -484,11 +482,13 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		i--;
 		j = i;
 		data.ind = 0;
+		ft_printf("I : %d\n", i);
 		while (i >= 0)
 		{
 			data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
+				ft_printf("here\n");
 				pipe_proc(&data, temp, env, i);
 				temp = temp->next;
 				data.ind++;
@@ -498,6 +498,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
+				ft_printf("oh\n");
 				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
