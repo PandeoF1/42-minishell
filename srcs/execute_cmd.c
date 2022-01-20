@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/19 18:32:08 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 10:09:06 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,28 @@ int	find_path(char **env)
 *do :	check if the command exist and if we have the rights to use it 
 */
 
+char	*ft_strxjoin(char *s1, char *s2, int n)
+{
+	int		i;
+	int		j;
+	char	*str;
+	int		k;
+
+	k = 0;
+	j = ft_strlen(s2) + n + 1;
+	str = (char *)malloc(sizeof(char) * j);
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (++i < ft_strlen(s1))
+		str[i] = s1[i];
+	while (n-- && s2[k])
+		str[i++] = s2[k++];
+	str[i] = '\0';
+	free(s2);
+	return (str);
+}
+
 char	*ft_check_arg(char *cmd, char *env)
 {
 	int			i;
@@ -53,27 +75,32 @@ char	*ft_check_arg(char *cmd, char *env)
 		else
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : permission denied");
 	}
-	cmd = ft_strjoin("/", cmd);
-	tab = ft_split(env, ':');
-	i = 0;
-	while (tab[i])
+	cmd = ft_strxjoin("/", cmd, ft_strlen(cmd));
+	if (!ft_strncmp("/pwd", cmd, 4))
+		ft_perror("mamammamamama");
+	else
 	{
-		try = ft_strjoin(tab[i], cmd);
-		if (!access(try, X_OK))
+		tab = ft_split(env, ':');
+		i = 0;
+		while (tab[i])
 		{
-			i = -1;
-			while (tab[++i])
-				free(tab[i]);
-			free(tab);
-			free(cmd);
-			return (try);
+			try = ft_strjoin(tab[i], cmd);
+			if (!access(try, X_OK))
+			{
+				i = -1;
+				while (tab[++i])
+					free(tab[i]);
+				free(tab);
+				free(cmd);
+				return (try);
+			}
+			i++;
 		}
-		i++;
+		i = -1;
+		while (tab[++i])
+			free(tab[i]);
+		free(tab);
 	}
-	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
 	free(cmd);
 	free(try);
 	ft_perror("command not found");
@@ -197,7 +224,7 @@ void	free_exec(t_data *data, int i)
 		free(data->pid1);
 	if (data->tab_args)
 		free(data->tab_args);
-	// if (data->tab_paths) need to be free
+	// if (data->tab_paths) //need to be free
 	// {
 	// 	while (data->tab_paths[j] != NULL)
 	// 	{
@@ -206,8 +233,8 @@ void	free_exec(t_data *data, int i)
 	// 		j++;
 	// 	}
 	// }
-	// if (data->tab_paths) need to be free
-	// 	free(data->tab_paths);
+	if (data->tab_paths) //need to be free
+		free(data->tab_paths);
 	if (data->check)
 		free(data->check);
 	if (data->type_char)
@@ -221,7 +248,7 @@ void	free_exec(t_data *data, int i)
 	// j = -1; need to be free
 	// while (data->file[++j])
 	// 	free(data->file[j]);
-	// free(data->file);
+	free(data->file); // need to be free
 }
 
 void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
@@ -231,7 +258,7 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
+		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{
@@ -277,20 +304,23 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
 		{
-			data->fd1[i] = dup(data->fd[2 * data->ind - 2]);
-			if (dup2(data->fd1[i], STDIN_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
 		}
-		if (dup2(data->file[i], STDOUT_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red_proc");
+		if (data->inout->next == NULL)
+			if (dup2(data->file[i], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
 		close(data->file[i]);
 		if (temp->command != NULL)
 		{
-			data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
-			data->tab_paths[i] = ft_check_arg(temp->command, env);
-			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
-				ft_perror("failed to exec in red_proc\n");
+			if (data->inout->next == NULL)
+			{
+				data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+				data->tab_paths[i] = ft_check_arg(temp->command, env);
+				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+					ft_perror("failed to exec in red_proc\n");
+			}
 		}
 		exit(0);
 	}
@@ -306,18 +336,57 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		data->file[i] = open(data->inout->file, O_RDWR);
 		if (data->file[i] < 0)
 			ft_perror("minishell: no such file or directory");
-		if (dup2(data->file[i], STDIN_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red2_proc");
+		if (data->inout->next == NULL)
+			if (dup2(data->file[i], STDIN_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red2_proc");
 		close_pipes(data);
 		close(data->file[i]);
 		if (temp->command != NULL)
 		{
-			data->tab_args[i] = ft_splitd(temp->cmd_arg, ' ');
-			data->tab_paths[i] = ft_check_arg(temp->command, env);
-			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
-				ft_perror("failed to exec in red_proc\n");
+			if (data->inout->next == NULL)
+			{
+				data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+				data->tab_paths[i] = ft_check_arg(temp->command, env);
+				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+					ft_perror("failed to exec in red_proc\n");
+			}
 		}
 		exit (0);
+	}
+}
+
+void	red4_proc(t_data *data, t_process *temp, char *env, int i)
+{
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
+		ft_perror("forking failed\n");
+	if (data->pid1[i] == 0)
+	{
+		data->file[i] = open(data->inout->file,
+				O_RDWR | O_APPEND | O_CREAT, 0644);
+		if (data->file[i] < 0)
+			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
+		if (temp->in_prev != 0)
+		{
+			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
+				ft_perror("dup2 n1 failed in pipe_proc");
+		}
+		if (data->inout->next == NULL)
+			if (dup2(data->file[i], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red_proc");
+		close_pipes(data);
+		close(data->file[i]);
+		if (temp->command != NULL)
+		{
+			if (data->inout->next == NULL)
+			{
+				data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+				data->tab_paths[i] = ft_check_arg(temp->command, env);
+				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+					ft_perror("failed to exec in red_proc\n");
+			}
+		}
+		exit(0);
 	}
 }
 
@@ -351,9 +420,6 @@ int ft_malloc_struct(t_data *data, int	i)
 	if (!data->tab_paths)
 		return (0);
 	data->file = malloc(sizeof(int) * i);
-	if (!data->file)
-		return (0);
-	data->fd1 = malloc(sizeof(int) * i);
 	if (!data->file)
 		return (0);
 	data->charset[0] = '\'';
@@ -439,6 +505,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
 				red2_proc(&data, temp, env, i);
+				data.inout = data.inout->next;
+				i--;
+			}
+			while (i >= 0 && data.inout != 0 && data.inout->type == 4)
+			{
+				red4_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
