@@ -263,15 +263,11 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
-		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
-		}
 		if (temp->out_next != 0)
-		{
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n2 failed in pipe_proc");
-		}
 		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
 			ft_perror("failed to exec in pipe_proc");
@@ -300,25 +296,24 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(data->inout->file,
+		data->fd[2 * data->ind + 1] = open(data->inout->file,
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
-		if (data->file[i] < 0)
+		if (data->fd[2 * data->ind + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
-		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
-		}
 		if (data->inout->next == NULL)
-			if (dup2(data->file[i], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
-		close(data->file[i]);
+		//close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
 			{
-				data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+				data->tab_args[i]
+					= ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 				data->tab_paths[i] = ft_check_arg(temp->command, env);
 				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
 					ft_perror("failed to exec in red_proc\n");
@@ -369,10 +364,8 @@ void	red4_proc(t_data *data, t_process *temp, char *env, int i)
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
-		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
-		}
 		if (data->inout->next == NULL)
 			if (dup2(data->file[i], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
@@ -484,13 +477,11 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		i--;
 		j = i;
 		data.ind = 0;
-		ft_printf("I : %d\n", i);
 		while (i >= 0)
 		{
 			data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
-				ft_printf("here\n");
 				pipe_proc(&data, temp, env, i);
 				temp = temp->next;
 				data.ind++;
@@ -500,7 +491,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
-				ft_printf("oh\n");
 				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
@@ -518,7 +508,10 @@ int	ft_execute_cmd(t_process *proc, char *env)
 				i--;
 			}
 			if (temp && temp->inout)
+			{
 				temp = temp->next;
+				data.ind++;
+			}
 		}
 	}
 	i = j;
