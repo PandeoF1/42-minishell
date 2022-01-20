@@ -83,8 +83,7 @@ int	main(int argc, char **argv, char **envp)
 		//rl_clear_history();
 		free(tmp);
 	}
-	free(penv);
-	if (tmp)
+	free(penv);	if (tmp)
 		free(tmp);
 	return (0);
 }

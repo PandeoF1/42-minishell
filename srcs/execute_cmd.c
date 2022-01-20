@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 15:06:51 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 16:31:11 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,8 @@ char	*ft_check_arg(char *cmd, char *env)
 	try = NULL;
 	if (!access(cmd, F_OK))
 	{
-		if (!access(cmd, R_OK))
+		if (!access(cmd, X_OK))
 			return (cmd);
-		else
-			ft_perror("\033[2K\r\033[0;31mError\033[0m : permission denied");
 	}
 	cmd = ft_strxjoin("/", cmd, ft_strlen(cmd));
 	if (!ft_strncmp("/pwd", cmd, 4))
@@ -116,7 +114,7 @@ char	*ft_check_arg(char *cmd, char *env)
 *do :	exec one of the cmd
 */
 
-int ft_malloc_struct(t_data *data, int	i)
+int	ft_malloc_struct(t_data *data, int	i)
 {
 	int	j;
 
@@ -282,7 +280,7 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->fd[2 * data->ind + 1] = open(data->inout->file,
+		data->fd[2 * data->ind + 1] = open(ft_ddquote(data->inout->file, 0),
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->fd[2 * data->ind + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
@@ -293,7 +291,6 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
-		//close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -316,22 +313,26 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(data->inout->file, O_RDWR);
-		if (data->file[i] < 0)
-			ft_perror("minishell: no such file or directory");
+		data->fd[2 * data->ind + 1]
+			= open(ft_ddquote(data->inout->file, 0), O_RDWR);
+		if (data->fd[2 * data->ind + 1] < 0)
+			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
+		if (temp->in_prev != 0)
+			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red2_proc");
 		if (data->inout->next == NULL)
-			if (dup2(data->file[i], STDIN_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind + 1], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
 		close_pipes(data);
-		close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
 			{
-				data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+				data->tab_args[i]
+					= ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 				data->tab_paths[i] = ft_check_arg(temp->command, env);
 				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
-					ft_perror("failed to exec in red_proc\n");
+					ft_perror("failed to exec in red2_proc\n");
 			}
 		}
 		exit (0);
@@ -345,7 +346,7 @@ void	red4_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(data->inout->file,
+		data->file[i] = open(ft_ddquote(data->inout->file, 0),
 				O_RDWR | O_APPEND | O_CREAT, 0644);
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
