@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	ft_is_charsetd(char str, char *charset)
 {
@@ -82,6 +82,11 @@ static char	*ft_strduppd(char *src, int j)
 	return (dst);
 }
 
+/*
+*	char	**ft_splitd(char const *s, char c)
+*	desc : like a ft_split but work with quote
+*/
+
 char	**ft_splitd(char const *s, char c)
 {
 	char		**dest;
@@ -94,7 +99,6 @@ char	**ft_splitd(char const *s, char c)
 	charset[0] = c;
 	charset[1] = '\0';
 	size = ft_wordcountd((char *)s, charset);
-	// ft_printf("size : %d\n", size);
 	dest = malloc((size + 1) * sizeof(char *));
 	if (!dest)
 		return (0);

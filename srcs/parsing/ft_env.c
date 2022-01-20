@@ -6,62 +6,18 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/19 16:11:37 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 12:39:11 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 /*
- * ft_add_char(char *str, char c)
- * desc : desc malloc a string and add a char at the end of it
- * params : str to add c
- */
+*	ft_w_is_eon(str)
+*	desc : count the number of char before the end of the string
+*/
 
-static char	*ft_add_char(char *str, char c)
-{
-	char	*new;
-	int		x;
-
-	x = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!new)
-		return (NULL);
-	while (str[x])
-	{
-		new[x] = str[x];
-		x++;
-	}
-	new[x] = c;
-	new[x + 1] = '\0';
-	free(str);
-	return (new);
-}
-
-char	*ft_strsub(char const *s, unsigned int start, size_t len)
-{
-	char	*result;
-	size_t	i;
-
-	if (s == NULL)
-		return (NULL);
-	if (start > ft_strlen(s))
-		return (NULL);
-	result = (char *)malloc(sizeof(char) * (len + 1));
-	if (result == NULL)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start] != '\0')
-	{
-		result[i] = s[start];
-		start++;
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
-}
-
-int		ft_w_is_eon(char *str)
+int	ft_w_is_eon(char *str)
 {
 	int		i;
 
@@ -75,40 +31,10 @@ int		ft_w_is_eon(char *str)
 	return (i);
 }
 
-char	*ft_search_env(char *env, char *var)
-{
-	int		x;
-	int		y;
-	char	*tmp2;
-
-	x = 0;
-	y = 0;
-	while (env[x])
-	{
-		if (env[x] != var[0])
-		{
-			while (env[x] && env[x] != '\n')
-				x++;
-		}
-		else
-		{
-			y = 0;
-			while (env[x] && y < ft_strlen(var) && env[x] == var[y])
-			{
-				x++;
-				y++;
-			}
-			if (y == ft_strlen(var) && env[x] == '=')
-			{
-				x++;
-				tmp2 = ft_strndup(env + x, ft_w_is_eon(env + x));
-				return (tmp2);
-			}
-		}
-		x++;
-	}
-	return (NULL);
-}
+/*
+*	ft_w_is_eon(str)
+*	desc : check if c is a valid env char
+*/
 
 int	ft_is_env_char(char c)
 {
@@ -117,6 +43,11 @@ int	ft_is_env_char(char c)
 	return (0);
 }
 
+/*
+*	ft_is_tild(str)
+*	desc : check if the tilde is a valid env home path
+*/
+
 int	ft_is_tild(char *str, int x)
 {
 	if (str[x] == '~')
@@ -124,43 +55,19 @@ int	ft_is_tild(char *str, int x)
 		if (str[x + 1])
 			if (str [x + 1] == '~')
 				return (0);
-		if (str[x - 1]) 
+		if (str[x - 1])
 			if (str[x - 1] == '~')
 				return (0);
 	}
 	return (1);
 }
 
-char	*ft_replace(char *str, char *tmp, int x, int y)
-{
-	char	*new;
-	int		i;
-	int		j;
-	int		b;
+/*
+*	ft_env(char *env, char *str, int x, int b)
+*	desc : replace all ~ and env variable in the str
+*/
 
-	i = 0;
-	j = 0;
-	b = 0;
-	new = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(tmp)) + 1);
-	if (!new)
-		return (NULL);
-	while (str[b])
-	{
-		if (i == y)
-		{
-			while (tmp[j])
-				new[i++] = tmp[j++];
-			b += (x - y);
-		}
-		else
-			new[i++] = str[b++];
-	}
-	new[i] = '\0';
-	free(tmp);
-	return (new);
-}
-
-char	*ft_env(char *env, char *str, int x, int b) //encore des truc a patch
+char	*ft_env(char *env, char *str, int x, int b)
 {
 	char	*tmp;
 	char	*var;

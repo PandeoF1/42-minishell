@@ -16,7 +16,12 @@ RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
 
-SRCS		= minishell.c srcs/ft_process.c srcs/ft_parse.c srcs/ft_free.c srcs/ft_get_input.c srcs/ft_check.c srcs/ft_perror.c srcs/ft_env.c srcs/execute_cmd.c srcs/ft_dquote.c srcs/ft_splitd.c
+SRCS		= minishell.c srcs/execute_cmd.c srcs/ft_dquote.c \
+				srcs/ft_free.c srcs/ft_get_input.c srcs/ft_perror.c \
+				srcs/ft_utils_1.c srcs/ft_utils_2.c srcs/parsing/ft_check.c \
+				srcs/parsing/ft_env.c srcs/parsing/ft_parse.c srcs/parsing/ft_process.c \
+				srcs/parsing/ft_quote.c srcs/parsing/ft_replace.c srcs/parsing/ft_search_env.c \
+				srcs/parsing/ft_splitd.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
@@ -28,6 +33,7 @@ CC_FLAGS	= #-fsanitize=address -g3 #-Wall -Werror -Wextra
 $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)srcs
+	@mkdir -p $(OBJS_DIR)srcs/parsing
 	@mkdir -p $(OBJS_DIR)get_next_line
 	@$(CC) $(CC_FLAGS) -c $< -o $@
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"

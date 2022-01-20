@@ -10,7 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
+
+/*
+*	ft_structlen(t_process *process)
+*	desc : count the number of struct in struct
+*/
 
 int	ft_structlen(t_process *process)
 {
@@ -26,6 +31,11 @@ int	ft_structlen(t_process *process)
 	}
 	return (len);
 }
+
+/*
+*	ft_config_process(t_process *process)
+*	desc : configure the output and input on the process
+*/
 
 void	ft_config_process(t_process *process)
 {
@@ -43,9 +53,7 @@ void	ft_config_process(t_process *process)
 		if (tmp->type && tmp->type[0] == '|')
 		{
 			if (x != 0)
-			{	
 				tmp->in_prev = 1;
-			}
 			tmp->out_next = 1;
 			next = 1;
 		}
@@ -95,24 +103,16 @@ void	ft_parse_command(char *str, char *env)
 	t_process	*tmp;
 	t_inout		*tmpi;
 	int			x;
-	int			yolo;
 
 	x = 0;
-	yolo = 0;
 	if (ft_strlen(str) == 0 || ft_space(str) == 0)
 		return ;
-	//str[ft_strlen(str) - 1] = '\0';
 	if (ft_check_quote(str))
 	{
-		//ft_printf("yolo = %p\n", &yolo);
-		process = ft_create_process(str, &yolo);
-		//ft_printf("yolo = %p\n", &yolo);
-		//ft_printf("yolo = %d\n", yolo);
-		if (yolo == 1)
+		process = ft_create_process(str, -1, 0, ft_splitd(str, '|'));
+		if (1)
 		{
-			//ft_printf("config :\n");
 			ft_config_process(process);
-			//ft_printf("config done\n");
 			tmp = process;
 			while (process)
 			{
@@ -153,7 +153,7 @@ void	ft_parse_command(char *str, char *env)
 			ft_execute_cmd(process, env);
 		}
 		else
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf("minishell: syntax error near token `newline'\n");
 		ft_free(&process);
 	}
 	else
