@@ -43,7 +43,9 @@ void	ft_config_process(t_process *process)
 		if (tmp->type && tmp->type[0] == '|')
 		{
 			if (x != 0)
+			{	
 				tmp->in_prev = 1;
+			}
 			tmp->out_next = 1;
 			next = 1;
 		}
@@ -112,7 +114,7 @@ void	ft_parse_command(char *str, char *env)
 			ft_config_process(process);
 			//ft_printf("config done\n");
 			tmp = process;
-			/*while (process)
+			while (process)
 			{
 				ft_printf("---- parse ----\n");
 				ft_printf("command : %s.\n", process->command);
@@ -146,7 +148,7 @@ void	ft_parse_command(char *str, char *env)
 				}
 				ft_printf("---- end parse ----\n");
 				process = process->next;
-			}*/
+			}
 			process = tmp;
 			ft_execute_cmd(process, env);
 		}
