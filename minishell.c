@@ -47,11 +47,20 @@ char	*ft_readline(void)
 	return (str);
 }
 
+void	ctrl_c_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		ft_putchar('\n');
+		ft_putstr_fd(ft_readline(), 1);
+	}
+}
+
 static void	action(int sig)
 {
 	(void)sig;
 	static int x = 0;
-	ft_putstr_fd("\b\b  \b\b", 1);
+	ft_putstr_fd("\b\b", 1);
 	ft_putchar_fd('\n', 1);
 	ft_putstr_fd(ft_readline(), 1);
 	x++;
@@ -68,8 +77,13 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = getenv("PATH");
+	signal(SIGINT, ctrl_c_handler);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+	/*
 	signal(SIGINT, action);
-	signal(SIGQUIT, sig_quit);
+	signal(SIGQUIT, sig_quit);*/
 	penv = ft_export_env(envp);
 	while (1)
 	{

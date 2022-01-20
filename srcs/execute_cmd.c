@@ -460,6 +460,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		}
 	}
 	i = j;
+	ft_printf("gg\n");
 	close_pipes(&data);
 	while (j >= 0)
 	{

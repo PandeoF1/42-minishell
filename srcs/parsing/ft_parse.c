@@ -109,7 +109,7 @@ void	ft_parse_command(char *str, char *env)
 	if (ft_check_quote(str))
 	{
 		process = ft_create_process(-1, 0, ft_splitd(str, '|'));
-		if (1)
+		if (ft_check_process(process))
 		{
 			ft_config_process(process, -1, 0, 0);
 			tmp = process;
@@ -149,5 +149,5 @@ void	ft_parse_command(char *str, char *env)
 		ft_free(&process);
 	}
 	else
-		ft_printf("minishell: syntax error with open quotes\n");
+		ft_printf("minishell: syntax error with open quotes or < >\n");
 }

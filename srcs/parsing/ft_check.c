@@ -64,3 +64,22 @@ int	ft_contains(char *str, char c)
 	}
 	return (0);
 }
+
+int	ft_check_process(t_process *process)
+{
+	t_process	*tmp;
+
+	tmp = process;
+	while (tmp)
+	{
+		if (tmp->inout)
+		{
+			if (tmp->inout->file && tmp->inout->file[0] == '\0')
+				return (0);
+			if (!tmp->inout->file)
+				return (0);
+		}
+		tmp = tmp->next;
+	}
+	return (1);
+}

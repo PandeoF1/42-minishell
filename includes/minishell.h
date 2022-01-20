@@ -51,7 +51,7 @@ typedef struct s_check
 char		*ft_get_input(int fd, int size, int len);
 void		ft_parse_command(char *str, char *env);
 int			ft_check_quote(char *str);
-int			ft_check_inout(char *str);
+int			ft_check_process(t_process *process);
 void		ft_free_split(char **split);
 char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(int x, int y, char **split);
