@@ -40,11 +40,9 @@ int	ft_structlen(t_process *process)
 void	ft_config_process(t_process *process, int x, int next, int inout)
 {
 	t_process	*tmp;
-	int			len;
 
 	tmp = process;
-	len = ft_structlen(tmp);
-	while (tmp && ++x < len)
+	while (tmp && ++x < ft_structlen(process))
 	{
 		if (tmp->type && tmp->type[0] == '|')
 		{
@@ -110,7 +108,7 @@ void	ft_parse_command(char *str, char *env)
 		return ;
 	if (ft_check_quote(str))
 	{
-		process = ft_create_process(str, -1, 0, ft_splitd(str, '|'));
+		process = ft_create_process(-1, 0, ft_splitd(str, '|'));
 		if (1)
 		{
 			ft_config_process(process, -1, 0, 0);

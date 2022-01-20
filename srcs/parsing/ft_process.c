@@ -106,7 +106,7 @@ void	ft_prep_process(t_process **process, int x, t_process **tmp)
  * todo : split of "|"
  */
 
-t_process	*ft_create_process(char *str, int x, int y, char **split)
+t_process	*ft_create_process(int x, int y, char **split)
 {
 	t_process	*process;
 	t_process	*tmp;

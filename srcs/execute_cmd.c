@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 11:54:55 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 14:09:21 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_strxjoin(char *s1, char *s2, int n)
 	if (!str)
 		return (NULL);
 	i = -1;
-	while (++i < ft_strlen(s1))
+	while (++i < (int)ft_strlen(s1))
 		str[i] = s1[i];
 	while (n-- && s2[k])
 		str[i++] = s2[k++];
@@ -68,6 +68,7 @@ char	*ft_check_arg(char *cmd, char *env)
 	char		**tab;
 	char		*try;
 
+	try = NULL;
 	if (!access(cmd, F_OK))
 	{
 		if (!access(cmd, R_OK))
@@ -199,6 +200,7 @@ void	free_exec(t_data *data, int i)
 {
 	int			j;
 
+	i = 0;
 	//temp = proc;
 	j = 0;
 	//while (++i && temp->next != NULL)
@@ -438,7 +440,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	t_process	*temp;
 	t_inout		*temp2;
 	int			j;
-	int			check;
+//	int			check;
 	int			status;
 
 	temp = proc;

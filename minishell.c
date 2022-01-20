@@ -12,16 +12,10 @@
 
 #include "includes/minishell.h"
 
-static void	action(int sig)
-{
-	ft_printf("\b\b  \b\b");
-	ft_printf("\n%> ");
-	exit(0);
-}
-
 static void	sig_quit(int sig)
 {
-	ft_putstr("\b\b \b\b");
+	(void)sig;
+	ft_putstr_fd("\b\b  \b\b", 1);
 }
 
 static char	*ft_export_env(char **env)
@@ -40,23 +34,29 @@ static char	*ft_export_env(char **env)
 	return (str);
 }
 
-char	*ft_readline(char *penv, char *str)
+char	*ft_readline(void)
 {
+	char	*str;
 	char	*tmp;
-	char	*var;
-	char	test[UCHAR_MAX];
-	char	*a;
 
-	tmp = malloc(sizeof(char));
-	var = ft_search_env(penv, "USER");
-	tmp = ft_strnjoin(tmp, "\e[0;34m", ft_strlen("\e[0;34m"));
-	tmp = ft_strnjoin(tmp, var, ft_strlen(var));
-	//free(var);
-	tmp = ft_strnjoin(tmp, "\e[0m@\e[0;35m", ft_strlen("\e[0m@\e[0;35m"));
-	getcwd(test, UCHAR_MAX);
-	tmp = ft_strnjoin(tmp, test, ft_strlen(test));
-	tmp = ft_strnjoin(tmp, "\e[0m%> ", ft_strlen("> \e[0m"));
-	return (tmp);
+	str = ft_strdup("\e[0;32mminishell\e[0m:\e[0;34m");
+	tmp = getcwd(NULL, 0);
+	str = ft_strnjoin(str, tmp, ft_strlen(tmp));
+	free(tmp);
+	str = ft_strnjoin(str, "\e[0m$ ", ft_strlen("\e[0m$ "));
+	return (str);
+}
+
+static void	action(int sig)
+{
+	(void)sig;
+	static int x = 0;
+	ft_putstr_fd("\b\b  \b\b", 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd(ft_readline(), 1);
+	x++;
+	if (x == 10)
+		exit(0);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -73,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	penv = ft_export_env(envp);
 	while (1)
 	{
-		tmp = readline("%> ");
+		tmp = readline(ft_readline());
 		if (ft_strlen(tmp) != 0)
 		{
 			add_history(tmp);

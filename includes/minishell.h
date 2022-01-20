@@ -54,7 +54,7 @@ int			ft_check_quote(char *str);
 int			ft_check_inout(char *str);
 void		ft_free_split(char **split);
 char		**ft_splitd(char const *s, char c);
-t_process	*ft_create_process(char *str, int x, int y, char **split);
+t_process	*ft_create_process(int x, int y, char **split);
 void		ft_free(t_process **process);
 int			ft_execute_cmd(t_process *proc, char *env);
 char		*ft_env(char *env, char *str, int x, int b);

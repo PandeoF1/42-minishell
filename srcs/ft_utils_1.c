@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 11:27:16 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/20 12:39:15 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 14:09:43 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strnjoin(char *s1, char *s2, int n)
 	if (!str)
 		return (NULL);
 	i = -1;
-	while (++i < ft_strlen(s1))
+	while (++i < (int)ft_strlen(s1))
 		str[i] = s1[i];
 	while (n-- && s2[k])
 		str[i++] = s2[k++];

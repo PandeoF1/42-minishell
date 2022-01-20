@@ -28,7 +28,7 @@ PROJECT_H	= includes/minishell.h
 OBJS		= $(SRCS:.c=.o)
 OBJECTS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
 CC			= gcc
-CC_FLAGS	= #-fsanitize=address -g3 #-Wall -Werror -Wextra
+CC_FLAGS	= -Wall -Werror -Wextra #-fsanitize=address -g3
 
 $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)

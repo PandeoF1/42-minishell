@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 11:36:57 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/20 12:38:40 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 14:11:40 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char	*ft_search_env(char *env, char *var)
 		else
 		{
 			y = 0;
-			while (env[x] && y < ft_strlen(var) && env[x] == var[y])
+			while (env[x] && y < (int)ft_strlen(var) && env[x] == var[y])
 				ft_printf("", x++, y++);
-			if (y == ft_strlen(var) && env[x] == '=')
+			if (y == (int)ft_strlen(var) && env[x] == '=')
 				return (ft_strndup(env + x + 1, ft_w_is_eon(env + x + 1)));
 		}
 		x++;
