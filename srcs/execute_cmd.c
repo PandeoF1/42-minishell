@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 14:40:00 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/20 15:06:51 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,6 @@ void	red4_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-
 int	ft_execute_cmd(t_process *proc, char *env)
 {
 	t_data		data;
@@ -379,13 +378,15 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	t_process	*temp;
 	t_inout		*temp2;
 	int			j;
-//	int			check;
 	int			status;
 
 	temp = proc;
 	temp2 = temp->inout;
-	i = 1;
-	while (temp2 && temp2->next != 0)
+	if (!temp2)
+		i = 1;
+	else
+		i = 0;
+	while (temp2)
 	{
 		i++;
 		temp2 = temp2->next;
@@ -394,24 +395,23 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	{
 		temp = temp->next;
 		temp2 = temp->inout;
-		if (temp)
-			i++;
-		while (temp2)
+		if (temp2)
 		{
-			i++;
-			temp2 = temp2->next;
+			while (temp2)
+			{
+				i++;
+				temp2 = temp2->next;
+			}
 		}
+		else
+			if (temp)
+				i++;
 	}
 	temp = proc;
-	if (i == 0 && temp->inout == 0)
-	{
-		i++;
-		j = -1;
-	}
 	if (!ft_malloc_struct(&data, i))
 		ft_perror("malloc failed\n");
 	create_pipes(&data);
-	if (i == 1 && temp->inout == 0 && j == -1)
+	if (i == 1 && temp->inout == 0)
 	{
 		one_proc(&data, temp, env);
 		j = 0;
