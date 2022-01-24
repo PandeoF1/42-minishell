@@ -99,8 +99,8 @@ int	ft_space(char *str)
 void	ft_parse_command(char *str, char *env)
 {
 	t_process	*process;
-	//t_process	*tmp;
-	//t_inout		*tmpi;
+	// t_process	*tmp;
+	// t_inout		*tmpi;
 	int			x;
 
 	x = 0;

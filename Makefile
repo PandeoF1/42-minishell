@@ -33,7 +33,6 @@ CC_FLAGS	= #-Wall -Werror -Wextra #-fsanitize=address -g3
 $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)srcs
-	@mkdir -p $(OBJS_DIR)temp
 	@mkdir -p $(OBJS_DIR)srcs/parsing
 	@mkdir -p $(OBJS_DIR)get_next_line
 	@$(CC) $(CC_FLAGS) -c $< -o $@

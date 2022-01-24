@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/24 08:34:31 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/24 12:17:53 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void	create_pipes(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < data->nb_cmd - 1)
+	while (i < data->nb_cmd)
 	{
 		if (pipe(data->fd + 2 * i) < 0)
 			ft_perror("fail , lets free\n");
@@ -174,7 +174,7 @@ void	close_pipes(t_data *data)
 	int	i;
 
 	i = 0;
-	while (i < 2 * (data->nb_cmd - 1))
+	while (i < 2 * data->nb_cmd)
 	{
 		close(data->fd[i]);
 		i++;
@@ -248,8 +248,10 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
+		{
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
+		}
 		if (temp->out_next != 0)
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n2 failed in pipe_proc");
@@ -346,50 +348,14 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 
 void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 {
-	t_inout	*tmp;
-	char	*line;
 
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->file[i] = open(ft_ddquote("objs/temp/heredoc", 0),
-				O_RDWR | O_TRUNC | O_APPEND | O_CREAT, 0644);
-		if (data->file[i] < 0)
-			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
-		tmp = data->inout;
-		while (data->inout->next != NULL && data->inout->next->type == 3)
-			data->inout = data->inout->next;
-		if (!ft_strncmp(tmp->file, data->inout->file, ft_strlen(tmp->file)))
-		{
-			line = readline("heredoc> ");
-			if (ft_strncmp(line, data->inout->file, ft_strlen(line)))
-			{
-				write(data->file[i], line, ft_strlen(line));
-				write(data->file[i], "\n", 1);
-			}
-		}
-		while (ft_strncmp(tmp->file, data->inout->file, ft_strlen(tmp->file)))
-		{
-			line = readline("heredoc> ");
-			if (!ft_strncmp(line, tmp->file, ft_strlen(line)))
-				tmp = tmp->next;
-		}
-		while (ft_strncmp(line, data->inout->file, ft_strlen(line)))
-		{
-			line = readline("heredoc> ");
-			if (ft_strncmp(line, data->inout->file, ft_strlen(line)))
-			{
-				write(data->file[i], line, ft_strlen(line));
-				write(data->file[i], "\n", 1);
-			}
-		}
-		close(data->file[i]);
-		data->file[i] = open(ft_ddquote("objs/temp/heredoc", 0), O_RDONLY);
-		if (dup2(data->file[i], STDIN_FILENO) == -1)
+		if (dup2(data->fd[2 * (data->ind + 1) - 2], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red3_proc");
-		close(data->file[i]);
 		if (temp->out_next)
 			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
@@ -469,11 +435,17 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			while (temp2)
 			{
 				if (temp2 && temp2->type != 3)
+				{
 					i++;
-				temp2 = temp2->next;
+					temp2 = temp2->next;
+				}
+				if (temp2 && temp2->type == 3)
+				{
+					i++;
+					while (temp2 && temp2->type == 3)
+						temp2 = temp2->next;
+				}
 			}
-			if (temp2 && temp2->type == 3)
-				i++;
 		}
 		else
 			if (temp)
@@ -509,7 +481,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
-				ft_printf("here\n");
 				red2_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
@@ -522,8 +493,37 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			if (i >= 0 && data.inout != 0 && data.inout->type == 3)
 			{
+				t_inout	*tmp;
+				char	*line;
+
+				tmp = data.inout;
+				if (!ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
+				{
+					line = readline("heredoc> ");
+					if (ft_strncmp(line, data.inout->file, ft_strlen(line)))
+					{
+						write(data.fd[2 * data.ind + 1], line, ft_strlen(line));
+						write(data.fd[2 * data.ind + 1], "\n", 1);
+					}
+				}
+				while (ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
+				{
+					line = readline("heredoc> ");
+					if (!ft_strncmp(line, tmp->file, ft_strlen(line))
+						&& data.inout->next->type == 3)
+						tmp = tmp->next;
+				}
+				while (ft_strncmp(line, data.inout->file, ft_strlen(line)))
+				{
+					line = readline("heredoc> ");
+					if (ft_strncmp(line, data.inout->file, ft_strlen(line)))
+					{
+						write(data.fd[2 * data.ind + 1], line, ft_strlen(line));
+						write(data.fd[2 * data.ind + 1], "\n", 1);
+					}
+				}
 				red3_proc(&data, temp, env, i);
-				while (data.inout->next && data.inout->next->type == 3)
+				while (data.inout->next != NULL && data.inout->next->type == 3)
 					data.inout = data.inout->next;
 				data.inout = data.inout->next;
 				i--;
