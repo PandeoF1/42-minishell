@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/20 16:31:11 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/21 16:23:43 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,38 +71,39 @@ char	*ft_check_arg(char *cmd, char *env)
 	try = NULL;
 	if (!access(cmd, F_OK))
 	{
-		if (!access(cmd, X_OK))
+		if (ft_strlen(cmd) > 2 && cmd[0] == '.'
+			&& cmd[1] == '/' && !access(cmd, X_OK))
 			return (cmd);
+		else
+			if (ft_strchr(cmd, '/'))
+				ft_perror("minishell: Permission denied");
 	}
+	if (ft_strchr(cmd, '/'))
+		ft_perror("minishell: No such file or directory");
 	cmd = ft_strxjoin("/", cmd, ft_strlen(cmd));
-	if (!ft_strncmp("/pwd", cmd, 4))
-		ft_perror("mamammamamama");
-	else
+	tab = ft_split(env, ':');
+	i = 0;
+	while (tab[i])
 	{
-		tab = ft_split(env, ':');
-		i = 0;
-		while (tab[i])
+		try = ft_strjoin(tab[i], cmd);
+		if (!access(try, X_OK))
 		{
-			try = ft_strjoin(tab[i], cmd);
-			if (!access(try, X_OK))
-			{
-				i = -1;
-				while (tab[++i])
-					free(tab[i]);
-				free(tab);
-				free(cmd);
-				return (try);
-			}
-			i++;
+			i = -1;
+			while (tab[++i])
+				free(tab[i]);
+			free(tab);
+			free(cmd);
+			return (try);
 		}
-		i = -1;
-		while (tab[++i])
-			free(tab[i]);
-		free(tab);
+		i++;
 	}
+	i = -1;
+	while (tab[++i])
+		free(tab[i]);
+	free(tab);
 	free(cmd);
 	free(try);
-	ft_perror("command not found");
+	ft_perror("minishell: No such file or directory");
 	return (0);
 }
 
@@ -273,7 +274,7 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 	}
 }
 
-void	red_proc(t_data *data, t_process *temp, char *env, int i)
+void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -306,24 +307,28 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-void	red2_proc(t_data *data, t_process *temp, char *env, int i)
+void	red_proc(t_data *data, t_process *temp, char *env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->fd[2 * data->ind + 1]
-			= open(ft_ddquote(data->inout->file, 0), O_RDWR);
+		data->file[i]
+			= open(ft_ddquote(data->inout->file, 0), O_RDONLY);
 		if (data->fd[2 * data->ind + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
 		if (temp->in_prev != 0)
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
 		if (data->inout->next == NULL)
-			if (dup2(data->fd[2 * data->ind + 1], STDIN_FILENO) == -1)
+			if (dup2(data->file[i], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
+		if (data->inout->next == NULL && temp->out_next)
+			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
+		close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -336,6 +341,59 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 			}
 		}
 		exit (0);
+	}
+}
+
+void	red3_proc(t_data *data, t_process *temp, char *env, int i)
+{
+	t_inout	*tmp;
+	char	*line;
+
+	data->pid1[i] = fork();
+	if (data->pid1[i] < 0)
+		ft_perror("forking failed\n");
+	if (data->pid1[i] == 0)
+	{
+		data->file[i] = open(ft_ddquote("objs/temp/heredoc", 0),
+				O_RDWR | O_TRUNC | O_APPEND | O_CREAT, 0644);
+		if (data->file[i] < 0)
+			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
+		tmp = data->inout;
+		while (data->inout->next != NULL && data->inout->next->type == 3)
+			data->inout = data->inout->next;
+		while (ft_strncmp(tmp->file, data->inout->file, ft_strlen(tmp->file)))
+		{
+			line = readline("heredoc> ");
+			if (!ft_strncmp(line, tmp->file, ft_strlen(line)))
+				tmp = tmp->next;
+		}
+		while (ft_strncmp(line, data->inout->file, ft_strlen(line)))
+		{
+			line = readline("heredoc> ");
+			if (ft_strncmp(line, data->inout->file, ft_strlen(line)))
+			{
+				write(data->file[i], line, ft_strlen(line));
+				write(data->file[i], "\n", 1);
+			}
+		}
+		close(data->file[i]);
+		data->file[i] = open(ft_ddquote("objs/temp/heredoc", 0), O_RDONLY);
+		if (dup2(data->file[i], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red3_proc");
+		close(data->file[i]);
+		if (temp->out_next)
+			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red_proc");
+		close_pipes(data);
+		if (temp->command != NULL)
+		{
+			data->tab_args[i]
+				= ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+			data->tab_paths[i] = ft_check_arg(temp->command, env);
+			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				ft_perror("failed to exec in red3_proc\n");
+		}
+		exit(0);
 	}
 }
 
@@ -383,13 +441,14 @@ int	ft_execute_cmd(t_process *proc, char *env)
 
 	temp = proc;
 	temp2 = temp->inout;
-	if (!temp2)
+	if (!temp2 || (temp2 && temp2->type == 3))
 		i = 1;
 	else
 		i = 0;
 	while (temp2)
 	{
-		i++;
+		if (temp2 && temp2->type != 3)
+			i++;
 		temp2 = temp2->next;
 	}
 	while (temp->next != NULL)
@@ -400,9 +459,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		{
 			while (temp2)
 			{
-				i++;
+				if (temp2 && temp2->type != 3)
+					i++;
 				temp2 = temp2->next;
 			}
+			if (temp2 && temp2->type == 3)
+				i++;
 		}
 		else
 			if (temp)
@@ -421,10 +483,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	{
 		i--;
 		j = i;
+		ft_printf("I : %d\n", i);
 		data.ind = 0;
 		while (i >= 0)
 		{
-			data.inout = temp->inout;
+			if (!data.inout)
+				data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
 				pipe_proc(&data, temp, env, i);
@@ -436,23 +500,32 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
-				red_proc(&data, temp, env, i);
+				ft_printf("here\n");
+				red2_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
-				red2_proc(&data, temp, env, i);
+				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
-			while (i >= 0 && data.inout != 0 && data.inout->type == 4)
+			if (i >= 0 && data.inout != 0 && data.inout->type == 3)
+			{
+				red3_proc(&data, temp, env, i);
+				while (data.inout->next && data.inout->next->type == 3)
+					data.inout = data.inout->next;
+				data.inout = data.inout->next;
+				i--;
+			}
+			if (i >= 0 && data.inout != 0 && data.inout->type == 4)
 			{
 				red4_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
-			if (temp && temp->inout)
+			if (temp && temp->inout && !data.inout)
 			{
 				temp = temp->next;
 				data.ind++;
@@ -460,7 +533,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 		}
 	}
 	i = j;
-	ft_printf("gg\n");
 	close_pipes(&data);
 	while (j >= 0)
 	{
