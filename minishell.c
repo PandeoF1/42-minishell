@@ -58,14 +58,14 @@ void	ctrl_c_handler(int sig)
 
 static void	action(int sig)
 {
+	char *tmp;
+
 	(void)sig;
-	static int x = 0;
-	ft_putstr_fd("\b\b", 1);
+	ft_putstr_fd("\b\b  \b\b", 1);
 	ft_putchar_fd('\n', 1);
-	ft_putstr_fd(ft_readline(), 1);
-	x++;
-	if (x == 10)
-		exit(0);
+	tmp = ft_readline();
+	ft_putstr_fd(tmp, 1);
+	free(tmp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -73,28 +73,30 @@ int	main(int argc, char **argv, char **envp)
 	char	*tmp;
 	char	*env;
 	char	*penv;
+	char	*readlin;
 
 	(void)argc;
 	(void)argv;
 	env = getenv("PATH");
-	signal(SIGINT, ctrl_c_handler);
+	/*signal(SIGINT, ctrl_c_handler);
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
-	/*
+	signal(SIGTSTP, SIG_IGN);*/
 	signal(SIGINT, action);
-	signal(SIGQUIT, sig_quit);*/
+	signal(SIGQUIT, sig_quit);
 	penv = ft_export_env(envp);
 	while (1)
 	{
-		tmp = readline(ft_readline());
+		readlin = ft_readline();
+		tmp = readline(readlin);
+		free(readlin);
 		if (ft_strlen(tmp) != 0)
 		{
 			add_history(tmp);
 			tmp = ft_env(penv, tmp, 0, 0);
 			ft_parse_command(tmp, env);
 		}
-		//rl_clear_history();
+		clear_history();
 		free(tmp);
 	}
 	free(penv);	if (tmp)
