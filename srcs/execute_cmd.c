@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/21 16:23:43 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/24 08:34:31 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,6 +361,15 @@ void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 		tmp = data->inout;
 		while (data->inout->next != NULL && data->inout->next->type == 3)
 			data->inout = data->inout->next;
+		if (!ft_strncmp(tmp->file, data->inout->file, ft_strlen(tmp->file)))
+		{
+			line = readline("heredoc> ");
+			if (ft_strncmp(line, data->inout->file, ft_strlen(line)))
+			{
+				write(data->file[i], line, ft_strlen(line));
+				write(data->file[i], "\n", 1);
+			}
+		}
 		while (ft_strncmp(tmp->file, data->inout->file, ft_strlen(tmp->file)))
 		{
 			line = readline("heredoc> ");
