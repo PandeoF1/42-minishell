@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/24 12:17:53 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/25 12:52:14 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,11 +249,11 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{
-			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
 		}
 		if (temp->out_next != 0)
-			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n2 failed in pipe_proc");
 		close_pipes(data);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
@@ -283,15 +283,15 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->fd[2 * data->ind + 1] = open(ft_ddquote(data->inout->file, 0),
+		data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote(data->inout->file, 0),
 				O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->fd[2 * data->ind + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
-			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
+			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
 		if (data->inout->next == NULL)
-			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
 		if (temp->command != NULL)
@@ -318,16 +318,13 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 	{
 		data->file[i]
 			= open(ft_ddquote(data->inout->file, 0), O_RDONLY);
-		if (data->fd[2 * data->ind + 1] < 0)
+		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
-		if (temp->in_prev != 0)
-			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red2_proc");
 		if (data->inout->next == NULL)
 			if (dup2(data->file[i], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
 		if (data->inout->next == NULL && temp->out_next)
-			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
 		close(data->file[i]);
@@ -348,7 +345,6 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 
 void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 {
-
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
 		ft_perror("forking failed\n");
@@ -357,7 +353,7 @@ void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 		if (dup2(data->fd[2 * (data->ind + 1) - 2], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red3_proc");
 		if (temp->out_next)
-			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
 		if (temp->command != NULL)
@@ -413,6 +409,8 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	t_inout		*temp2;
 	int			j;
 	int			status;
+	t_inout		*tmp;
+	char		*line;
 
 	temp = proc;
 	temp2 = temp->inout;
@@ -464,14 +462,16 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	{
 		i--;
 		j = i;
-		ft_printf("I : %d\n", i);
+		// ft_printf("I : %d\n", i);
 		data.ind = 0;
+		data.inout = NULL;
 		while (i >= 0)
 		{
 			if (!data.inout)
 				data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
+				ft_printf("warning\n");
 				pipe_proc(&data, temp, env, i);
 				temp = temp->next;
 				data.ind++;
@@ -481,22 +481,24 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
+				ft_printf("warning\n");
 				red2_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
+				ft_printf("warning\n");
 				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
 			if (i >= 0 && data.inout != 0 && data.inout->type == 3)
 			{
-				t_inout	*tmp;
-				char	*line;
-
 				tmp = data.inout;
+				line = NULL;
+				while (data.inout->next != NULL && data.inout->next->type == 3)
+					data.inout = data.inout->next;
 				if (!ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
 				{
 					line = readline("heredoc> ");
@@ -510,11 +512,15 @@ int	ft_execute_cmd(t_process *proc, char *env)
 				{
 					line = readline("heredoc> ");
 					if (!ft_strncmp(line, tmp->file, ft_strlen(line))
-						&& data.inout->next->type == 3)
+						&& tmp->next && tmp->next->type == 3)
 						tmp = tmp->next;
+					if (ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
+						free(line);
 				}
 				while (ft_strncmp(line, data.inout->file, ft_strlen(line)))
 				{
+					if (line)
+						free (line);
 					line = readline("heredoc> ");
 					if (ft_strncmp(line, data.inout->file, ft_strlen(line)))
 					{
@@ -522,9 +528,8 @@ int	ft_execute_cmd(t_process *proc, char *env)
 						write(data.fd[2 * data.ind + 1], "\n", 1);
 					}
 				}
+				free(line);
 				red3_proc(&data, temp, env, i);
-				while (data.inout->next != NULL && data.inout->next->type == 3)
-					data.inout = data.inout->next;
 				data.inout = data.inout->next;
 				i--;
 			}
@@ -537,7 +542,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			if (temp && temp->inout && !data.inout)
 			{
 				temp = temp->next;
-				data.ind++;
+				data.ind++;//be carefull
 			}
 		}
 	}

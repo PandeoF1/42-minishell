@@ -96,10 +96,10 @@ int	main(int argc, char **argv, char **envp)
 			tmp = ft_env(penv, tmp, 0, 0);
 			ft_parse_command(tmp, env);
 		}
-		clear_history();
 		free(tmp);
 	}
 	free(penv);	if (tmp)
 		free(tmp);
+	clear_history();
 	return (0);
 }

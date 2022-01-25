@@ -115,8 +115,8 @@ void	ft_clean_process(t_process *process)
 void	ft_parse_command(char *str, char *env)
 {
 	t_process	*process;
-	t_process	*tmp;
-	t_inout		*tmpi;
+	// t_process	*tmp;
+	// t_inout		*tmpi;
 	int			x;
 
 	x = 0;
@@ -129,36 +129,36 @@ void	ft_parse_command(char *str, char *env)
 		{
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
-			 tmp = process;
-			 while (process)
-			 {
-			 	ft_printf("---- parse ----\n");
-			 	ft_printf("command : %s.\n", process->command);
-			 	ft_printf("cmd_arg : %s.\n", process->cmd_arg);
-			 	ft_printf("red_prev : %d.\n", process->red_prev);
-			 	ft_printf("out_next : %d.\n", process->out_next);
-			 	ft_printf("in_prev : %d.\n", process->in_prev);
-			 	ft_printf("type : %s.\n", process->type);
-			 	if (process->inout)
-			 	{
-			 		tmpi = process->inout;
-			 		ft_printf("--- INOUT ----\n");
-			 		while (tmpi)
-			 		{
-			 			ft_printf("-------\n");
-			 			if (tmpi->file)
-			 				ft_printf("inout : %s.\n", tmpi->file);
-			 			if (tmpi->type)
-			 				ft_printf("type : %d.\n", tmpi->type);
-			 			ft_printf("-------\n");
-			 			tmpi = tmpi->next;
-			 		}
-			 		ft_printf("--- INOUT ----\n");
-			 	}
-			 	ft_printf("---- end parse ----\n");
-			 	process = process->next;
-			 }
-			 process = tmp;
+			//  tmp = process;
+			//  while (process)
+			//  {
+			//  	ft_printf("---- parse ----\n");
+			//  	ft_printf("command : %s.\n", process->command);
+			//  	ft_printf("cmd_arg : %s.\n", process->cmd_arg);
+			//  	ft_printf("red_prev : %d.\n", process->red_prev);
+			//  	ft_printf("out_next : %d.\n", process->out_next);
+			//  	ft_printf("in_prev : %d.\n", process->in_prev);
+			//  	ft_printf("type : %s.\n", process->type);
+			//  	if (process->inout)
+			//  	{
+			//  		tmpi = process->inout;
+			//  		ft_printf("--- INOUT ----\n");
+			//  		while (tmpi)
+			//  		{
+			//  			ft_printf("-------\n");
+			//  			if (tmpi->file)
+			//  				ft_printf("inout : %s.\n", tmpi->file);
+			//  			if (tmpi->type)
+			//  				ft_printf("type : %d.\n", tmpi->type);
+			//  			ft_printf("-------\n");
+			//  			tmpi = tmpi->next;
+			//  		}
+			//  		ft_printf("--- INOUT ----\n");
+			//  	}
+			//  	ft_printf("---- end parse ----\n");
+			//  	process = process->next;
+			//  }
+			//  process = tmp;
 			ft_execute_cmd(process, env);
 		}
 		else
