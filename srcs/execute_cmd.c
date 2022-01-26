@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/25 12:52:14 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 09:27:00 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,9 +283,9 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote(data->inout->file, 0),
-				O_RDWR | O_TRUNC | O_CREAT, 0644);
-		if (data->fd[2 * data->ind + 1] < 0)
+		data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote
+				(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
+		if (data->fd[2 * (data->ind + 1) + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		if (temp->in_prev != 0)
 			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
@@ -352,7 +352,8 @@ void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 	{
 		if (dup2(data->fd[2 * (data->ind + 1) - 2], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red3_proc");
-		if (temp->out_next)
+		if (temp->out_next || (temp->inout->next
+				&& temp->inout->next->type != 3))
 			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
@@ -462,7 +463,7 @@ int	ft_execute_cmd(t_process *proc, char *env)
 	{
 		i--;
 		j = i;
-		// ft_printf("I : %d\n", i);
+		//ft_printf("I : %d\n", i);
 		data.ind = 0;
 		data.inout = NULL;
 		while (i >= 0)
@@ -471,7 +472,6 @@ int	ft_execute_cmd(t_process *proc, char *env)
 				data.inout = temp->inout;
 			while (i >= 0 && (!data.inout))
 			{
-				ft_printf("warning\n");
 				pipe_proc(&data, temp, env, i);
 				temp = temp->next;
 				data.ind++;
@@ -481,14 +481,12 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
 			{
-				ft_printf("warning\n");
 				red2_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
-				ft_printf("warning\n");
 				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
 				i--;
@@ -497,6 +495,9 @@ int	ft_execute_cmd(t_process *proc, char *env)
 			{
 				tmp = data.inout;
 				line = NULL;
+				close(data.fd[2 * data.ind + 1]);
+				if (pipe(data.fd + 2 * data.ind) < 0)
+					ft_perror("nooope");
 				while (data.inout->next != NULL && data.inout->next->type == 3)
 					data.inout = data.inout->next;
 				if (!ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
