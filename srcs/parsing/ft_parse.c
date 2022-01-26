@@ -68,7 +68,6 @@ void	ft_clear_process(t_process *process)
 
 	if (ft_strlen(process->command) == 0 && ft_strlen(process->cmd_arg) != 0)
 	{
-		ft_printf("gne gne gne\n");
 		splitd = ft_splitd(process->cmd_arg, ' ');
 		process->command = ft_strdup(splitd[0]);
 		ft_free_split(splitd);
@@ -149,6 +148,41 @@ void	ft_clean_process(t_process *process)
 	}
 }
 
+int	ft_check_split(char	*str, int x, int y)
+{
+	char	**splitd;
+	int		test;
+
+	test = 0;
+	splitd = ft_splitd(str, ' ');
+	while (splitd[x])
+	{
+		y = 0;
+		while (splitd[x][y])
+		{
+			ft_printf("str %s\n", splitd[x] + y);
+			if (splitd[x][y] == '|')
+				test++;
+			else
+				test = 0;
+			if (test == 2 || (splitd[x][y + 1] &&  	splitd[x][y] == '|' && splitd[x][y + 1] == '|'))
+			{
+				ft_free_split(splitd);
+				return (0);
+			}
+			y++;
+		}
+		x++;
+	}
+	if (test != 0 || splitd[0][0] == '|')
+	{
+		ft_free_split(splitd);
+		return (0);
+	}
+	ft_free_split(splitd);
+	return (1);
+}
+
 /*
 * ft_parse_command(str)
 * desc : parse the command and return the struct
@@ -166,7 +200,7 @@ void	ft_parse_command(char *str, char *env)
 	x = 0;
 	if (ft_strlen(str) == 0 || ft_space(str) == 0)
 		return ;
-	if (ft_check_quote(str))
+	if (ft_check_quote(str) && ft_check_split(str, 0 , 0))
 	{
 		process = ft_create_process(-1, 0, ft_splitd(str, '|'));
 		if (ft_check_process(process))
@@ -209,5 +243,5 @@ void	ft_parse_command(char *str, char *env)
 		ft_free(&process);
 	}
 	else
-		ft_printf("minishell: syntax error with open quotes or < >\n");
+		ft_printf("minishell: syntax error with open quotes or > | <\n");
 }
