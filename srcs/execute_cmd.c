@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 11:15:10 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 11:38:06 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*ft_check_arg(char *cmd, char *env)
 	char		*try;
 
 	try = NULL;
+	cmd = ft_ddquote(cmd, 0);
 	if (!access(cmd, F_OK))
 	{
 		if (ft_strlen(cmd) > 2 && cmd[0] == '.'
