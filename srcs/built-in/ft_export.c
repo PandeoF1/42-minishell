@@ -16,6 +16,7 @@ int	ft_export(t_data *data, char **arg, int fd)
 {
 	char	**tmp;
 
+	ft_printf("export: ");
 	tmp = data->tab_env;
 	ft_printf("test : %s", (*tmp)[0]);
 	return (1);
