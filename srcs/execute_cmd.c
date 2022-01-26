@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 11:38:06 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 12:12:40 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,7 +418,7 @@ void	red4_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-int	ft_execute_cmd(t_process *proc, char *env)
+int	ft_execute_cmd(t_process *proc, char **env)
 {
 	t_data		data;
 	int			i;

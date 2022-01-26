@@ -73,6 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*tmp;
 	char	*env;
 	char	*penv;
+	char	**splitd;
 	char	*readlin;
 
 	(void)argc;
@@ -94,7 +95,8 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(tmp);
 			tmp = ft_env(penv, tmp, 0, 0);
-			ft_parse_command(tmp, penv);
+			splitd = ft_strsplit(tmp, '\n');
+			ft_parse_command(tmp, splitd);
 		}
 		free(tmp);
 	}

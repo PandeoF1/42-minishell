@@ -200,7 +200,7 @@ int	ft_check_split(char	*str, int x, int y)
 * todo : free(process)
 */
 
-void	ft_parse_command(char *str, char *env)
+void	ft_parse_command(char *str, char **env)
 {
 	t_process	*process;
 	t_process	*tmp;
