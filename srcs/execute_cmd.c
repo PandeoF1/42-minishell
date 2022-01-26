@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 09:27:00 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 11:15:10 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,17 +283,32 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 		ft_perror("forking failed\n");
 	if (data->pid1[i] == 0)
 	{
-		data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote
-				(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
+		if (temp->out_next)
+			data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote
+					(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
+		else
+			data->file[i] = open(ft_ddquote
+					(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->fd[2 * (data->ind + 1) + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
-		if (temp->in_prev != 0)
+		if (temp->in_prev != 0 || data->inout->red_prev == 1)
+		{
 			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
-		if (data->inout->next == NULL)
+		}
+		if (data->inout->next == NULL && temp->out_next)
+		{
 			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red_proc");
+				ft_perror("dup2 n2 failed in red_proc");
+		}
+		else if (data->inout->next == NULL)
+		{
+			if (dup2(data->file[i], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n3 failed in red_proc");
+		}
 		close_pipes(data);
+		if (!temp->out_next)
+			close(data->file[i]);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -357,7 +372,7 @@ void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		close_pipes(data);
-		if (temp->command != NULL)
+		if (temp->command != NULL && !data->inout->next)
 		{
 			data->tab_args[i]
 				= ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
