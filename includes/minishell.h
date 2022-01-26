@@ -72,6 +72,7 @@ char		*ft_replace(char *str, char *tmp, int x, int y);
 void		ft_quote(t_process **process, int x, int *y, char **split);
 int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
+int			ft_is_command(char *cmd, char *str);
 
 void		ft_pwd(int fd);
 void		ft_echo(char *args, int fd);

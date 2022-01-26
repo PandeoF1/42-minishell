@@ -58,14 +58,17 @@ void	ctrl_c_handler(int sig)
 
 static void	action(int sig)
 {
-	char *tmp;
-
 	(void)sig;
-	ft_putstr_fd("\b\b  \b\b", 1);
-	ft_putchar_fd('\n', 1);
-	tmp = ft_readline();
-	ft_putstr_fd(tmp, 1);
-	free(tmp);
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	//return_val = 130;
+}
+
+void	test(int sig)
+{
+	ft_printf("yolo\n");
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -83,6 +86,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);*/
+	signal(SIGTSTP, test);
 	signal(SIGINT, action);
 	signal(SIGQUIT, sig_quit);
 	penv = ft_export_env(envp);
@@ -91,16 +95,22 @@ int	main(int argc, char **argv, char **envp)
 		readlin = ft_readline();
 		tmp = readline(readlin);
 		free(readlin);
+		if (!tmp)
+		{
+			ft_printf("exit\n");
+			exit (1);
+		}
 		if (ft_strlen(tmp) != 0)
 		{
 			add_history(tmp);
 			tmp = ft_penv(penv, tmp, 0, 0);
 			splitd = ft_splitd(penv, '\n');
 			ft_parse_command(tmp, splitd, &penv);
+			free(tmp);
 		}
-		free(tmp);
 	}
-	free(penv);	if (tmp)
+	free(penv);
+	if (tmp)
 		free(tmp);
 	clear_history();
 	return (0);
