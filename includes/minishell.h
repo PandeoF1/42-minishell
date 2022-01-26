@@ -26,6 +26,7 @@
 typedef struct s_inout
 {
 	int				type;
+	int				red_prev;
 	char			*file;
 	struct s_inout	*next;
 }			t_inout;
@@ -37,7 +38,6 @@ typedef struct s_process
 	char				*command;
 	char				*cmd_arg;
 	int					out_next;
-	int					red_prev;
 	int					in_prev;
 	char				*type;
 }		t_process;

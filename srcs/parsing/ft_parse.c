@@ -33,6 +33,31 @@ int	ft_structlen(t_process *process)
 }
 
 /*
+*	ft_config_inout(t_inout **inout)
+*	desc : configure the output and input on the inout
+*/
+
+void	ft_config_inout(t_inout *inout)
+{
+	t_inout	*tmp;
+	int		x;
+
+	x = 0;
+	tmp = inout;
+	while (tmp)
+	{
+		if (x)
+		{
+			x = 0;
+			tmp->red_prev = 1;
+		}
+		if (tmp->type == 3)
+			x = 1;
+		tmp = tmp->next;
+	}
+}
+
+/*
 *	ft_config_process(t_process *process)
 *	desc : configure the output and input on the process
 */
@@ -56,11 +81,11 @@ void	ft_config_process(t_process *process, int x, int next, int inout)
 		else if (next)
 		{
 			tmp->in_prev = 1;
-			if (inout)
-				tmp->red_prev = 1;
 			inout = 0;
 			next = 0;
 		}
+		if (tmp->inout)
+			ft_config_inout(tmp->inout);
 		tmp = tmp->next;
 	}
 }
@@ -148,8 +173,8 @@ void	ft_parse_command(char *str, char *env)
 			//  			ft_printf("-------\n");
 			//  			if (tmpi->file)
 			//  				ft_printf("inout : %s.\n", tmpi->file);
-			//  			if (tmpi->type)
-			//  				ft_printf("type : %d.\n", tmpi->type);
+			//  			ft_printf("type : %d.\n", tmpi->type);
+			//  			ft_printf("red_prev : %d.\n", tmpi->red_prev);
 			//  			ft_printf("-------\n");
 			//  			tmpi = tmpi->next;
 			//  		}

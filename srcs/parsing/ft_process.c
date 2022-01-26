@@ -54,6 +54,7 @@ t_inout	*ft_create_inout(void)
 		return (NULL);
 	inout->type = 0;
 	inout->file = NULL;
+	inout->red_prev = 0;
 	inout->next = NULL;
 	return (inout);
 }
