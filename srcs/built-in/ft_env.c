@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/minishell.h"
+
 void	ft_env(char *env, int fd)
 {
 	write(fd, env, ft_strlen(env));

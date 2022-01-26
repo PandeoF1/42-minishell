@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 12:12:40 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 13:18:45 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*ft_strxjoin(char *s1, char *s2, int n)
 	return (str);
 }
 
-char	*ft_check_arg(char *cmd, char *env)
+char	*ft_check_arg(char *cmd, char **env)
 {
 	int			i;
 	char		**tab;
@@ -82,7 +82,9 @@ char	*ft_check_arg(char *cmd, char *env)
 	if (ft_strchr(cmd, '/'))
 		ft_perror("minishell: No such file or directory");
 	cmd = ft_strxjoin("/", cmd, ft_strlen(cmd));
-	tab = ft_split(env, ':');
+	i = find_path(env);
+	//ft_printf("hugh : %s\n", env[1]);
+	tab = ft_split(env[i] + 5, ':');
 	i = 0;
 	while (tab[i])
 	{
@@ -239,7 +241,7 @@ void	free_exec(t_data *data, int i)
 	free(data->file); // need to be free
 }
 
-void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
+void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -262,7 +264,7 @@ void	pipe_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-void	one_proc(t_data *data, t_process *temp, char *env)
+void	one_proc(t_data *data, t_process *temp, char **env)
 {
 	data->pid1[0] = fork();
 	if (data->pid1[0] < 0)
@@ -272,12 +274,12 @@ void	one_proc(t_data *data, t_process *temp, char *env)
 		close_pipes(data);
 		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
-		if (execve(data->tab_paths[0], data->tab_args[0], NULL) == -1)
-			ft_perror("failed to exec in child_proc");
+		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
+			ft_perror("failed to exec in one_proc");
 	}
 }
 
-void	red2_proc(t_data *data, t_process *temp, char *env, int i)
+void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -325,7 +327,7 @@ void	red2_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-void	red_proc(t_data *data, t_process *temp, char *env, int i)
+void	red_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -359,7 +361,7 @@ void	red_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-void	red3_proc(t_data *data, t_process *temp, char *env, int i)
+void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
@@ -385,7 +387,7 @@ void	red3_proc(t_data *data, t_process *temp, char *env, int i)
 	}
 }
 
-void	red4_proc(t_data *data, t_process *temp, char *env, int i)
+void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)

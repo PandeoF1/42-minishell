@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/minishell.h"
+
 static int	ft_w_is_arg(char *str)
 {
 	int i;
