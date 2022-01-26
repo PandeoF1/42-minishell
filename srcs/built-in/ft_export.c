@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_export(t_data *data, char *arg)
+void	ft_export(t_data *data, char **arg, int fd)
 {
 	char	**tmp;
 

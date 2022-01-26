@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 13:48:42 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 15:24:45 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,20 @@ int	find_path(char **env)
 		i++;
 	}
 	return (i);
+}
+
+void	ft_built(int i, char **env, t_data *data, t_process *temp)
+{
+	if (!ft_strncmp(temp->command, "pwd", 3))
+		ft_pwd(data->fd1[i]);
+	if (!ft_strncmp(temp->command, "env", 3))
+		ft_env(env, data->fd1[i]);
+	if (!ft_strncmp(temp->command, "exit", 4))
+		ft_exit(data->fd1[i]);
+	if (!ft_strncmp(temp->command, "cd", 2))
+		ft_cd(fd, data->tab_args[i]);
+	if (!ft_strncmp(temp->command, "export", 6))
+		ft_export(data, data->tab_args[i], data->fd1[i]);
 }
 
 /*
@@ -128,6 +142,9 @@ int	ft_malloc_struct(t_data *data, int	i)
 		return (0);
 	data->check = (int *)malloc(sizeof(int) * i);
 	if (!data->check)
+		return (0);
+	data->fd1 = malloc(sizeof(int) * i);
+	if (!data->fd1)
 		return (0);
 	data->type_nb = (int *)malloc(sizeof(int) * i);
 	if (!data->type_nb)
@@ -272,8 +289,10 @@ void	one_proc(t_data *data, t_process *temp, char **env)
 	if (data->pid1[0] == 0)
 	{
 		close_pipes(data);
+		data->fd1[i] = 1;
 		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
+		ft_built(1, env, data, temp);
 		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
 			ft_perror("failed to exec in one_proc");
 	}
@@ -433,6 +452,8 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 
 	data.tab_env = penv;
 	temp = proc;
+	if (!ft_strncmp(temp->command, "exit", 4))
+		ft_exit(1);
 	temp2 = temp->inout;
 	if (!temp2 || (temp2 && temp2->type == 3))
 		i = 1;
