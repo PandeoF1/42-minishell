@@ -160,7 +160,6 @@ int	ft_check_split(char	*str, int x, int y)
 		y = 0;
 		while (splitd[x][y])
 		{
-			ft_printf("str %s\n", splitd[x] + y);
 			if (splitd[x][y] == '|')
 				test++;
 			else
