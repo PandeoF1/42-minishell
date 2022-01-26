@@ -30,7 +30,6 @@ static void	ft_malloc_process(t_process **prev)
 	new->cmd_arg = NULL;
 	new->out_next = 0;
 	new->in_prev = 0;
-	new->red_prev = 0;
 	new->type = NULL;
 	new->next = NULL;
 	if (*prev)
