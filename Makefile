@@ -10,6 +10,12 @@
 #                                                                              #
 # **************************************************************************** #
 
+
+ifneq ($(shell uname), Linux)
+READLINE_LIB_DIR_FLAG := -L$(shell brew --prefix readline)/lib
+READLINE_INC_DIR_FLAG := -I$(shell brew --prefix readline)/include
+endif
+
 BLU			= \033[0;34m
 GRN			= \033[0;32m
 RED			= \033[0;31m
@@ -37,11 +43,11 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)srcs/parsing
 	@mkdir -p $(OBJS_DIR)srcs/built-in
 	@mkdir -p $(OBJS_DIR)get_next_line
-	@$(CC) $(CC_FLAGS) -c $< -o $@
+	@$(CC) $(READLINE_INC_DIR_FLAG) $(CC_FLAGS) -c $< -o $@
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 
 $(NAME): $(OBJECTS_PREFIXED) maker
-	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) libft/libft.a ft_printf/libftprintf.a -lreadline 
+	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) $(READLINE_LIB_DIR_FLAG) libft/libft.a ft_printf/libftprintf.a -lreadline 
 	@printf "\033[2K\r\033[0;32m[END]\033[0m $(NAME)$(END)\n"
 
 all: $(NAME)
