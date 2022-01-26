@@ -49,14 +49,14 @@ typedef struct s_check
 }			t_check;
 
 char		*ft_get_input(int fd, int size, int len);
-void		ft_parse_command(char *str, char **env);
+void		ft_parse_command(char *str, char **env, char **penv);
 int			ft_check_quote(char *str);
 int			ft_check_process(t_process *process);
 void		ft_free_split(char **split);
 char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(int x, int y, char **split);
 void		ft_free(t_process **process);
-int			ft_execute_cmd(t_process *proc, char **env);
+int			ft_execute_cmd(t_process *proc, char **env, char **penv);
 char		*ft_env(char *env, char *str, int x, int b);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 13:18:45 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 13:48:42 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,7 +420,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 	}
 }
 
-int	ft_execute_cmd(t_process *proc, char **env)
+int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 {
 	t_data		data;
 	int			i;
@@ -431,6 +431,7 @@ int	ft_execute_cmd(t_process *proc, char **env)
 	t_inout		*tmp;
 	char		*line;
 
+	data.tab_env = penv;
 	temp = proc;
 	temp2 = temp->inout;
 	if (!temp2 || (temp2 && temp2->type == 3))

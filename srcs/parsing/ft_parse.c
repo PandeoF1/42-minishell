@@ -200,7 +200,7 @@ int	ft_check_split(char	*str, int x, int y)
 * todo : free(process)
 */
 
-void	ft_parse_command(char *str, char **env)
+void	ft_parse_command(char *str, char **env, char **penv)
 {
 	t_process	*process;
 	t_process	*tmp;
@@ -246,7 +246,7 @@ void	ft_parse_command(char *str, char **env)
 			//  	process = process->next;
 			//  }
 			//  process = tmp;
-			ft_execute_cmd(process, env);
+			ft_execute_cmd(process, env, penv);
 		}
 		else
 			ft_printf("minishell: syntax error near token `newline'\n");
