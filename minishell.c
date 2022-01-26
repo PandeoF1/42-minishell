@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(tmp);
 			tmp = ft_env(penv, tmp, 0, 0);
-			splitd = ft_strsplit(tmp, '\n');
+			splitd = ft_splitd(tmp, '\n');
 			ft_parse_command(tmp, splitd);
 		}
 		free(tmp);
