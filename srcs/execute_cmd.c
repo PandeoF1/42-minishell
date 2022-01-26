@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 15:24:45 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 15:29:08 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	ft_built(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(data->fd1[i]);
 	if (!ft_strncmp(temp->command, "cd", 2))
-		ft_cd(fd, data->tab_args[i]);
-	if (!ft_strncmp(temp->command, "export", 6))
-		ft_export(data, data->tab_args[i], data->fd1[i]);
+		ft_cd(data->fd1[i], data->tab_args[i]);
+	// if (!ft_strncmp(temp->command, "export", 6))
+	// 	ft_export(data, data->tab_args[i], data->fd1[i]);
 }
 
 /*
@@ -283,6 +283,9 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	one_proc(t_data *data, t_process *temp, char **env)
 {
+	int	i;
+
+	i = 0;
 	data->pid1[0] = fork();
 	if (data->pid1[0] < 0)
 		ft_perror("forking failed\n");
