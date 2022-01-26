@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(tmp);
 			tmp = ft_env(penv, tmp, 0, 0);
-			ft_parse_command(tmp, env);
+			ft_parse_command(tmp, penv);
 		}
 		free(tmp);
 	}

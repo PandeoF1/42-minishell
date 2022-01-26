@@ -152,6 +152,7 @@ int	ft_check_split(char	*str, int x, int y)
 {
 	char	**splitd;
 	int		test;
+	char	c;
 
 	test = 0;
 	splitd = ft_splitd(str, ' ');
@@ -160,14 +161,24 @@ int	ft_check_split(char	*str, int x, int y)
 		y = 0;
 		while (splitd[x][y])
 		{
-			if (splitd[x][y] == '|')
-				test++;
-			else
-				test = 0;
-			if (test == 2 || (splitd[x][y + 1] &&  	splitd[x][y] == '|' && splitd[x][y + 1] == '|'))
+			if (splitd[x][y] == '"' || splitd[x][y] == '\'')
 			{
-				ft_free_split(splitd);
-				return (0);
+				c = splitd[x][y];
+				y++;
+				while (splitd[x][y] && splitd[x][y] != c)
+					y++;
+			}
+			if (splitd[x][y])
+			{
+				if (splitd[x][y] == '|')
+					test++;
+				else
+					test = 0;
+				if (test == 2 || (splitd[x][y + 1] &&  	splitd[x][y] == '|' && splitd[x][y + 1] == '|'))
+				{
+					ft_free_split(splitd);
+					return (0);
+				}
 			}
 			y++;
 		}
