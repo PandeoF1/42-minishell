@@ -77,7 +77,7 @@ int			ft_is_command(char *cmd, char *str);
 void		ft_pwd(int fd);
 void		ft_echo(char *args, int fd);
 void		ft_env(char **env, int fd);
-void		ft_export(t_data *data);
+void		ft_export(t_data *data, char *arg)
 
 void		ft_perror(char *str);
 int			ft_wordlen(char *str, t_data *data, int a);
