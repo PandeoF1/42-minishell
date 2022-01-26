@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 15:29:08 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 15:39:44 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	ft_built(int i, char **env, t_data *data, t_process *temp)
 		ft_exit(data->fd1[i]);
 	if (!ft_strncmp(temp->command, "cd", 2))
 		ft_cd(data->fd1[i], data->tab_args[i]);
-	// if (!ft_strncmp(temp->command, "export", 6))
-	// 	ft_export(data, data->tab_args[i], data->fd1[i]);
+	if (!ft_strncmp(temp->command, "export", 6))
+		ft_export(data, data->tab_args[i], data->fd1[i]);
 }
 
 /*
@@ -295,7 +295,7 @@ void	one_proc(t_data *data, t_process *temp, char **env)
 		data->fd1[i] = 1;
 		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
-		ft_built(1, env, data, temp);
+		ft_built(i, env, data, temp);
 		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
 			ft_perror("failed to exec in one_proc");
 	}
