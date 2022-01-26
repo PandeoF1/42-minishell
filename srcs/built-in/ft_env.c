@@ -19,4 +19,5 @@ void	ft_env(char **env, int fd)
 	x = 0;
 	while (env[x])
 		ft_putendl_fd(env[x++], fd);
+	exit(0);
 }

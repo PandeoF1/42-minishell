@@ -10,3 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../includes/minishell.h"
+
+void	ft_export(t_data *data)
+{
+	char	**tmp;
+
+	tmp = data->tab_env;
+	ft_printf("test : %s", (*tmp)[0]);
+	exit(0);
+}

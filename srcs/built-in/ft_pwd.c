@@ -20,4 +20,5 @@ void	ft_pwd(int fd)
 	write(fd, pwd, ft_strlen(pwd));
 	write(fd, "\n", 1);
 	free(pwd);
+	exit(0);
 }

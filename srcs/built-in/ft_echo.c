@@ -39,4 +39,5 @@ void	ft_echo(char *args, int fd)
 			write(fd, args + x, ft_strlen(args + x));
 		write(fd, "\n", 1);
 	}
+	exit(0);
 }

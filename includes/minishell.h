@@ -57,7 +57,7 @@ char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(int x, int y, char **split);
 void		ft_free(t_process **process);
 int			ft_execute_cmd(t_process *proc, char **env, char **penv);
-char		*ft_env(char *env, char *str, int x, int b);
+char		*ft_penv(char *env, char *str, int x, int b);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);
 char		*ft_search_env(char *env, char *var);
@@ -72,6 +72,11 @@ char		*ft_replace(char *str, char *tmp, int x, int y);
 void		ft_quote(t_process **process, int x, int *y, char **split);
 int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
+
+void		ft_pwd(int fd);
+void		ft_echo(char *args, int fd);
+void		ft_env(char **env, int fd);
+void		ft_export(t_data *data);
 
 void		ft_perror(char *str);
 int			ft_wordlen(char *str, t_data *data, int a);

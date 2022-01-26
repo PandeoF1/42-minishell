@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/20 12:39:11 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 13:56:25 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	ft_is_tild(char *str, int x)
 *	desc : replace all ~ and env variable in the str
 */
 
-char	*ft_env(char *env, char *str, int x, int b)
+char	*ft_penv(char *env, char *str, int x, int b)
 {
 	char	*tmp;
 	char	*var;
