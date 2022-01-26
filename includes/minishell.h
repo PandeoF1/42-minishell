@@ -74,10 +74,10 @@ int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
 int			ft_is_command(char *cmd, char *str);
 
-void		ft_pwd(int fd);
-void		ft_echo(char *args, int fd);
-void		ft_env(char **env, int fd);
-void		ft_export(t_data *data, char **arg, int fd);
+int			ft_pwd(int fd);
+int			ft_echo(char *args, int fd);
+int			ft_env(char **env, int fd);
+int			ft_export(t_data *data, char **arg, int fd);
 void		ft_exit(int fd);
 int			ft_cd(int fd, char **path);
 

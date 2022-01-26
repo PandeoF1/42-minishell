@@ -26,7 +26,7 @@ static int	ft_w_is_arg(char *str)
 	return (0);
 }
 
-void	ft_echo(char *args, int fd)
+int	ft_echo(char *args, int fd)
 {
 	int	x;
 
@@ -39,5 +39,5 @@ void	ft_echo(char *args, int fd)
 			write(fd, args + x, ft_strlen(args + x));
 		write(fd, "\n", 1);
 	}
-	exit(0);
+	return (1);
 }

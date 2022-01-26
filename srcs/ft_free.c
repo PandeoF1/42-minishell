@@ -54,7 +54,8 @@ void	ft_free(t_process **process)
 			free((*process)->cmd_arg);
 		if ((*process)->type)
 			free((*process)->type);
-		ft_free_inout(&(*process)->inout);
+		if ((*process)->inout)
+			ft_free_inout(&(*process)->inout);
 		free(*process);
 		(*process) = tmp;
 	}

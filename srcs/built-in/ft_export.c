@@ -12,11 +12,11 @@
 
 #include "../../includes/minishell.h"
 
-void	ft_export(t_data *data, char **arg, int fd)
+int	ft_export(t_data *data, char **arg, int fd)
 {
 	char	**tmp;
 
 	tmp = data->tab_env;
 	ft_printf("test : %s", (*tmp)[0]);
-	exit(0);
+	return (1);
 }

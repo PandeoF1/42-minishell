@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 15:28:07 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 15:46:00 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_data
 	int				*check;
 	pid_t			*pid1;
 	char			**tab_paths;
-	char			***tab_args;\
+	char			***tab_args;
 	char			**tab_env;
 	struct s_inout	*inout;
 }	t_data;

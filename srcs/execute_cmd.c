@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 15:39:44 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 16:50:45 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,19 @@ int	find_path(char **env)
 	return (i);
 }
 
-void	ft_built(int i, char **env, t_data *data, t_process *temp)
+int	ft_built(int i, char **env, t_data *data, t_process *temp)
 {
 	if (!ft_strncmp(temp->command, "pwd", 3))
-		ft_pwd(data->fd1[i]);
+		return (ft_pwd(data->fd1[i]));
 	if (!ft_strncmp(temp->command, "env", 3))
-		ft_env(env, data->fd1[i]);
+		return (ft_env(env, data->fd1[i]));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(data->fd1[i]);
 	if (!ft_strncmp(temp->command, "cd", 2))
-		ft_cd(data->fd1[i], data->tab_args[i]);
+		return (ft_cd(data->fd1[i], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
-		ft_export(data, data->tab_args[i], data->fd1[i]);
+		return (ft_export(data, data->tab_args[i], data->fd1[i]));
+	return (0);
 }
 
 /*
@@ -81,35 +82,37 @@ char	*ft_check_arg(char *cmd, char **env)
 	int			i;
 	char		**tab;
 	char		*try;
+	char		*temp;
 
+	temp = ft_strdup(cmd);
 	try = NULL;
-	cmd = ft_ddquote(cmd, 0);
-	if (!access(cmd, F_OK))
+	temp = ft_ddquote(temp, 0);
+	if (!access(temp, F_OK))
 	{
-		if (ft_strlen(cmd) > 2 && cmd[0] == '.'
-			&& cmd[1] == '/' && !access(cmd, X_OK))
-			return (cmd);
+		ft_printf("fdp\n");
+		if (ft_strlen(temp) > 2 && temp[0] == '.'
+			&& temp[1] == '/' && !access(temp, X_OK))
+			return (temp);
 		else
-			if (ft_strchr(cmd, '/'))
+			if (ft_strchr(temp, '/'))
 				ft_perror("minishell: Permission denied");
 	}
-	if (ft_strchr(cmd, '/'))
+	if (ft_strchr(temp, '/'))
 		ft_perror("minishell: No such file or directory");
-	cmd = ft_strxjoin("/", cmd, ft_strlen(cmd));
+	temp = ft_strxjoin("/", temp, ft_strlen(temp));
 	i = find_path(env);
-	//ft_printf("hugh : %s\n", env[1]);
 	tab = ft_split(env[i] + 5, ':');
 	i = 0;
 	while (tab[i])
 	{
-		try = ft_strjoin(tab[i], cmd);
+		try = ft_strjoin(tab[i], temp);
 		if (!access(try, X_OK))
 		{
 			i = -1;
 			while (tab[++i])
 				free(tab[i]);
 			free(tab);
-			free(cmd);
+			free(temp);
 			return (try);
 		}
 		i++;
@@ -118,7 +121,7 @@ char	*ft_check_arg(char *cmd, char **env)
 	while (tab[++i])
 		free(tab[i]);
 	free(tab);
-	free(cmd);
+	free(temp);
 	free(try);
 	ft_perror("minishell: No such file or directory");
 	return (0);
@@ -255,7 +258,8 @@ void	free_exec(t_data *data, int i)
 	// j = -1; need to be free
 	// while (data->file[++j])
 	// 	free(data->file[j]);
-	free(data->file); // need to be free
+	if (data->file)
+		free(data->file); // need to be free
 }
 
 void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
@@ -283,19 +287,13 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	one_proc(t_data *data, t_process *temp, char **env)
 {
-	int	i;
-
-	i = 0;
 	data->pid1[0] = fork();
 	if (data->pid1[0] < 0)
 		ft_perror("forking failed\n");
 	if (data->pid1[0] == 0)
 	{
-		close_pipes(data);
-		data->fd1[i] = 1;
-		data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
-		ft_built(i, env, data, temp);
+		close_pipes(data);
 		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
 			ft_perror("failed to exec in one_proc");
 	}
@@ -455,8 +453,6 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 
 	data.tab_env = penv;
 	temp = proc;
-	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(1);
 	temp2 = temp->inout;
 	if (!temp2 || (temp2 && temp2->type == 3))
 		i = 1;
@@ -499,7 +495,16 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	create_pipes(&data);
 	if (i == 1 && temp->inout == 0)
 	{
-		one_proc(&data, temp, env);
+		data.fd1[0] = 1;
+		data.tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+		if (!ft_built(0, env, &data, temp))
+			one_proc(&data, temp, env);
+		else
+		{
+			close_pipes(&data);
+			free_exec(&data, i);
+			return (0);
+		}
 		j = 0;
 	}
 	else
