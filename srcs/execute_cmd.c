@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 16:59:21 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 17:10:14 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 		return (ft_cd(data->fd1[i], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
 		return (ft_export(data, data->tab_args[i], data->fd1[i]));
+	if (!ft_strncmp(temp->command, "echo", 4))
+		return (ft_echo(data->tab_args[i], data->fd1[i]));
 	return (0);
 }
 

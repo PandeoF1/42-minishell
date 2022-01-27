@@ -3,41 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/25 14:15:05 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/25 14:15:05 by tnard            ###   ########lyon.fr   */
+/*   Created: 2022/01/27 09:22:11 by asaffroy          #+#    #+#             */
+/*   Updated: 2022/01/27 09:22:11 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	ft_w_is_arg(char *str)
+static int	ft_w_is_arg(char **args, int x, int y)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
+	if (args[x] && args[x][y] == '-' && args[x][++y] == 'n')
 	{
-		if (str[i] && str[i + 1] && str[i + 2])
-			if (str[i] == '-' && str[i + 1] == 'n' && str[i + 2] == ' ')
-				i += 3;
+		while (args[x][y])
+		{
+			if (args[x][y] != 'n')
+				return (0);
+			y++;
+		}
+		return (1);
 	}
 	return (0);
 }
 
-int	ft_echo(char *args, int fd)
+int	ft_echo(char **args, int fd)
 {
 	int	x;
+	int	y;
+	int	check;
+	int	tamp;
 
-	x = ft_w_is_arg(args);
-	if (x == 0)
-		write(fd, args, ft_strlen(args));
-	else
+	x = 1;
+	y = 0;
+	check = 1;
+	while (args[x] && check)
 	{
-		if (args[x])
-			write(fd, args + x, ft_strlen(args + x));
-		write(fd, "\n", 1);
+		if (!ft_w_is_arg(args, x, y))
+			check = 0;
+		else
+			x++;
 	}
+	tamp = x;
+	while (args[x])
+	{
+		write(fd, args[x], ft_strlen(args[x]));
+		if (args[++x])
+			write(fd, " ", 1);
+	}
+	if (tamp == 1)
+		write(fd, "\n", 1);
 	return (1);
 }
