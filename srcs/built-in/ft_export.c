@@ -63,7 +63,7 @@ char	**ft_sort(char *env)
 	return (splitd);
 }
 
-void	ft_display_export(char **splitd)
+void	ft_display_export(char **splitd) //patch if "" is null
 {
 	int		x;
 	int		y;
@@ -89,7 +89,7 @@ void	ft_display_export(char **splitd)
 	ft_free_split(splitd);
 }
 
-void	ft_add_env(char **tmp, char *arg)
+char	*ft_add_env(char **tmp, char *arg)
 {
 	char	*str;
 	int		x;
@@ -112,8 +112,7 @@ void	ft_add_env(char **tmp, char *arg)
 		str = ft_strdup(arg);
 		str = ft_strnjoin(str, "=", 1);
 	}
-	(*tmp) = ft_strnjoin((*tmp), "\n", 1);
-	(*tmp) = ft_strnjoin((*tmp), str, ft_strlen(str));
+	return (str);
 }
 
 int	ft_is_valid(char *str)
@@ -136,10 +135,121 @@ int	ft_is_valid(char *str)
 	return (1);
 }
 
+int	ft_env_len(char *env)
+{
+	int		x;
+
+	x = 0;
+	while (env[x])
+	{
+		if (env[x] == '=')
+			return (x);
+		x++;
+	}
+	return (x);
+}
+
+int	ft_exist(char *env, char *varr)
+{
+	int		x;
+	int		y;
+	char	*var;
+
+	var = ft_strdup(varr);
+	x = 0;
+	y = 0;
+	while (var[y++])
+		if (var[y] == '=')
+			var[y] = '\0';
+	y = 0;
+	while (env[x])
+	{
+		if (env[x] != var[0])
+			while (env[x] && env[x] != '\n')
+				x++;
+		else
+		{
+			y = 0;
+			while (env[x] && y < (int)ft_strlen(var) && env[x] == var[y])
+				ft_printf("", x++, y++);
+			ft_printf("x : %d y : %d strlen : %d char : %c\n", x, y, ft_strlen(var), env[x]);
+			if (y == (int)ft_strlen(var) && (!env[x] || env[x] == '=' || env[x] == '\n'))
+			{
+				free(var);
+				return (x);
+			}
+		}
+		x++;
+	}
+	free(var);
+	return (0);
+}
+
+char	*ft_remove_in(char *str, int a, int b)
+{
+	int		i;
+	int		j;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	new = (char *)malloc(sizeof(char) * ft_strlen(str) - (b - a));
+	while (str[i])
+	{
+		if (i < a || i > b)
+		{
+			ft_printf("je copie : %c\n", str[i]);
+			new[j++] = str[i];
+		}
+		i++;
+	}
+	new[j] = '\0';
+	free(str);
+	return (new);
+}
+
+void	ft_remove_env(char **tmp, char *arg)
+{
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	while ((*tmp)[x])
+	{
+		if ((*tmp)[x] != arg[0])
+			while ((*tmp)[x] && (*tmp)[x] != '\n')
+				x++;
+		else
+		{
+			y = 0;
+			while ((*tmp)[x] && y < (int)ft_strlen(arg) && (*tmp)[x] == arg[y] && arg[y] != '=')
+				ft_printf("", x++, y++);
+			if (y == (int)ft_env_len(arg) && (*tmp)[x] == '=')
+			{
+				y = x - y;
+				while ((*tmp)[x] && (*tmp)[x] != '\n')
+					x++;
+				ft_printf("debut du remove : %c %d\n", (*tmp)[y], y);
+				ft_printf("fin du remove : .%c. %d\n", (*tmp)[x], x);
+				//if ((*tmp)[x + 1] && (*tmp)[x + 1] == '\n')
+				//	x++;
+				ft_printf("debut du remove : %c %d\n", (*tmp)[y], y);
+				ft_printf("fin du remove : .%c. %d\n", (*tmp)[x], x);
+				(*tmp) = ft_remove_in((*tmp), y, x);
+				return ;
+			}
+		}
+		x++;
+	}
+}
+
 int	ft_export(t_data *data, char **arg, int fd)
 {
 	int		x;
+	int		b;
 	char	**tmp;
+	char	*env;
 
 	x = 1;
 	ft_printf("export:\n");
@@ -151,7 +261,14 @@ int	ft_export(t_data *data, char **arg, int fd)
 		while (arg[x])
 		{
 			if (ft_is_valid(ft_ddquote(arg[x], 0)))
-				ft_add_env(tmp, arg[x]);
+			{
+				env = ft_add_env(tmp, arg[x]);
+				ft_remove_env(tmp, env);
+				(*tmp) = ft_strnjoin((*tmp), "\n", 1);
+				(*tmp) = ft_strnjoin((*tmp), env, ft_strlen(env)); //verif ici j'ai peur de send un truc corrompue
+				if (b == 0)
+					free(env);
+			}
 			else
 				ft_printf("export: %s: not a valid identifier\n", arg[x]);
 			x++;

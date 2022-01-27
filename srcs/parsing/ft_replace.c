@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 11:41:11 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/20 17:01:12 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/26 22:22:47 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 *	ft_replace(char *str, char *tmp, int x, int y)
-*	desc : replace in str the var with the value of the env
+*	desc : replace in str the var with the value of the env between x and y
 */
 
 char	*ft_replace(char *str, char *tmp, int x, int y)

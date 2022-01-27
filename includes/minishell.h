@@ -61,7 +61,6 @@ char		*ft_penv(char *env, char *str, int x, int b);
 char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);
 char		*ft_search_env(char *env, char *var);
-char		**ft_dquote(char **split, int x, int y);
 char		*ft_strsub(char const *s, unsigned int start, size_t len);
 char		*ft_search_env(char *env, char *var);
 int			ft_word_len(char *str);
@@ -87,6 +86,8 @@ int			ft_is_charset(char str, t_data *data, int a);
 int			ft_wordcount(char *str, t_data *data, int a);
 int			ft_strdupp_util2(t_data *data, int a, char *dst, char *src);
 int			ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
+char		*ft_remove(char *str, int c);
+char		**ft_dquote(char **split, int x, int y);
 char		*ft_ddquote(char *split, int x);
 
 #endif
