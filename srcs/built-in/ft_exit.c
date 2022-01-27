@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:21:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/26 16:33:40 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/27 14:40:40 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,5 @@
 
 void	ft_exit(int fd)
 {
-	write(fd, "exit\n", 5);
 	exit(0);
 }

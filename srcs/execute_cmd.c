@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/27 11:43:59 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/27 14:46:23 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(env, data->file[i]));
 	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(data->file[i]);
+	{
+		write(1, "exit\n", 5);
+		exit(0);
+	}
 	if (!ft_strncmp(temp->command, "cd", 2))
 		return (ft_cd(data->file[i], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
@@ -280,7 +283,6 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 		{
 			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
@@ -297,6 +299,7 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 			if (ft_built(i, env, data, temp))
 				exit (0);
 		close_pipes(data);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
 			ft_perror("failed to exec in pipe_proc");
 	}
@@ -324,7 +327,6 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->out_next)
 			data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote
 					(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
@@ -356,6 +358,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 			if (ft_built(i, env, data, temp))
 				exit (0);
 		close_pipes(data);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -377,7 +380,6 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (data->inout->next == NULL)
 			if (dup2(data->file[i], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
@@ -393,6 +395,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 				exit(0);
 		close_pipes(data);
 		close(data->file[i]);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -411,7 +414,6 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (dup2(data->fd[2 * (data->ind + 1) - 2], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red3_proc");
 		if (temp->out_next || (temp->inout->next
@@ -423,9 +425,14 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 				ft_perror("dup2 n1 failed in red_proc");
 		}
 		else
+		{
+			if (!ft_strncmp(temp->command, "exit", 4))
+				write(1, "exit\n", 5);
 			if (ft_built(i, env, data, temp))
 				exit(0);
+		}
 		close_pipes(data);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
 			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
 				ft_perror("failed to exec in red3_proc\n");
@@ -445,7 +452,6 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->in_prev != 0)
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
@@ -461,6 +467,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 				exit(0);
 		close_pipes(data);
 		close(data->file[i]);
+		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
@@ -527,6 +534,12 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	if (i == 1 && temp->inout == 0)
 	{
 		data.tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+		if (!ft_strncmp(temp->command, "exit", 4))
+		{
+			write(1, "exit\n", 5);
+			free_exec(&data, i);
+			exit(0);
+		}
 		if (!ft_built(0, env, &data, temp))
 			one_proc(&data, temp, env);
 		else
