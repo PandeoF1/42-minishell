@@ -127,6 +127,7 @@ int	main(int argc, char **argv, char **envp)
 		readlin = ft_readline();
 		tmp = readline(readlin);
 		free(readlin);
+		ft_printf("uwu\n");
 		if (!tmp)
 		{
 			ft_printf("exit\n");
@@ -138,6 +139,7 @@ int	main(int argc, char **argv, char **envp)
 			tmp = ft_penv(penv, tmp, 0, 0);
 			splitd = ft_splitd(penv, '\n');
 			ft_parse_command(tmp, splitd, &penv);
+			ft_free_split(splitd);
 			free(tmp);
 		}
 	}
