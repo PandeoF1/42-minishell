@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 16:18:36 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/28 23:24:11 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_cd(t_data *data, int fd, char **path)
 	env = data->tab_env;
 	if (ft_strlen(*path) == 1)
 	{
-		tmp = ft_search_env(env, "HOME");
+		tmp = ft_search_env(*env, "HOME");
 		if (!tmp || ft_strlen == 0)
 			ft_printf("cd: HOME not set\n");
 		else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 16:08:08 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/28 23:23:57 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "exit", 4))
 		exit(0);
 	if (!ft_strncmp(temp->command, "cd", 2))
-		return (ft_cd(1, data->tab_args[i]));
+		return (ft_cd(data, 1, data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
 		return (ft_export(data, data->tab_args[i], 1));
 	if (!ft_strncmp(temp->command, "unset", 6))
@@ -60,7 +60,7 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))
-		return (ft_cd(data->fd[2 * (data->ind + 1) + 1], data->tab_args[i]));
+		return (ft_cd(data, data->fd[2 * (data->ind + 1) + 1], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
 		return (ft_export
 			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
@@ -81,7 +81,7 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))
-		return (ft_cd(data->file[i], data->tab_args[i]));
+		return (ft_cd(data, data->file[i], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
 		return (ft_export
 			(data, data->tab_args[i], data->file[i]));
