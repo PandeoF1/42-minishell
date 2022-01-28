@@ -81,7 +81,7 @@ int			ft_env(char **env, int fd);
 int			ft_export(t_data *data, char **arg, int fd);
 void		ft_remove_env(char **tmp, char *arg);
 void		ft_exit(t_process *temp);
-int			ft_cd(int fd, char **path);
+int			ft_cd(t_data *data, int fd, char **path);
 int			ft_unset(t_data *data, char **arg, int fd);
 
 // built-in utils
