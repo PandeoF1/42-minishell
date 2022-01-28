@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 10:43:36 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/28 11:58:03 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	find_path(char **env)
 			return (i);
 		i++;
 	}
-	return (i);
+	return (-1);
 }
 
 int	ft_built(int i, char **env, t_data *data, t_process *temp)
@@ -140,6 +140,8 @@ char	*ft_check_arg(char *cmd, char **env)
 		ft_perror("minishell: No such file or directory");
 	temp = ft_strxjoin("/", temp, ft_strlen(temp));
 	i = find_path(env);
+	if (i == -1)
+		ft_perror("minishell: No such file or directory");
 	tab = ft_split(env[i] + 5, ':');
 	i = 0;
 	while (tab[i])
