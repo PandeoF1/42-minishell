@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 11:58:03 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/28 16:08:08 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "echo", 4))
 		return (ft_echo(data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
+	if (!ft_strncmp(temp->command, "unset", 6))
+		return (ft_unset
+			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
 	return (0);
 }
 
@@ -84,6 +87,9 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 			(data, data->tab_args[i], data->file[i]));
 	if (!ft_strncmp(temp->command, "echo", 4))
 		return (ft_echo(data->tab_args[i], data->file[i]));
+	if (!ft_strncmp(temp->command, "unset", 6))
+		return (ft_unset
+			(data, data->tab_args[i], data->file[i]));
 	return (0);
 }
 
@@ -117,16 +123,37 @@ char	*ft_strxjoin(char *s1, char *s2, int n)
 	return (str);
 }
 
+char	*ft_check_arg2(char **env, char *temp, int i)
+{
+	char	**tab;
+	char	*try;
+
+	tab = ft_split(env[i] + 5, ':');
+	i = 0;
+	while (tab[i])
+	{
+		try = ft_strjoin(tab[i], temp);
+		if (!access(try, X_OK))
+		{
+			i = -1;
+			while (tab[++i])
+				free(tab[i]);
+			free(tab);
+			return (try);
+		}
+		i++;
+	}
+	free(tab);
+	return (NULL);
+}
+
 char	*ft_check_arg(char *cmd, char **env)
 {
 	int			i;
-	char		**tab;
-	char		*try;
 	char		*temp;
+	char		*try_temp;
 
-	temp = ft_strdup(cmd);
-	try = NULL;
-	temp = ft_ddquote(temp, 0);
+	temp = ft_ddquote(ft_strdup(cmd), 0);
 	if (!access(temp, F_OK))
 	{
 		if (ft_strlen(temp) > 2 && temp[0] == '.'
@@ -139,33 +166,14 @@ char	*ft_check_arg(char *cmd, char **env)
 	if (ft_strchr(temp, '/'))
 		ft_perror("minishell: No such file or directory");
 	temp = ft_strxjoin("/", temp, ft_strlen(temp));
-	i = find_path(env);
-	if (i == -1)
+	if (find_path(env) == -1)
 		ft_perror("minishell: No such file or directory");
-	tab = ft_split(env[i] + 5, ':');
-	i = 0;
-	while (tab[i])
-	{
-		try = ft_strjoin(tab[i], temp);
-		if (!access(try, X_OK))
-		{
-			i = -1;
-			while (tab[++i])
-				free(tab[i]);
-			free(tab);
-			free(temp);
-			return (try);
-		}
-		i++;
-	}
-	i = -1;
-	while (tab[++i])
-		free(tab[i]);
-	free(tab);
+	else
+		try_temp = ft_check_arg2(env, temp, find_path(env));
 	free(temp);
-	free(try);
-	ft_perror("minishell: No such file or directory");
-	return (0);
+	if (!try_temp)
+		ft_perror("minishell: No such file or directory");
+	return (try_temp);
 }
 
 /*
@@ -275,6 +283,25 @@ void	free_exec(t_data *data, int i)
 		free(data->file); // need to be free
 }
 
+void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
+{
+	if (temp->in_prev != 0)
+	{
+		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in pipe_proc");
+	}
+	if (temp->out_next != 0)
+	{
+		if (ft_built_red(i, env, data, temp))
+			exit (0);
+		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n2 failed in pipe_proc");
+	}
+	else
+		if (ft_built(i, env, data, temp))
+			exit (0);
+}
+
 void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
@@ -283,24 +310,10 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		if (temp->in_prev != 0)
-		{
-			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in pipe_proc");
-		}
-		if (temp->out_next != 0)
-		{
-			if (ft_built_red(i, env, data, temp))
-				exit (0);
-			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n2 failed in pipe_proc");
-		}
-		else
-			if (ft_built(i, env, data, temp))
-				exit (0);
+		pipe_proc_2(temp, data, i, env);
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
-		if (execve(data->tab_paths[i], data->tab_args[i], NULL) != 0)
+		if (execve(data->tab_paths[i], data->tab_args[i], env) != 0)
 			ft_perror("failed to exec in pipe_proc");
 	}
 }
@@ -362,7 +375,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
-				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 					ft_perror("failed to exec in red_proc\n");
 		}
 		exit(0);
@@ -403,7 +416,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
-				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 					ft_perror("failed to exec in red2_proc\n");
 		}
 		exit (0);
@@ -439,7 +452,7 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
-			if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+			if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 				ft_perror("failed to exec in red3_proc\n");
 		exit(0);
 	}
@@ -476,7 +489,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 		if (temp->command != NULL)
 		{
 			if (data->inout->next == NULL)
-				if (execve(data->tab_paths[i], data->tab_args[i], NULL) == -1)
+				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 					ft_perror("failed to exec in red_proc\n");
 		}
 		exit(0);
@@ -558,7 +571,6 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	{
 		i--;
 		j = i;
-		//ft_printf("I : %d\n", i);
 		data.ind = 0;
 		data.inout = NULL;
 		while (i >= 0)
