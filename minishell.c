@@ -18,6 +18,16 @@ static void	sig_quit(int sig)
 	ft_putstr_fd("\b\b  \b\b", 1);
 }
 
+static void	action(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	//return_val = 130;
+}
+
 static char	*ft_export_env(char **env)
 {
 	char	*str;
@@ -47,49 +57,71 @@ char	*ft_readline(void)
 	return (str);
 }
 
-void	ctrl_c_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		ft_putchar('\n');
-		ft_putstr_fd(ft_readline(), 1);
-	}
-}
-
-static void	action(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	//return_val = 130;
-}
-
 void	test(int sig)
 {
 	ft_printf("yolo\n");
 }
 
+void	ft_add_shlvl(char **env)
+{
+	char	*tmp;
+	char	*tmp1;
+	int		x;
+
+	tmp = NULL;
+	tmp = ft_search_env(*env, "SHLVL");
+	if (tmp)
+	{
+		x = ft_atoi(tmp);
+		x++;
+		free(tmp);
+		tmp = ft_itoa(x);
+		ft_remove_env(env, "SHLVL");
+		tmp1 = ft_strjoin("SHLVL=", tmp);
+		free(tmp);
+		(*env) = ft_strnjoin((*env), "\n", 1);
+		(*env) = ft_strnjoin((*env), tmp1, ft_strlen(tmp1));
+	}
+}
+
+void	ft_remove_shlvl(char **env) //logiquement pas besoin car l'env ce detruit
+{
+	char	*tmp;
+	char	*tmp1;
+	int		x;
+
+	tmp = NULL;
+	tmp = ft_search_env(*env, "SHLVL");
+	if (tmp)
+	{
+		x = ft_atoi(tmp);
+		x++;
+		free(tmp);
+		tmp = ft_itoa(x);
+		ft_remove_env(env, "SHLVL");
+		tmp1 = ft_strjoin("SHLVL=", tmp);
+		free(tmp);
+		if ((*env)[ft_strlen(*env) - 1] != '\n')
+			(*env) = ft_strnjoin((*env), "\n", 1);
+		(*env) = ft_strnjoin((*env), tmp1, ft_strlen(tmp1));
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*tmp;
-	char	*env;
 	char	*penv;
 	char	**splitd;
 	char	*readlin;
 
 	(void)argc;
 	(void)argv;
-	env = getenv("PATH");
-	/*signal(SIGINT, ctrl_c_handler);
-	signal(SIGTERM, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);*/
-	signal(SIGTSTP, test);
 	signal(SIGINT, action);
 	signal(SIGQUIT, sig_quit);
-	penv = ft_export_env(envp);
+	if (!envp[0])
+		penv = ft_strdup("MINISHELL=1");
+	else
+		penv = ft_export_env(envp);
 	while (1)
 	{
 		readlin = ft_readline();
@@ -112,6 +144,6 @@ int	main(int argc, char **argv, char **envp)
 	free(penv);
 	if (tmp)
 		free(tmp);
-	clear_history();
+	rl_clear_history();
 	return (0);
 }

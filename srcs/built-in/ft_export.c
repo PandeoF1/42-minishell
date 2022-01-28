@@ -63,7 +63,7 @@ char	**ft_sort(char *env)
 	return (splitd);
 }
 
-void	ft_display_export(char **splitd) //patch if "" is null
+void	ft_display_export(char **splitd)
 {
 	int		x;
 	int		y;
@@ -80,7 +80,8 @@ void	ft_display_export(char **splitd) //patch if "" is null
 				ft_putstr("=\"");
 				y++;
 			}
-			ft_putchar(splitd[x][y]);
+			if (splitd[x][y])
+				ft_putchar(splitd[x][y]);
 			y++;
 		}
 		ft_putstr("\"\n");
@@ -197,10 +198,7 @@ char	*ft_remove_in(char *str, int a, int b)
 	while (str[i])
 	{
 		if (i < a || i > b)
-		{
-			ft_printf("je copie : %c\n", str[i]);
 			new[j++] = str[i];
-		}
 		i++;
 	}
 	new[j] = '\0';
@@ -213,9 +211,8 @@ void	ft_remove_env(char **tmp, char *arg)
 	int		x;
 	int		y;
 
-	x = 0;
-	y = 0;
-	while ((*tmp)[x])
+	x = -1;
+	while ((*tmp)[++x])
 	{
 		if ((*tmp)[x] != arg[0])
 			while ((*tmp)[x] && (*tmp)[x] != '\n')
@@ -230,50 +227,46 @@ void	ft_remove_env(char **tmp, char *arg)
 				y = x - y;
 				while ((*tmp)[x] && (*tmp)[x] != '\n')
 					x++;
-				ft_printf("debut du remove : %c %d\n", (*tmp)[y], y);
-				ft_printf("fin du remove : .%c. %d\n", (*tmp)[x], x);
-				//if ((*tmp)[x + 1] && (*tmp)[x + 1] == '\n')
-				//	x++;
-				ft_printf("debut du remove : %c %d\n", (*tmp)[y], y);
-				ft_printf("fin du remove : .%c. %d\n", (*tmp)[x], x);
 				(*tmp) = ft_remove_in((*tmp), y, x);
 				return ;
 			}
 		}
-		x++;
 	}
+}
+
+void	ft_finish_export(char **tmp, char *env)
+{
+	if ((*tmp)[ft_strlen(*tmp) - 1] != '\n')
+		(*tmp) = ft_strnjoin(*tmp, "\n", 1);
+	(*tmp) = ft_strnjoin(*tmp, env, ft_strlen(env));
+	if (env)
+		free(env);
 }
 
 int	ft_export(t_data *data, char **arg, int fd)
 {
 	int		x;
-	int		b;
 	char	**tmp;
 	char	*env;
 
-	x = 1;
-	ft_printf("export:\n");
+	x = 0;
+	env = NULL;
 	tmp = data->tab_env;
 	if (ft_split_len(arg) == 1)
 		ft_display_export(ft_sort(*tmp));
 	else
 	{
-		while (arg[x])
+		while (arg[++x])
 		{
 			if (ft_is_valid(ft_ddquote(arg[x], 0)))
 			{
 				env = ft_add_env(tmp, arg[x]);
 				ft_remove_env(tmp, env);
-				(*tmp) = ft_strnjoin((*tmp), "\n", 1);
-				(*tmp) = ft_strnjoin((*tmp), env, ft_strlen(env)); //verif ici j'ai peur de send un truc corrompue
-				if (b == 0)
-					free(env);
+				ft_finish_export(tmp, env);
 			}
 			else
 				ft_printf("export: %s: not a valid identifier\n", arg[x]);
-			x++;
 		}
 	}
-	ft_printf("fin export\n");
 	return (1);
 }

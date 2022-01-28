@@ -48,6 +48,8 @@ typedef struct s_check
 	int	input;
 }			t_check;
 
+
+// parsing and everything else
 char		*ft_get_input(int fd, int size, int len);
 void		ft_parse_command(char *str, char **env, char **penv);
 int			ft_check_quote(char *str);
@@ -62,7 +64,6 @@ char		*ft_strnjoin(char *s1, char *s2, int n);
 char		*ft_strndup(const char *s, size_t n);
 char		*ft_search_env(char *env, char *var);
 char		*ft_strsub(char const *s, unsigned int start, size_t len);
-char		*ft_search_env(char *env, char *var);
 int			ft_word_len(char *str);
 int			ft_w_is_space(char *str);
 int			ft_len_quote(char *str);
@@ -73,13 +74,23 @@ int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
 int			ft_is_command(char *cmd, char *str);
 
+// built-in
 int			ft_pwd(int fd);
 int			ft_echo(char **args, int fd);
 int			ft_env(char **env, int fd);
 int			ft_export(t_data *data, char **arg, int fd);
+void		ft_remove_env(char **tmp, char *arg);
 void		ft_exit(int fd);
 int			ft_cd(int fd, char **path);
+int			ft_unset(t_data *data, char **arg, int fd);
 
+// built-in utils
+void		ft_remove_env(char **tmp, char *arg);
+char		*ft_remove_in(char *str, int a, int b);
+int			ft_env_len(char *env);
+int			ft_is_valid(char *str);
+
+// executions
 void		ft_perror(char *str);
 int			ft_wordlen(char *str, t_data *data, int a);
 int			ft_is_charset(char str, t_data *data, int a);
