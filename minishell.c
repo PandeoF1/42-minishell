@@ -127,7 +127,6 @@ int	main(int argc, char **argv, char **envp)
 		readlin = ft_readline();
 		tmp = readline(readlin);
 		free(readlin);
-		ft_printf("uwu\n");
 		if (!tmp)
 		{
 			ft_printf("exit\n");

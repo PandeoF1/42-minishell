@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 04:15:16 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/28 10:43:36 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(env, 1));
 	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(1);
+		exit(0);
 	if (!ft_strncmp(temp->command, "cd", 2))
 		return (ft_cd(1, data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
@@ -58,7 +58,7 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(env, data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(data->fd[2 * (data->ind + 1) + 1]);
+		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))
 		return (ft_cd(data->fd[2 * (data->ind + 1) + 1], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
@@ -76,10 +76,7 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(env, data->file[i]));
 	if (!ft_strncmp(temp->command, "exit", 4))
-	{
-		write(1, "exit\n", 5);
-		exit(0);
-	}
+		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))
 		return (ft_cd(data->file[i], data->tab_args[i]));
 	if (!ft_strncmp(temp->command, "export", 6))
@@ -132,7 +129,6 @@ char	*ft_check_arg(char *cmd, char **env)
 	temp = ft_ddquote(temp, 0);
 	if (!access(temp, F_OK))
 	{
-		ft_printf("fdp\n");
 		if (ft_strlen(temp) > 2 && temp[0] == '.'
 			&& temp[1] == '/' && !access(temp, X_OK))
 			return (temp);
@@ -383,8 +379,12 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		if (data->inout->next == NULL)
+		{
+			if (ft_built_red2(i, env, data, temp))
+				exit(0);
 			if (dup2(data->file[i], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red2_proc");
+		}
 		if (data->inout->next == NULL && temp->out_next)
 		{
 			if (ft_built_red(i, env, data, temp))
@@ -426,13 +426,14 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 				ft_perror("dup2 n1 failed in red_proc");
 		}
-		else
+		else if (!ft_strncmp(temp->command, "exit", 4))
 		{
-			if (!ft_strncmp(temp->command, "exit", 4))
-				write(1, "exit\n", 5);
+			write(2, "exit\n", 5);
+			exit(0);
+		}
+		else
 			if (ft_built(i, env, data, temp))
 				exit(0);
-		}
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
@@ -538,7 +539,7 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 		data.tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		if (!ft_strncmp(temp->command, "exit", 4))
 		{
-			write(1, "exit\n", 5);
+			write(2, "exit\n", 5);
 			free_exec(&data, i);
 			exit(0);
 		}
@@ -575,12 +576,18 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 			{
 				red2_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
+				if (!data.inout && !temp->out_next
+					&& !ft_strncmp(temp->command, "exit", 4))
+					exit(0);
 				i--;
 			}
 			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
 			{
 				red_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
+				if (!data.inout && !temp->out_next
+					&& !ft_strncmp(temp->command, "exit", 4))
+					exit(0);
 				i--;
 			}
 			if (i >= 0 && data.inout != 0 && data.inout->type == 3)
@@ -624,18 +631,24 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 				free(line);
 				red3_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
+				if (!data.inout && !temp->out_next
+					&& !ft_strncmp(temp->command, "exit", 4))
+					exit(0);
 				i--;
 			}
 			if (i >= 0 && data.inout != 0 && data.inout->type == 4)
 			{
 				red4_proc(&data, temp, env, i);
 				data.inout = data.inout->next;
+				if (!data.inout && !temp->out_next
+					&& !ft_strncmp(temp->command, "exit", 4))
+					exit(0);
 				i--;
 			}
 			if (temp && temp->inout && !data.inout)
 			{
 				temp = temp->next;
-				data.ind++;//be carefull
+				data.ind++;
 			}
 		}
 	}
