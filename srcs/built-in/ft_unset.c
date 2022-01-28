@@ -22,9 +22,7 @@ int	ft_unset(t_data *data, char **arg, int fd)
 	while (arg[++x])
 	{
 		if (ft_is_valid(ft_ddquote(arg[x], 0)))
-		{
 			ft_remove_env(tmp, arg[x]);
-		}
 		else
 			ft_printf("unset: %s: not a valid identifier\n", arg[x]);
 	}
