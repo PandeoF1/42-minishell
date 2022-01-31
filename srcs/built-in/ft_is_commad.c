@@ -12,18 +12,18 @@
 
 #include "../../includes/minishell.h"
 
-int	ft_is_command(char *cmd, char *str)
+int	ft_is_command(char *str, char *cmd)
 {
 	int	x;
 
 	x = 0;
 	if (ft_strlen(cmd) != ft_strlen(str))
-		return (0);
+		return (1);
 	while (cmd[x])
 	{
 		if (cmd[x] != str[x])
-			return (0);
+			return (1);
 		x++;
 	}
-	return (1);
+	return (0);
 }
