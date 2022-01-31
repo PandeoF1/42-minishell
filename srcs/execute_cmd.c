@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 23:23:57 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 11:08:37 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "pwd", 3))
 		return (ft_pwd(1));
 	if (!ft_strncmp(temp->command, "env", 3))
-		return (ft_env(env, 1));
+		return (ft_env(data, 1));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		exit(0);
 	if (!ft_strncmp(temp->command, "cd", 2))
@@ -56,7 +56,7 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "pwd", 3))
 		return (ft_pwd(data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "env", 3))
-		return (ft_env(env, data->fd[2 * (data->ind + 1) + 1]));
+		return (ft_env(data, data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))
@@ -77,7 +77,7 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_strncmp(temp->command, "pwd", 3))
 		return (ft_pwd(data->file[i]));
 	if (!ft_strncmp(temp->command, "env", 3))
-		return (ft_env(env, data->file[i]));
+		return (ft_env(data, data->file[i]));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
 	if (!ft_strncmp(temp->command, "cd", 2))

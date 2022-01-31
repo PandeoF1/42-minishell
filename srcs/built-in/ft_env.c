@@ -12,12 +12,20 @@
 
 #include "../../includes/minishell.h"
 
-int	ft_env(char **env, int fd)
+int	ft_env(t_data *data, int fd)
 {
+	char	**tmp;
 	int		x;
+	char	**splitd;
 
 	x = 0;
-	while (env[x])
-		ft_putendl_fd(env[x++], fd);
+	tmp = data->tab_env;
+	splitd = ft_split(*tmp, '\n');
+	while (splitd[x])
+	{
+		ft_putendl_fd(splitd[x], fd);
+		x++;
+	}
+	ft_free_split(splitd);
 	return (1);
 }

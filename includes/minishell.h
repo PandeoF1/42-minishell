@@ -78,7 +78,7 @@ int			ft_strstrlen(char **str);
 // built-in
 int			ft_pwd(int fd);
 int			ft_echo(char **args, int fd);
-int			ft_env(char **env, int fd);
+int			ft_env(t_data *data, int fd);
 int			ft_export(t_data *data, char **arg, int fd);
 void		ft_remove_env(char **tmp, char *arg);
 void		ft_exit(t_process *temp);
