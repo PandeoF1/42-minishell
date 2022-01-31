@@ -25,6 +25,20 @@ void	ft_free_split(char **split)
 	free(split);
 }
 
+int	ft_free_split_r(char **split, int x)
+{
+	int	i;
+
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+	return (x);
+}
+
 void	ft_free_inout(t_inout **inout)
 {
 	t_inout	*tmp;

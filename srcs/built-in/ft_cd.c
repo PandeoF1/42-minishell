@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/31 10:52:17 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 22:32:41 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	ft_cd(t_data *data, int fd, char **path)
 			ft_printf("cd: HOME not set\n");
 		else
 			chdir(tmp);
-		ft_printf("%s\n", tmp);
 		free (tmp);
 	}
 	else if (ft_strstrlen(path) == 2)

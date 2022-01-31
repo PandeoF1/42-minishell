@@ -12,126 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-/*
-*	ft_structlen(t_process *process)
-*	desc : count the number of struct in struct
-*/
-
-int	ft_structlen(t_process *process)
-{
-	t_process	*tmp;
-	int			len;
-
-	tmp = process;
-	len = 0;
-	while (tmp)
-	{
-		len++;
-		tmp = tmp->next;
-	}
-	return (len);
-}
-
-/*
-*	ft_config_inout(t_inout **inout)
-*	desc : configure the output and input on the inout
-*/
-
-void	ft_config_inout(t_inout *inout)
-{
-	t_inout	*tmp;
-	int		x;
-
-	x = 0;
-	tmp = inout;
-	while (tmp)
-	{
-		if (x)
-		{
-			x = 0;
-			tmp->red_prev = 1;
-		}
-		if (tmp->type == 3)
-			x = 1;
-		tmp = tmp->next;
-	}
-}
-
-/*
-*	ft_clear_process(t_process *process)
-*	desc : patch all command null
-*/
-
-void	ft_clear_process(t_process *process)
-{
-	char		**splitd;
-
-	if (ft_strlen(process->command) == 0 && ft_strlen(process->cmd_arg) != 0)
-	{
-		splitd = ft_splitd(process->cmd_arg, ' ');
-		process->command = ft_strdup(splitd[0]);
-		ft_free_split(splitd);
-	}
-}
-
-/*
-*	ft_config_process(t_process *process)
-*	desc : configure the output and input on the process
-*/
-
-void	ft_config_process(t_process *process, int x, int next, int inout)
-{
-	t_process	*tmp;
-
-	tmp = process;
-	while (tmp && ++x < ft_structlen(process))
-	{
-		if (tmp->type && tmp->type[0] == '|')
-		{
-			if (x != 0)
-				tmp->in_prev = 1;
-			tmp->out_next = 1;
-			next = 1;
-			if (tmp->inout)
-				inout = 1;
-		}
-		else if (next)
-		{
-			tmp->in_prev = 1;
-			inout = 0;
-			next = 0;
-		}
-		if (tmp->inout)
-			ft_config_inout(tmp->inout);
-		ft_clear_process(tmp);
-		tmp = tmp->next;
-	}
-}
-
-/*
-* ft_space(str)
-* desc : compare number of space with strlen
-* params : string
-*/
-
-int	ft_space(char *str)
-{
-	int	i;
-	int	x;
-
-	i = 0;
-	x = 0;
-	while (str[i])
-	{
-		if (str[i] == ' ')
-			x++;
-		i++;
-	}
-	if (x == i)
-		return (0);
-	return (1);
-}
-
 void	ft_clean_process(t_process *process)
 {
 	t_process	*tmp;
@@ -148,49 +28,43 @@ void	ft_clean_process(t_process *process)
 	}
 }
 
-int	ft_check_split(char	*str, int x, int y)
+int	ft_check_in_split(char **splitd, int x, int *y, char *c)
+{
+	if (splitd[x][(*y)] == '"' || splitd[x][(*y)] == '\'')
+	{
+		*c = splitd[x][(*y)++];
+		while (splitd[x][*y] && splitd[x][(*y)] != *c)
+			(*y)++;
+	}
+}
+
+int	ft_check_split(char	*str, int x, int y, int test)
 {
 	char	**splitd;
-	int		test;
 	char	c;
 
-	test = 0;
 	splitd = ft_splitd(str, ' ');
-	while (splitd[x])
+	while (splitd[++x])
 	{
-		y = 0;
-		while (splitd[x][y])
+		y = -1;
+		while (splitd[x][++y])
 		{
-			if (splitd[x][y] == '"' || splitd[x][y] == '\'')
-			{
-				c = splitd[x][y];
-				y++;
-				while (splitd[x][y] && splitd[x][y] != c)
-					y++;
-			}
+			ft_check_in_split(splitd, x, &y, &c);
 			if (splitd[x][y])
 			{
 				if (splitd[x][y] == '|')
 					test++;
 				else
 					test = 0;
-				if (test == 2 || (splitd[x][y + 1] &&  	splitd[x][y] == '|' && splitd[x][y + 1] == '|'))
-				{
-					ft_free_split(splitd);
-					return (0);
-				}
+				if (test == 2 || (splitd[x][y + 1]
+					&& splitd[x][y] == '|' && splitd[x][y + 1] == '|'))
+					return (ft_free_split_r(splitd, 0));
 			}
-			y++;
 		}
-		x++;
 	}
 	if (test != 0 || splitd[0][0] == '|')
-	{
-		ft_free_split(splitd);
-		return (0);
-	}
-	ft_free_split(splitd);
-	return (1);
+		return (ft_free_split_r(splitd, 0));
+	return (ft_free_split_r(splitd, 1));
 }
 
 /*
@@ -203,49 +77,18 @@ int	ft_check_split(char	*str, int x, int y)
 void	ft_parse_command(char *str, char **env, char **penv)
 {
 	t_process	*process;
-	t_process	*tmp;
-	t_inout		*tmpi;
 	int			x;
 
 	x = 0;
 	if (ft_strlen(str) == 0 || ft_space(str) == 0)
 		return ;
-	if (ft_check_quote(str) && ft_check_split(str, 0 , 0))
+	if (ft_check_quote(str) && ft_check_split(str, -1, 0, 0))
 	{
 		process = ft_create_process(-1, 0, ft_splitd(str, '|'));
 		if (ft_check_process(process))
 		{
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
-			// tmp = process;
-			// while (process)
-			// {
-			// 	ft_printf("---- parse ----\n");
-			// 	ft_printf("command : %s.\n", process->command);
-			// 	ft_printf("cmd_arg : %s.\n", process->cmd_arg);
-			// 	ft_printf("out_next : %d.\n", process->out_next);
-			// 	ft_printf("in_prev : %d.\n", process->in_prev);
-			// 	ft_printf("type : %s.\n", process->type);
-			// 	if (process->inout)
-			// 	{
-			// 		tmpi = process->inout;
-			// 		ft_printf("--- INOUT ----\n");
-			// 		while (tmpi)
-			// 		{
-			// 			ft_printf("-------\n");
-			// 			if (tmpi->file)
-			// 				ft_printf("inout : %s.\n", tmpi->file);
-			// 			ft_printf("type : %d.\n", tmpi->type);
-			// 			ft_printf("red_prev : %d.\n", tmpi->red_prev);
-			// 			ft_printf("-------\n");
-			// 			tmpi = tmpi->next;
-			// 		}
-			// 		ft_printf("--- INOUT ----\n");
-			// 	}
-			// 	ft_printf("---- end parse ----\n");
-			// 	process = process->next;
-			// }
-			// process = tmp;
 			ft_execute_cmd(process, env, penv);
 		}
 		else

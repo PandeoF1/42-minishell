@@ -48,13 +48,13 @@ typedef struct s_check
 	int	input;
 }			t_check;
 
-
 // parsing and everything else
 char		*ft_get_input(int fd, int size, int len);
 void		ft_parse_command(char *str, char **env, char **penv);
 int			ft_check_quote(char *str);
 int			ft_check_process(t_process *process);
 void		ft_free_split(char **split);
+int			ft_free_split_r(char **split, int x);
 char		**ft_splitd(char const *s, char c);
 t_process	*ft_create_process(int x, int y, char **split);
 void		ft_free(t_process **process);
@@ -74,6 +74,11 @@ int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
 int			ft_strstrlen(char **str);
 int			ft_is_command(char *str, char *cmd);
+int			ft_structlen(t_process *process);
+void		ft_config_inout(t_inout *inout);
+void		ft_clear_process(t_process *process);
+void		ft_config_process(t_process *process, int x, int next, int inout);
+int			ft_space(char *str);
 
 // built-in
 int			ft_pwd(int fd);
@@ -84,6 +89,12 @@ void		ft_remove_env(char **tmp, char *arg);
 void		ft_exit(t_process *temp);
 int			ft_cd(t_data *data, int fd, char **path);
 int			ft_unset(t_data *data, char **arg, int fd);
+int			ft_swap(char **a, char **b);
+int			ft_split_len(char **splitd);
+char		**ft_sort(char *env, int x, int y, int a);
+void		ft_display_export(char **splitd);
+char		*ft_add_env(char **tmp, char *arg);
+char		*ft_remove_in(char *str, int a, int b);
 
 // built-in utils
 void		ft_remove_env(char **tmp, char *arg);
