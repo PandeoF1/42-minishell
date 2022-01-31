@@ -122,6 +122,7 @@ int	main(int argc, char **argv, char **envp)
 		penv = ft_strdup("MINISHELL=1");
 	else
 		penv = ft_export_env(envp);
+	ft_add_shlvl(&penv);
 	while (1)
 	{
 		readlin = ft_readline();

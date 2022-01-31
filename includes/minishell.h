@@ -73,6 +73,7 @@ void		ft_quote(t_process **process, int x, int *y, char **split);
 int			ft_w_is_eon(char *str);
 t_inout		*ft_create_inout(void);
 int			ft_is_command(char *cmd, char *str);
+int			ft_strstrlen(char **str);
 
 // built-in
 int			ft_pwd(int fd);
