@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/27 10:21:21 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/01/31 09:12:14 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ typedef struct s_data
 	char			**tab_paths;
 	char			***tab_args;
 	char			**tab_env;
+	int				j;
+	int				status;
+	char			*line;
 	struct s_inout	*inout;
 }	t_data;
 

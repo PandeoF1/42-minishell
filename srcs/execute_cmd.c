@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 11:15:22 by asaffroy          #+#    #+#             */
 /*   Updated: 2022/01/31 11:08:37 by tnard            ###   ########lyon.fr   */
@@ -34,39 +34,39 @@ int	find_path(char **env)
 
 int	ft_built(int i, char **env, t_data *data, t_process *temp)
 {
-	if (!ft_strncmp(temp->command, "pwd", 3))
+	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(1));
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(data, 1));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		exit(0);
-	if (!ft_strncmp(temp->command, "cd", 2))
+	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, 1, data->tab_args[i]));
-	if (!ft_strncmp(temp->command, "export", 6))
+	if (!ft_is_command(temp->command, "export"))
 		return (ft_export(data, data->tab_args[i], 1));
-	if (!ft_strncmp(temp->command, "unset", 6))
+	if (!ft_is_command(temp->command, "unset"))
 		return (ft_unset(data, data->tab_args[i], 1));
-	if (!ft_strncmp(temp->command, "echo", 4))
+	if (!ft_is_command(temp->command, "echo"))
 		return (ft_echo(data->tab_args[i], 1));
 	return (0);
 }
 
 int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 {
-	if (!ft_strncmp(temp->command, "pwd", 3))
+	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(data, data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
-	if (!ft_strncmp(temp->command, "cd", 2))
+	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, data->fd[2 * (data->ind + 1) + 1], data->tab_args[i]));
-	if (!ft_strncmp(temp->command, "export", 6))
+	if (!ft_is_command(temp->command, "export"))
 		return (ft_export
 			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
-	if (!ft_strncmp(temp->command, "echo", 4))
+	if (!ft_is_command(temp->command, "echo"))
 		return (ft_echo(data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
-	if (!ft_strncmp(temp->command, "unset", 6))
+	if (!ft_is_command(temp->command, "unset"))
 		return (ft_unset
 			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
 	return (0);
@@ -74,20 +74,20 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 
 int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 {
-	if (!ft_strncmp(temp->command, "pwd", 3))
+	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->file[i]));
 	if (!ft_strncmp(temp->command, "env", 3))
 		return (ft_env(data, data->file[i]));
 	if (!ft_strncmp(temp->command, "exit", 4))
 		ft_exit(temp);
-	if (!ft_strncmp(temp->command, "cd", 2))
+	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, data->file[i], data->tab_args[i]));
-	if (!ft_strncmp(temp->command, "export", 6))
+	if (!ft_is_command(temp->command, "export"))
 		return (ft_export
 			(data, data->tab_args[i], data->file[i]));
-	if (!ft_strncmp(temp->command, "echo", 4))
+	if (!ft_is_command(temp->command, "echo"))
 		return (ft_echo(data->tab_args[i], data->file[i]));
-	if (!ft_strncmp(temp->command, "unset", 6))
+	if (!ft_is_command(temp->command, "unset"))
 		return (ft_unset
 			(data, data->tab_args[i], data->file[i]));
 	return (0);
@@ -302,6 +302,86 @@ void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
 			exit (0);
 }
 
+void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
+{
+	if (temp->in_prev != 0 || data->inout->red_prev == 1)
+	{
+		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in pipe_proc");
+	}
+	if (data->inout->next == NULL && temp->out_next)
+	{
+		if (ft_built_red(i, env, data, temp))
+			exit (0);
+		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n2 failed in red_proc");
+	}
+	else if (data->inout->next == NULL)
+	{
+		if (ft_built_red2(i, env, data, temp))
+			exit (0);
+		if (dup2(data->file[i], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n3 failed in red_proc");
+	}
+	else
+		if (ft_built(i, env, data, temp))
+			exit (0);
+}
+
+void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
+{
+	if (data->inout->next == NULL)
+	{
+		if (ft_built_red2(i, env, data, temp))
+			exit(0);
+		if (dup2(data->file[i], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red2_proc");
+	}
+	if (data->inout->next == NULL && temp->out_next)
+	{
+		if (ft_built_red(i, env, data, temp))
+			exit(0);
+		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red_proc");
+	}
+	else
+		if (ft_built(i, env, data, temp))
+			exit(0);
+}
+
+void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
+{
+	if (temp->out_next || (temp->inout->next && temp->inout->next->type != 3))
+	{
+		if (ft_built_red(i, env, data, temp))
+			exit(0);
+		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red_proc");
+	}
+	else if (!ft_is_command(temp->command, "exit"))
+	{
+		write(2, "exit\n", 5);
+		exit(0);
+	}
+	else
+		if (ft_built(i, env, data, temp))
+			exit(0);
+}
+
+void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
+{
+	if (data->inout->next == NULL)
+	{
+		if (ft_built_red2(i, env, data, temp))
+			exit(0);
+		if (dup2(data->file[i], STDOUT_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red_proc");
+	}
+	else
+		if (ft_built_red(i, env, data, temp))
+			exit(0);
+}
+
 void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
@@ -348,28 +428,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 					(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->fd[2 * (data->ind + 1) + 1] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed");
-		if (temp->in_prev != 0 || data->inout->red_prev == 1)
-		{
-			if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in pipe_proc");
-		}
-		if (data->inout->next == NULL && temp->out_next)
-		{
-			if (ft_built_red(i, env, data, temp))
-				exit (0);
-			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n2 failed in red_proc");
-		}
-		else if (data->inout->next == NULL)
-		{
-			if (ft_built_red2(i, env, data, temp))
-				exit (0);
-			if (dup2(data->file[i], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n3 failed in red_proc");
-		}
-		else
-			if (ft_built(i, env, data, temp))
-				exit (0);
+		red2_proc_2(data, temp, env, i);
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
@@ -393,23 +452,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed");
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		if (data->inout->next == NULL)
-		{
-			if (ft_built_red2(i, env, data, temp))
-				exit(0);
-			if (dup2(data->file[i], STDIN_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red2_proc");
-		}
-		if (data->inout->next == NULL && temp->out_next)
-		{
-			if (ft_built_red(i, env, data, temp))
-				exit(0);
-			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red_proc");
-		}
-		else
-			if (ft_built(i, env, data, temp))
-				exit(0);
+		red_proc_2(data, temp, env, i);
 		close_pipes(data);
 		close(data->file[i]);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
@@ -433,22 +476,7 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		if (dup2(data->fd[2 * (data->ind + 1) - 2], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red3_proc");
-		if (temp->out_next || (temp->inout->next
-				&& temp->inout->next->type != 3))
-		{
-			if (ft_built_red(i, env, data, temp))
-				exit(0);
-			if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red_proc");
-		}
-		else if (!ft_strncmp(temp->command, "exit", 4))
-		{
-			write(2, "exit\n", 5);
-			exit(0);
-		}
-		else
-			if (ft_built(i, env, data, temp))
-				exit(0);
+		red3_proc_2(data, temp, env, i);
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
@@ -473,16 +501,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 		if (temp->in_prev != 0)
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc");
-		if (data->inout->next == NULL)
-		{
-			if (ft_built_red2(i, env, data, temp))
-				exit(0);
-			if (dup2(data->file[i], STDOUT_FILENO) == -1)
-				ft_perror("dup2 n1 failed in red_proc");
-		}
-		else
-			if (ft_built_red(i, env, data, temp))
-				exit(0);
+		red4_proc_2(data, temp, env, i);
 		close_pipes(data);
 		close(data->file[i]);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
@@ -496,30 +515,8 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 	}
 }
 
-int	ft_execute_cmd(t_process *proc, char **env, char **penv)
+int	ft_execute_cmd_3(t_process *temp, t_process *proc, t_inout *temp2, int i)
 {
-	t_data		data;
-	int			i;
-	t_process	*temp;
-	t_inout		*temp2;
-	int			j;
-	int			status;
-	t_inout		*tmp;
-	char		*line;
-
-	data.tab_env = penv;
-	temp = proc;
-	temp2 = temp->inout;
-	if (!temp2 || (temp2 && temp2->type == 3))
-		i = 1;
-	else
-		i = 0;
-	while (temp2)
-	{
-		if (temp2 && temp2->type != 3)
-			i++;
-		temp2 = temp2->next;
-	}
 	while (temp->next != NULL)
 	{
 		temp = temp->next;
@@ -541,137 +538,218 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 				}
 			}
 		}
-		else
-			if (temp)
-				i++;
+		else if (temp)
+			i++;
 	}
+	return (i);
+}
+
+int	ft_execute_cmd_2(t_process *temp, t_process *proc, t_inout *temp2)
+{
+	int	i;
+
+	if (!temp2 || (temp2 && temp2->type == 3))
+		i = 1;
+	else
+		i = 0;
+	while (temp2)
+	{
+		if (temp2 && temp2->type != 3)
+			i++;
+		temp2 = temp2->next;
+	}
+	i = ft_execute_cmd_3(temp, proc, temp2, i);
 	temp = proc;
-	if (!ft_malloc_struct(&data, i))
-		ft_perror("malloc failed\n");
-	create_pipes(&data);
+	return (i);
+}
+
+int	ft_execute_cond(t_process *temp, t_data *data, int i, char **env)
+{
+	data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+	if (!ft_is_command(temp->command, "exit"))
+	{
+		write(2, "exit\n", 5);
+		free_exec(data, i);
+		exit(0);
+	}
+	if (!ft_built(0, env, data, temp))
+		one_proc(data, temp, env);
+	else
+	{
+		free_exec(data, i);
+		return (0);
+	}
+	data->j = 0;
+	return (1);
+}
+
+int	ft_execute_cmd_7(t_data *data, t_process *temp, char **env, int i)
+{
+	while (i >= 0 && data->inout != 0 && data->inout->type == 1)
+	{
+		red_proc(data, temp, env, i);
+		data->inout = data->inout->next;
+		if (!data->inout && !temp->out_next
+			&& !ft_is_command(temp->command, "exit"))
+			exit(0);
+		i--;
+	}
+	return (i);
+}
+
+int	ft_execute_cmd_6(t_data *data, t_process *temp, char **env, int i)
+{
+	while (i >= 0 && (!data->inout))
+	{
+		pipe_proc(data, temp, env, i);
+		temp = temp->next;
+		data->ind++;
+		i--;
+		if (temp)
+			data->inout = temp->inout;
+	}
+	while (i >= 0 && data->inout != 0 && data->inout->type == 2)
+	{
+		red2_proc(data, temp, env, i);
+		data->inout = data->inout->next;
+		if (!data->inout && !temp->out_next
+			&& !ft_is_command(temp->command, "exit"))
+			exit(0);
+		i--;
+	}
+	i = ft_execute_cmd_7(data, temp, env, i);
+	return (i);
+}
+
+void	ft_execute_cmd_8(t_data *data, t_process *temp, t_inout *tmp)
+{
+	data->line = NULL;
+	close(data->fd[2 * data->ind + 1]);
+	if (pipe(data->fd + 2 * data->ind) < 0)
+		ft_perror("nooope");
+	while (data->inout->next != NULL && data->inout->next->type == 3)
+		data->inout = data->inout->next;
+	if (!ft_is_command(tmp->file, data->inout->file))
+	{
+		data->line = readline("heredoc> ");
+		if (ft_is_command(data->line, data->inout->file))
+		{
+			write(data->fd[2 * data->ind + 1], data->line
+				, ft_strlen(data->line));
+			write(data->fd[2 * data->ind + 1], "\n", 1);
+		}
+	}
+	while (ft_is_command(tmp->file, data->inout->file))
+	{
+		data->line = readline("heredoc> ");
+		if (!ft_is_command(data->line, tmp->file)
+			&& tmp->next && tmp->next->type == 3)
+			tmp = tmp->next;
+		if (ft_is_command(tmp->file, data->inout->file))
+			free(data->line);
+	}
+}
+
+void	ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i)
+{
+	while (ft_is_command(data->line, data->inout->file))
+	{
+		if (data->line)
+			free (data->line);
+		data->line = readline("heredoc> ");
+		if (ft_is_command(data->line, data->inout->file))
+		{
+			write(data->fd[2 * data->ind + 1], data->line
+				, ft_strlen(data->line));
+			write(data->fd[2 * data->ind + 1], "\n", 1);
+		}
+	}
+	free(data->line);
+	red3_proc(data, temp, env, i);
+	data->inout = data->inout->next;
+	if (!data->inout && !temp->out_next
+		&& !ft_is_command(temp->command, "exit"))
+		exit(0);
+}
+
+void	ft_execute_cmd_10(t_data *data, t_process *temp, char **env, int i)
+{
+	if (i >= 0 && data->inout != 0 && data->inout->type == 4)
+	{
+		red4_proc(data, temp, env, i);
+		data->inout = data->inout->next;
+		if (!data->inout && !temp->out_next
+			&& !ft_is_command(temp->command, "exit"))
+			exit(0);
+		i--;
+	}
+	if (temp && temp->inout && !data->inout)
+	{
+		temp = temp->next;
+		data->ind++;
+	}
+}
+
+void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
+{
+	t_inout		*tmp;
+
+	while (i >= 0)
+	{
+		if (!data->inout)
+			data->inout = temp->inout;
+		i = ft_execute_cmd_6(data, temp, env, i);
+		if (i >= 0 && data->inout != 0 && data->inout->type == 3)
+		{
+			tmp = data->inout;
+			ft_execute_cmd_8(data, temp, tmp);
+			ft_execute_cmd_9(data, temp, env, i);
+			i--;
+		}
+		ft_execute_cmd_10(data, temp, env, i);
+	}
+}
+
+int	ft_execute_cmd_5(t_data *data, t_process *temp, char **env, int i)
+{
 	if (i == 1 && temp->inout == 0)
 	{
-		data.tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		if (!ft_strncmp(temp->command, "exit", 4))
-		{
-			write(2, "exit\n", 5);
-			free_exec(&data, i);
-			exit(0);
-		}
-		if (!ft_built(0, env, &data, temp))
-			one_proc(&data, temp, env);
-		else
-		{
-			free_exec(&data, i);
+		if (ft_execute_cond(temp, data, i, env) != 1)
 			return (0);
-		}
-		j = 0;
 	}
 	else
 	{
 		i--;
-		j = i;
-		data.ind = 0;
-		data.inout = NULL;
-		while (i >= 0)
-		{
-			if (!data.inout)
-				data.inout = temp->inout;
-			while (i >= 0 && (!data.inout))
-			{
-				pipe_proc(&data, temp, env, i);
-				temp = temp->next;
-				data.ind++;
-				i--;
-				if (temp)
-					data.inout = temp->inout;
-			}
-			while (i >= 0 && data.inout != 0 && data.inout->type == 2)
-			{
-				red2_proc(&data, temp, env, i);
-				data.inout = data.inout->next;
-				if (!data.inout && !temp->out_next
-					&& !ft_strncmp(temp->command, "exit", 4))
-					exit(0);
-				i--;
-			}
-			while (i >= 0 && data.inout != 0 && data.inout->type == 1)
-			{
-				red_proc(&data, temp, env, i);
-				data.inout = data.inout->next;
-				if (!data.inout && !temp->out_next
-					&& !ft_strncmp(temp->command, "exit", 4))
-					exit(0);
-				i--;
-			}
-			if (i >= 0 && data.inout != 0 && data.inout->type == 3)
-			{
-				tmp = data.inout;
-				line = NULL;
-				close(data.fd[2 * data.ind + 1]);
-				if (pipe(data.fd + 2 * data.ind) < 0)
-					ft_perror("nooope");
-				while (data.inout->next != NULL && data.inout->next->type == 3)
-					data.inout = data.inout->next;
-				if (!ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
-				{
-					line = readline("heredoc> ");
-					if (ft_strncmp(line, data.inout->file, ft_strlen(line)))
-					{
-						write(data.fd[2 * data.ind + 1], line, ft_strlen(line));
-						write(data.fd[2 * data.ind + 1], "\n", 1);
-					}
-				}
-				while (ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
-				{
-					line = readline("heredoc> ");
-					if (!ft_strncmp(line, tmp->file, ft_strlen(line))
-						&& tmp->next && tmp->next->type == 3)
-						tmp = tmp->next;
-					if (ft_strncmp(tmp->file, data.inout->file, ft_strlen(tmp->file)))
-						free(line);
-				}
-				while (ft_strncmp(line, data.inout->file, ft_strlen(line)))
-				{
-					if (line)
-						free (line);
-					line = readline("heredoc> ");
-					if (ft_strncmp(line, data.inout->file, ft_strlen(line)))
-					{
-						write(data.fd[2 * data.ind + 1], line, ft_strlen(line));
-						write(data.fd[2 * data.ind + 1], "\n", 1);
-					}
-				}
-				free(line);
-				red3_proc(&data, temp, env, i);
-				data.inout = data.inout->next;
-				if (!data.inout && !temp->out_next
-					&& !ft_strncmp(temp->command, "exit", 4))
-					exit(0);
-				i--;
-			}
-			if (i >= 0 && data.inout != 0 && data.inout->type == 4)
-			{
-				red4_proc(&data, temp, env, i);
-				data.inout = data.inout->next;
-				if (!data.inout && !temp->out_next
-					&& !ft_strncmp(temp->command, "exit", 4))
-					exit(0);
-				i--;
-			}
-			if (temp && temp->inout && !data.inout)
-			{
-				temp = temp->next;
-				data.ind++;
-			}
-		}
+		data->j = i;
+		data->ind = 0;
+		data->inout = NULL;
+		ft_execute_cmd_4(data, temp, env, i);
 	}
-	i = j;
+	return (1);
+}
+
+int	ft_execute_cmd(t_process *proc, char **env, char **penv)
+{
+	t_data		data;
+	t_process	*temp;
+	t_inout		*temp2;
+	int			i;
+
+	data.tab_env = penv;
+	temp = proc;
+	temp2 = temp->inout;
+	i = ft_execute_cmd_2(temp, proc, temp2);
+	if (!ft_malloc_struct(&data, i))
+		ft_perror("malloc failed\n");
+	create_pipes(&data);
+	if (ft_execute_cmd_5(&data, temp, env, i) == 0)
+		return (0);
+	i = data.j;
 	close_pipes(&data);
-	while (j >= 0)
+	while (data.j >= 0)
 	{
-		waitpid(data.pid1[j], &status, 0);
-		j--;
+		waitpid(data.pid1[data.j], &data.status, 0);
+		data.j--;
 	}
 	free_exec(&data, i);
 	return (0);
