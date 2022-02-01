@@ -22,7 +22,7 @@ RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
 
-SRCS		= minishell.c srcs/execute_cmd.c srcs/ft_dquote.c \
+SRCS		= minishell.c srcs/ft_dquote.c \
 				srcs/ft_free.c srcs/ft_get_input.c srcs/ft_perror.c \
 				srcs/ft_utils_1.c srcs/ft_utils_2.c srcs/parsing/ft_check.c \
 				srcs/parsing/ft_penv.c srcs/parsing/ft_parse.c srcs/parsing/ft_process.c \
@@ -30,7 +30,9 @@ SRCS		= minishell.c srcs/execute_cmd.c srcs/ft_dquote.c \
 				srcs/parsing/ft_splitd.c srcs/built-in/ft_echo.c srcs/built-in/ft_env.c srcs/built-in/ft_export.c \
 				srcs/built-in/ft_pwd.c srcs/built-in/ft_is_commad.c srcs/built-in/ft_exit.c srcs/built-in/ft_cd.c \
 				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c srcs/built-in/ft_export_utils.c \
-				srcs/built-in/ft_remove_in.c
+				srcs/built-in/ft_remove_in.c srcs/ft_exec_cmd.c srcs/ft_exec_cmd_2.c srcs/ft_exec_cmd_3.c \
+				srcs/ft_exec_utils.c srcs/ft_fork.c srcs/ft_fork_2.c srcs/ft_fork_3.c srcs/ft_free_exec.c \
+				srcs/ft_built_switch.c srcs/ft_init_exec.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h

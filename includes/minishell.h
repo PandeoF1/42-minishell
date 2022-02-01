@@ -101,8 +101,11 @@ void		ft_remove_env(char **tmp, char *arg);
 char		*ft_remove_in(char *str, int a, int b);
 int			ft_env_len(char *env);
 int			ft_is_valid(char *str);
+int			ft_built(int i, char **env, t_data *data, t_process *temp);
+int			ft_built_red(int i, char **env, t_data *data, t_process *temp);
+int			ft_built_red2(int i, char **env, t_data *data, t_process *temp);
 
-// executions
+// execution
 void		ft_perror(char *str);
 int			ft_wordlen(char *str, t_data *data, int a);
 int			ft_is_charset(char str, t_data *data, int a);
@@ -112,5 +115,35 @@ int			ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
 char		*ft_remove(char *str, int c);
 char		**ft_dquote(char **split, int x, int y);
 char		*ft_ddquote(char *split, int x);
+char		*ft_check_arg(char *cmd, char **env);
+int			ft_malloc_struct(t_data *data, int i);
+void		create_pipes(t_data *data);
+void		close_pipes(t_data *data);
+int			ft_execute_cmd(t_process *proc, char **env, char **penv);
+int			ft_execute_cmd_2(t_process *temp, t_process *proc, t_inout *temp2);
+int			ft_execute_cmd_3(t_process *temp,
+				t_process *proc, t_inout *temp2, int i);
+void		ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i);
+int			ft_execute_cmd_5(t_data *data, t_process *temp, char **env, int i);
+int			ft_execute_cmd_6(t_data *data, t_process *temp, char **env, int i);
+int			ft_execute_cmd_7(t_data *data, t_process *temp, char **env, int i);
+void		ft_execute_cmd_8(t_data *data, t_process *temp, t_inout *tmp);
+void		ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i);
+void		ft_execute_cmd_10(t_data *data, t_process *temp, char **env, int i);
+int			ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env);
+void		free_exec(t_data *data, int i);
 
-#endif
+// forks
+void		one_proc(t_data *data, t_process *temp, char **env);
+void		pipe_proc(t_data *data, t_process *temp, char **env, int i);
+void		pipe_proc_2(t_process *temp, t_data *data, int i, char **env);
+void		red_proc(t_data *data, t_process *temp, char **env, int i);
+void		red_proc_2(t_data *data, t_process *temp, char **env, int i);
+void		red2_proc(t_data *data, t_process *temp, char **env, int i);
+void		red2_proc_2(t_data *data, t_process *temp, char **env, int i);
+void		red3_proc(t_data *data, t_process *temp, char **env, int i);
+void		red3_proc_2(t_data *data, t_process *temp, char **env, int i);
+void		red4_proc(t_data *data, t_process *temp, char **env, int i);
+void		red4_proc_2(t_data *data, t_process *temp, char **env, int i);
+
+#endif	
