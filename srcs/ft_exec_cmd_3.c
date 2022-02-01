@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:31:23 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:47:25 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 17:13:32 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 int	ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env)
 {
+	ft_printf("uwu %d\n", i);
 	data->tab_args[0] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
+	ft_printf("auwu\n");
 	if (!ft_is_command(temp->command, "exit"))
 	{
 		write(2, "exit\n", 5);

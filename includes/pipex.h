@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 10:07:37 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 17:03:38 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,7 @@ typedef struct s_data
 	int				*file;
 	int				nb_cmd;
 	int				ind;
-	int				*i;
-	int				*dec;
-	char			*type_char;
 	char			charset[4];
-	int				*type_nb;
-	int				*check;
 	int				exit;
 	pid_t			*pid1;
 	char			**tab_paths;
