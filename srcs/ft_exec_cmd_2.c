@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:44:19 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 15:22:44 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,9 @@ void	ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i)
 
 void	ft_execute_cmd_10(t_data *data, t_process *temp, char **env, int i)
 {
-	if (i >= 0 && data->inout != 0 && data->inout->type == 4)
-	{
-		red4_proc(data, temp, env, i);
-		data->inout = data->inout->next;
-		if (!data->inout && !temp->out_next
-			&& !ft_is_command(temp->command, "exit"))
-			exit(0);
-		i--;
-	}
-	if (temp && temp->inout && !data->inout)
-	{
-		temp = temp->next;
-		data->ind++;
-	}
+	red4_proc(data, temp, env, i);
+	data->inout = data->inout->next;
+	if (!data->inout && !temp->out_next
+		&& !ft_is_command(temp->command, "exit"))
+		exit(0);
 }
