@@ -106,7 +106,16 @@ void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 			ft_execute_cmd_9(data, temp, env, i);
 			i--;
 		}
-		ft_execute_cmd_10(data, temp, env, i);
+		if (i >= 0 && data->inout != 0 && data->inout->type == 4)
+		{
+			ft_execute_cmd_10(data, temp, env, i);
+			i--;
+		}
+		if (temp && temp->inout && !data->inout)
+		{
+			temp = temp->next;
+			data->ind++;
+		}
 	}
 }
 
