@@ -16,7 +16,10 @@ static void	sig_quit(int sig)
 {
 	(void)sig;
 	if (g_exit != -1053)
+	{
 		ft_putstr_fd("\b\b  \b\b", 1);
+		g_exit = 131;
+	}
 }
 
 static void	action(int sig)
@@ -138,12 +141,10 @@ int	main(int argc, char **argv, char **envp)
 			ft_printf("exit\n");
 			exit (1);
 		}
-		ft_printf("exit : %d\n", g_exit);
 		if (ft_strlen(tmp) != 0)
 		{
 			add_history(tmp);
 			tmp = ft_penv(penv, tmp, 0, 0);
-			ft_printf("tmp : %s\n", tmp);
 			splitd = ft_splitd(penv, '\n');
 			ft_parse_command(tmp, splitd, &penv);
 			ft_free_split(splitd);

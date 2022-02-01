@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/01 11:15:34 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:53:55 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,8 @@ char	*ft_penv(char *env, char *str, int x, int b)
 			y = x++;
 			if (str[x] && str[x] == '?')
 			{
-				ft_printf("uwu\n");
 				tmp = ft_itoa(g_exit);
-				ft_printf("tmp = %s\n", tmp);
-				y = x + ft_strlen(tmp);
-				ft_printf("x = %d, y = %d\n", x, y);
-				tmp = ft_strdup("uwu");
+				x += ft_strlen(tmp);
 				tmp = ft_replace(str, tmp, x, y);
 				free(str);
 				str = tmp;
