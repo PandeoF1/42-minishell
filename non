@@ -1,0 +1,14 @@
+< non echo oui
+_ = doit contenir le path de la derneire commande
+export OUI=""
+export OUI=
+export OUI=''
+export OUI=$PWD
+cd ~
+cd - (remplacer - par OLDPWD)
+cd ewqeqwe (argument non valable, msg d' erreur)
+echo something > fichier1 > fichier2 ajout > fichier3
+echo somehting >> fichier3
+unset (env qui n'existe pas)
+gerer les args des exit 
+echo $PWD $USER

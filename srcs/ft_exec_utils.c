@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:18:04 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:20:15 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:45:53 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ char	*ft_check_arg2(char **env, char *temp, int i)
 
 char	*ft_check_arg(char *cmd, char **env)
 {
-	int			i;
 	char		*temp;
 	char		*try_temp;
 
+	try_temp = NULL;
 	temp = ft_ddquote(ft_strdup(cmd), 0);
 	if (!access(temp, F_OK))
 	{

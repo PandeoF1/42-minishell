@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:09:06 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:44:19 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_execute_cmd_7(t_data *data, t_process *temp, char **env, int i)
 	return (i);
 }
 
-void	ft_execute_cmd_8(t_data *data, t_process *temp, t_inout *tmp)
+void	ft_execute_cmd_8(t_data *data, t_inout *tmp)
 {
 	data->line = NULL;
 	close(data->fd[2 * data->ind + 1]);

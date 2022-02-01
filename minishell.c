@@ -66,11 +66,6 @@ char	*ft_readline(void)
 	return (str);
 }
 
-void	test(int sig)
-{
-	ft_printf("yolo\n");
-}
-
 void	ft_add_shlvl(char **env)
 {
 	char	*tmp;
@@ -141,7 +136,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!tmp)
 		{
 			ft_printf("exit\n");
-			exit (1);
+			exit (0);
 		}
 		if (ft_strlen(tmp) != 0)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd_3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:31:23 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:00:25 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:47:25 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env)
 		free_exec(data, i);
 		exit(data->status);
 	}
-	if (!ft_built(0, env, data, temp))
+	if (!ft_built(0, data, temp))
 		one_proc(data, temp, env);
 	else
 	{
@@ -39,4 +39,5 @@ int	ft_status(t_data *data)
 		return (WEXITSTATUS(data->status));
 	else if (WIFSIGNALED(data->status))
 		return (WTERMSIG(data->status));
+	return (data->status);
 }

@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:14:00 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:48:39 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
 {
+	(void)env;
 	if (temp->in_prev != 0)
 	{
 		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
@@ -51,13 +52,13 @@ void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
 	}
 	if (temp->out_next != 0)
 	{
-		if (ft_built_red(i, env, data, temp))
+		if (ft_built_red(i, data, temp))
 			exit (0);
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n2 failed in pipe_proc", 1);
 	}
 	else
-		if (ft_built(i, env, data, temp))
+		if (ft_built(i, data, temp))
 			exit (0);
 }
 
@@ -88,21 +89,22 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
+	(void)env;
 	if (data->inout->next == NULL)
 	{
-		if (ft_built_red2(i, env, data, temp))
+		if (ft_built_red2(i, data, temp))
 			exit(0);
 		if (dup2(data->file[i], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red2_proc", 1);
 	}
 	if (data->inout->next == NULL && temp->out_next)
 	{
-		if (ft_built_red(i, env, data, temp))
+		if (ft_built_red(i, data, temp))
 			exit(0);
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_proc", 1);
 	}
 	else
-		if (ft_built(i, env, data, temp))
+		if (ft_built(i, data, temp))
 			exit(0);
 }

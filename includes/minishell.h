@@ -87,7 +87,7 @@ int			ft_space(char *str);
 int			ft_pwd(int fd);
 int			ft_echo(char **args, int fd);
 int			ft_env(t_data *data, int fd);
-int			ft_export(t_data *data, char **arg, int fd);
+int			ft_export(t_data *data, char **arg);
 void		ft_remove_env(char **tmp, char *arg);
 void		ft_exit(t_process *temp, t_data *data);
 int			ft_cd(t_data *data, int fd, char **path);
@@ -98,15 +98,15 @@ char		**ft_sort(char *env, int x, int y, int a);
 void		ft_display_export(char **splitd);
 char		*ft_add_env(char **tmp, char *arg);
 char		*ft_remove_in(char *str, int a, int b);
+int			ft_built(int i, t_data *data, t_process *temp);
+int			ft_built_red(int i, t_data *data, t_process *temp);
+int			ft_built_red2(int i, t_data *data, t_process *temp);
 
 // built-in utils
 void		ft_remove_env(char **tmp, char *arg);
 char		*ft_remove_in(char *str, int a, int b);
 int			ft_env_len(char *env);
 int			ft_is_valid(char *str);
-int			ft_built(int i, char **env, t_data *data, t_process *temp);
-int			ft_built_red(int i, char **env, t_data *data, t_process *temp);
-int			ft_built_red2(int i, char **env, t_data *data, t_process *temp);
 
 // execution
 void		ft_perror(char *str, int code);
@@ -124,13 +124,12 @@ void		create_pipes(t_data *data);
 void		close_pipes(t_data *data);
 int			ft_execute_cmd(t_process *proc, char **env, char **penv);
 int			ft_execute_cmd_2(t_process *temp, t_process *proc, t_inout *temp2);
-int			ft_execute_cmd_3(t_process *temp,
-				t_process *proc, t_inout *temp2, int i);
+int			ft_execute_cmd_3(t_process *temp, t_inout *temp2, int i);
 void		ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i);
 int			ft_execute_cmd_5(t_data *data, t_process *temp, char **env, int i);
 int			ft_execute_cmd_6(t_data *data, t_process *temp, char **env, int i);
 int			ft_execute_cmd_7(t_data *data, t_process *temp, char **env, int i);
-void		ft_execute_cmd_8(t_data *data, t_process *temp, t_inout *tmp);
+void		ft_execute_cmd_8(t_data *data, t_inout *tmp);
 void		ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i);
 void		ft_execute_cmd_10(t_data *data, t_process *temp, char **env, int i);
 int			ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env);

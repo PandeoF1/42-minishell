@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/31 22:32:41 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:41:01 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ int	ft_cd(t_data *data, int fd, char **path)
 	char	**env;
 	char	*tmp;
 
+	(void)fd;
 	env = data->tab_env;
 	if (ft_strstrlen(path) == 1)
 	{
 		tmp = ft_search_env(*env, "HOME");
 		if (!tmp || ft_strlen(tmp) == 0)
-			ft_printf("cd: HOME not set\n");
+			ft_putstr_fd("cd: HOME not set\n", 2);
 		else
 			chdir(tmp);
 		free (tmp);
@@ -30,6 +31,6 @@ int	ft_cd(t_data *data, int fd, char **path)
 	else if (ft_strstrlen(path) == 2)
 		chdir(path[1]);
 	else
-		ft_printf("wrong number of args arguments\n");
+		ft_putstr_fd("wrong number of args arguments\n", 2);
 	return (1);
 }

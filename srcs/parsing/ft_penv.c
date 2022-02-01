@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/01 13:30:55 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:55:09 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	*ft_penv(char *env, char *str, int x, int b)
 				str = tmp;
 				x = y;
 			}
-			else if (str[x] && c[1] == 0 && !ft_isdigit(str[x]))
+			else if (str[x] && c[1] == 0 && !ft_isdigit(str[x]) && ft_is_env_char(str[x]))
 			{
 				while (str[x + b] && ft_is_env_char(str[x + b]))
 					b++;

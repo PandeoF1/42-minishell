@@ -93,6 +93,7 @@ char	*ft_add_env(char **tmp, char *arg)
 	char	*str;
 	int		x;
 
+	(void)tmp;
 	x = 0;
 	str = NULL;
 	while (arg[x])

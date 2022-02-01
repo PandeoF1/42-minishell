@@ -6,13 +6,13 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:33:19 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 12:12:53 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:46:17 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_built(int i, char **env, t_data *data, t_process *temp)
+int	ft_built(int i, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(1));
@@ -23,7 +23,7 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, 1, data->tab_args[i]));
 	if (!ft_is_command(temp->command, "export"))
-		return (ft_export(data, data->tab_args[i], 1));
+		return (ft_export(data, data->tab_args[i]));
 	if (!ft_is_command(temp->command, "unset"))
 		return (ft_unset(data, data->tab_args[i], 1));
 	if (!ft_is_command(temp->command, "echo"))
@@ -31,7 +31,7 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 	return (0);
 }
 
-int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
+int	ft_built_red(int i, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->fd[2 * (data->ind + 1) + 1]));
@@ -44,7 +44,7 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 				data->tab_args[i]));
 	if (!ft_is_command(temp->command, "export"))
 		return (ft_export
-			(data, data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
+			(data, data->tab_args[i]));
 	if (!ft_is_command(temp->command, "echo"))
 		return (ft_echo(data->tab_args[i], data->fd[2 * (data->ind + 1) + 1]));
 	if (!ft_is_command(temp->command, "unset"))
@@ -53,7 +53,7 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 	return (0);
 }
 
-int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
+int	ft_built_red2(int i, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->file[i]));
@@ -65,7 +65,7 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 		return (ft_cd(data, data->file[i], data->tab_args[i]));
 	if (!ft_is_command(temp->command, "export"))
 		return (ft_export
-			(data, data->tab_args[i], data->file[i]));
+			(data, data->tab_args[i]));
 	if (!ft_is_command(temp->command, "echo"))
 		return (ft_echo(data->tab_args[i], data->file[i]));
 	if (!ft_is_command(temp->command, "unset"))

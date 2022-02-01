@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 12:59:54 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:44:30 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ int	ft_execute_cmd_2(t_process *temp, t_process *proc, t_inout *temp2)
 			i++;
 		temp2 = temp2->next;
 	}
-	i = ft_execute_cmd_3(temp, proc, temp2, i);
+	i = ft_execute_cmd_3(temp, temp2, i);
 	temp = proc;
 	return (i);
 }
 
-int	ft_execute_cmd_3(t_process *temp, t_process *proc, t_inout *temp2, int i)
+int	ft_execute_cmd_3(t_process *temp, t_inout *temp2, int i)
 {
 	while (temp->next != NULL)
 	{
@@ -102,7 +102,7 @@ void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 		if (i >= 0 && data->inout != 0 && data->inout->type == 3)
 		{
 			tmp = data->inout;
-			ft_execute_cmd_8(data, temp, tmp);
+			ft_execute_cmd_8(data, tmp);
 			ft_execute_cmd_9(data, temp, env, i);
 			i--;
 		}

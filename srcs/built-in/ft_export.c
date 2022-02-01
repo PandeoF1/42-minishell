@@ -84,7 +84,7 @@ void	ft_finish_export(char **tmp, char *env)
 		free(env);
 }
 
-int	ft_export(t_data *data, char **arg, int fd)
+int	ft_export(t_data *data, char **arg)
 {
 	int		x;
 	char	**tmp;
@@ -106,7 +106,7 @@ int	ft_export(t_data *data, char **arg, int fd)
 				ft_finish_export(tmp, env);
 			}
 			else
-				ft_printf("export: %s: not a valid identifier\n", arg[x]);
+				ft_putstr_fd("export: not a valid identifier\n", 2);
 		}
 	}
 	return (1);
