@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:09:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 12:59:54 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	t_inout		*temp2;
 	int			i;
 
+	// ft_printf("g : %d\n", g_exit);
+	data.status = g_exit;
 	g_exit = -1053;
-	data.exit = 0;
 	data.tab_env = penv;
 	temp = proc;
 	temp2 = temp->inout;
@@ -38,7 +39,7 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 		data.j--;
 	}
 	free_exec(&data, i);
-	return (0);
+	return (ft_status(&data));
 }
 
 int	ft_execute_cmd_2(t_process *temp, t_process *proc, t_inout *temp2)

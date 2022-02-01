@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:31:23 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 09:31:49 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:00:25 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,24 @@ int	ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env)
 	{
 		write(2, "exit\n", 5);
 		free_exec(data, i);
-		exit(0);
+		exit(data->status);
 	}
 	if (!ft_built(0, env, data, temp))
 		one_proc(data, temp, env);
 	else
 	{
+		data->status = 0;
 		free_exec(data, i);
 		return (0);
 	}
 	data->j = 0;
 	return (1);
+}
+
+int	ft_status(t_data *data)
+{
+	if (WIFEXITED(data->status))
+		return (WEXITSTATUS(data->status));
+	else if (WIFSIGNALED(data->status))
+		return (WTERMSIG(data->status));
 }

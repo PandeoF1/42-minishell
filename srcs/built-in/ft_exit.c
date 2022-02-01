@@ -6,15 +6,15 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:21:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/01/28 10:19:39 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 12:14:02 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_exit(t_process *temp)
+void	ft_exit(t_process *temp, t_data *data)
 {
 	if (!temp->out_next && !temp->in_prev)
 		write(2, "exit\n", 5);
-	exit(0);
+	exit(data->status);
 }
