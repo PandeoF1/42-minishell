@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 09:41:19 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:09:18 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	temp2 = temp->inout;
 	i = ft_execute_cmd_2(temp, proc, temp2);
 	if (!ft_malloc_struct(&data, i))
-		ft_perror("malloc failed\n");
+		ft_perror("malloc failed\n", 1);
 	create_pipes(&data);
 	if (ft_execute_cmd_5(&data, temp, env, i) == 0)
 		return (0);

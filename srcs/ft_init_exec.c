@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:16:35 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 09:17:23 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:16:18 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	create_pipes(t_data *data)
 	while (i < data->nb_cmd)
 	{
 		if (pipe(data->fd + 2 * i) < 0)
-			ft_perror("fail , lets free\n");
+			ft_perror("fail , lets free\n", 1);
 		i++;
 	}
 }

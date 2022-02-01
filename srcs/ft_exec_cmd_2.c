@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 09:31:34 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:09:06 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_execute_cmd_8(t_data *data, t_process *temp, t_inout *tmp)
 	data->line = NULL;
 	close(data->fd[2 * data->ind + 1]);
 	if (pipe(data->fd + 2 * data->ind) < 0)
-		ft_perror("nooope");
+		ft_perror("pipe of heredoc failed", 1);
 	while (data->inout->next != NULL && data->inout->next->type == 3)
 		data->inout = data->inout->next;
 	if (!ft_is_command(tmp->file, data->inout->file))

@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:18:04 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 09:34:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:12:13 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,17 +100,17 @@ char	*ft_check_arg(char *cmd, char **env)
 			return (temp);
 		else
 			if (ft_strchr(temp, '/'))
-				ft_perror("minishell: Permission denied");
+				ft_perror("minishell: Permission denied", 126);
 	}
 	if (ft_strchr(temp, '/'))
-		ft_perror("minishell: No such file or directory");
+		ft_perror("minishell: No such file or directory", 127);
 	temp = ft_strxjoin("/", temp, ft_strlen(temp));
 	if (find_path(env) == -1)
-		ft_perror("minishell: No such file or directory");
+		ft_perror("minishell: No such file or directory", 127);
 	else
 		try_temp = ft_check_arg2(env, temp, find_path(env));
 	free(temp);
 	if (!try_temp)
-		ft_perror("minishell: No such file or directory");
+		ft_perror("minishell: No such file or directory", 127);
 	return (try_temp);
 }

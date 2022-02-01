@@ -106,7 +106,7 @@ int			ft_built_red(int i, char **env, t_data *data, t_process *temp);
 int			ft_built_red2(int i, char **env, t_data *data, t_process *temp);
 
 // execution
-void		ft_perror(char *str);
+void		ft_perror(char *str, int code);
 int			ft_wordlen(char *str, t_data *data, int a);
 int			ft_is_charset(char str, t_data *data, int a);
 int			ft_wordcount(char *str, t_data *data, int a);
