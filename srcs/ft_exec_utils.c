@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:18:04 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:18:19 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:20:15 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,6 @@ char	*ft_check_arg(char *cmd, char **env)
 		try_temp = ft_check_arg2(env, temp, find_path(env));
 	free(temp);
 	if (!try_temp)
-		ft_perror("minishell: No such file or directory", 127);
+		ft_perror("minishell: command not found", 127);
 	return (try_temp);
 }

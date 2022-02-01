@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:33:19 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:31:18 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 12:12:53 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	ft_built(int i, char **env, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(1));
-	if (!ft_strncmp(temp->command, "env", 3))
+	if (!ft_is_command(temp->command, "env"))
 		return (ft_env(data, 1));
-	if (!ft_strncmp(temp->command, "exit", 4))
+	if (!ft_is_command(temp->command, "exit"))
 		exit(0);
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, 1, data->tab_args[i]));
@@ -35,10 +35,10 @@ int	ft_built_red(int i, char **env, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->fd[2 * (data->ind + 1) + 1]));
-	if (!ft_strncmp(temp->command, "env", 3))
+	if (!ft_is_command(temp->command, "env"))
 		return (ft_env(data, data->fd[2 * (data->ind + 1) + 1]));
-	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(temp);
+	if (!ft_is_command(temp->command, "exit"))
+		ft_exit(temp, data);
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, data->fd[2 * (data->ind + 1) + 1],
 				data->tab_args[i]));
@@ -57,10 +57,10 @@ int	ft_built_red2(int i, char **env, t_data *data, t_process *temp)
 {
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(data->file[i]));
-	if (!ft_strncmp(temp->command, "env", 3))
+	if (!ft_is_command(temp->command, "env"))
 		return (ft_env(data, data->file[i]));
-	if (!ft_strncmp(temp->command, "exit", 4))
-		ft_exit(temp);
+	if (!ft_is_command(temp->command, "exit"))
+		ft_exit(temp, data);
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, data->file[i], data->tab_args[i]));
 	if (!ft_is_command(temp->command, "export"))

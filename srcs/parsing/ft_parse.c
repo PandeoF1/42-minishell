@@ -89,7 +89,7 @@ void	ft_parse_command(char *str, char **env, char **penv)
 		{
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
-			ft_execute_cmd(process, env, penv);
+			g_exit = ft_execute_cmd(process, env, penv);
 			x = 1;
 		}
 		else
