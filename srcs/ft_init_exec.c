@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:16:35 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 11:16:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 17:19:59 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_malloc_struct(t_data *data, int i)
 	int	j;
 
 	j = -1;
+	data->line = NULL;
 	data->fd = (int *)malloc(sizeof(int) * i * 2);
 	if (!data->fd)
 		return (0);
