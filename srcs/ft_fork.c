@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:48:39 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 15:13:57 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 	{
 		data->file[i] = open(ft_ddquote(data->inout->file, 0), O_RDONLY);
 		if (data->file[i] < 0)
-			ft_perror("\033[2K\r\033[0;31mError\033[0m : file opening failed", 1);
+			ft_perror("minishell : No such file or directory", 1);
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		red_proc_2(data, temp, env, i);
 		close_pipes(data);
@@ -104,7 +104,7 @@ void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_proc", 1);
 	}
-	else
+	else if (temp->command != NULL && !data->inout->next)
 		if (ft_built(i, data, temp))
 			exit(0);
 }

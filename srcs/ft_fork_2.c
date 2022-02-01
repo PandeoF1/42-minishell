@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:48:57 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 15:08:18 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 		else
 			data->file[i] = open(ft_ddquote
 					(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
-		if (data->fd[2 * (data->ind + 1) + 1] < 0)
+		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed", 1);
 		red2_proc_2(data, temp, env, i);
 		close_pipes(data);
@@ -63,7 +63,7 @@ void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 		if (dup2(data->file[i], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n3 failed in red_proc", 1);
 	}
-	else
+	else if (temp->command != NULL && !data->inout->next)
 		if (ft_built(i, data, temp))
 			exit (0);
 }
@@ -104,7 +104,7 @@ void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
 		write(2, "exit\n", 5);
 		exit(0);
 	}
-	else
+	else if (temp->command != NULL && !data->inout->next)
 		if (ft_built(i, data, temp))
 			exit(0);
 }
