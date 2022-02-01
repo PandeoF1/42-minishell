@@ -20,6 +20,7 @@ static void	sig_quit(int sig)
 		ft_putstr_fd("\b\b  \b\b", 1);
 		g_exit = 131;
 	}
+	g_exit = 0;
 }
 
 static void	action(int sig)
@@ -33,6 +34,7 @@ static void	action(int sig)
 		rl_redisplay();
 		g_exit = 130;
 	}
+	g_exit = 1;
 }
 
 static char	*ft_export_env(char **env)
@@ -145,6 +147,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(tmp);
 			tmp = ft_penv(penv, tmp, 0, 0);
+			ft_printf("tmp : %s\n", tmp);
 			splitd = ft_splitd(penv, '\n');
 			ft_parse_command(tmp, splitd, &penv);
 			ft_free_split(splitd);

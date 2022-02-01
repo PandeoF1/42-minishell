@@ -21,7 +21,7 @@ int	ft_is_command(char *str, char *cmd)
 		return (1);
 	while (cmd[x])
 	{
-		if (cmd[x] != str[x])
+		if (ft_tolower(cmd[x]) != str[x])
 			return (1);
 		x++;
 	}

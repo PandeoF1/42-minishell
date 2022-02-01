@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/01 11:53:55 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 13:08:12 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,18 @@ int	ft_is_tild(char *str, int x)
 	return (1);
 }
 
+void	ft_env_c(char *str, int x, int *c)
+{
+	if (str[x] == '\"' && c[0] == 0 && c[1] == 0)
+		c[0] = 1;
+	else if (str[x] == '\'' && c[0] == 0 && c[1] == 0)
+		c[1] = 1;
+	else if (str[x] == '\"' && c[0] == 1 && c[1] == 0)
+		c[0] = 0;
+	else if (str[x] == '\'' && c[0] == 0 && c[1] == 1)
+		c[1] = 0;
+}
+
 /*
 *	ft_env(char *env, char *str, int x, int b)
 *	desc : replace all ~ and env variable in the str
@@ -76,20 +88,14 @@ char	*ft_penv(char *env, char *str, int x, int b)
 
 	while (str[x])
 	{
-		if (str[x] == '\"' && c[0] == 0 && c[1] == 0)
-			c[0] = 1;
-		else if (str[x] == '\'' && c[0] == 0 && c[1] == 0)
-			c[1] = 1;
-		else if (str[x] == '\"' && c[0] == 1 && c[1] == 0)
-			c[0] = 0;
-		else if (str[x] == '\'' && c[0] == 0 && c[1] == 1)
-			c[1] = 0;
 		if (str[x] == '$')
 		{
+			ft_env_c(str, x, c);
 			b = 0;
 			y = x++;
-			if (str[x] && str[x] == '?')
+			if (str[x] && c[1] == 0 && str[x] == '?')
 			{
+				ft_printf("c[1] = %d\n", c[1]);
 				tmp = ft_itoa(g_exit);
 				x += ft_strlen(tmp);
 				tmp = ft_replace(str, tmp, x, y);
@@ -97,7 +103,8 @@ char	*ft_penv(char *env, char *str, int x, int b)
 				str = tmp;
 				x = y;
 			}
-			else if (str[x] && c[1] == 0 && !ft_isdigit(str[x]))
+			else if (str[x] && c[1] == 0
+				&& !ft_isdigit(str[x]) && ft_is_env_char(str[x]))
 			{
 				while (str[x + b] && ft_is_env_char(str[x + b]))
 					b++;
@@ -106,9 +113,15 @@ char	*ft_penv(char *env, char *str, int x, int b)
 				tmp = ft_search_env(env, var);
 				free(var);
 				if (!tmp)
-					tmp = ft_strdup("");
-				tmp = ft_replace(str, tmp, x, y);
-				free(str);
+				{
+					free(tmp);
+					tmp = ft_remove_in(str, y, x);
+				}
+				else
+				{
+					tmp = ft_replace(str, tmp, x, y);
+					free(str);
+				}
 				str = tmp;
 				x = y;
 			}
