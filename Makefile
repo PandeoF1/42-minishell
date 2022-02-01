@@ -29,7 +29,8 @@ SRCS		= minishell.c srcs/execute_cmd.c srcs/ft_dquote.c \
 				srcs/parsing/ft_quote.c srcs/parsing/ft_replace.c srcs/parsing/ft_search_env.c \
 				srcs/parsing/ft_splitd.c srcs/built-in/ft_echo.c srcs/built-in/ft_env.c srcs/built-in/ft_export.c \
 				srcs/built-in/ft_pwd.c srcs/built-in/ft_is_commad.c srcs/built-in/ft_exit.c srcs/built-in/ft_cd.c \
-				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c
+				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c srcs/built-in/ft_export_utils.c \
+				srcs/built-in/ft_remove_in.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
