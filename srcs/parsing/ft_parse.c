@@ -90,6 +90,7 @@ void	ft_parse_command(char *str, char **env, char **penv)
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
 			ft_execute_cmd(process, env, penv);
+			x = 1;
 		}
 		else
 			ft_printf("minishell: syntax error near token `newline'\n");
@@ -97,4 +98,6 @@ void	ft_parse_command(char *str, char **env, char **penv)
 	}
 	else
 		ft_printf("minishell: syntax error with open quotes or > | <\n");
+	if (x == 0)
+		g_exit = 258;
 }
