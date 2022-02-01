@@ -15,17 +15,21 @@
 static void	sig_quit(int sig)
 {
 	(void)sig;
-	ft_putstr_fd("\b\b  \b\b", 1);
+	if (g_exit != -1053)
+		ft_putstr_fd("\b\b  \b\b", 1);
 }
 
 static void	action(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	//return_val = 130;
+	if (g_exit != -1053)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		g_exit = 130;
+	}
 }
 
 static char	*ft_export_env(char **env)
@@ -116,6 +120,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	g_exit = 0;
 	signal(SIGINT, action);
 	signal(SIGQUIT, sig_quit);
 	if (!envp[0])
@@ -133,10 +138,12 @@ int	main(int argc, char **argv, char **envp)
 			ft_printf("exit\n");
 			exit (1);
 		}
+		ft_printf("exit : %d\n", g_exit);
 		if (ft_strlen(tmp) != 0)
 		{
 			add_history(tmp);
 			tmp = ft_penv(penv, tmp, 0, 0);
+			ft_printf("tmp : %s\n", tmp);
 			splitd = ft_splitd(penv, '\n');
 			ft_parse_command(tmp, splitd, &penv);
 			ft_free_split(splitd);

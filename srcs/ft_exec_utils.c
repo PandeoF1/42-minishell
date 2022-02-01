@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:18:04 by asaffroy          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2022/02/01 11:12:13 by asaffroy         ###   ########lyon.fr   */
+=======
+/*   Updated: 2022/02/01 10:57:39 by tnard            ###   ########lyon.fr   */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_penv.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/01/26 13:56:25 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 11:15:34 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,16 @@ char	*ft_penv(char *env, char *str, int x, int b)
 			y = x++;
 			if (str[x] && str[x] == '?')
 			{
-				//do la merde
+				ft_printf("uwu\n");
+				tmp = ft_itoa(g_exit);
+				ft_printf("tmp = %s\n", tmp);
+				y = x + ft_strlen(tmp);
+				ft_printf("x = %d, y = %d\n", x, y);
+				tmp = ft_strdup("uwu");
+				tmp = ft_replace(str, tmp, x, y);
+				free(str);
+				str = tmp;
+				x = y;
 			}
 			else if (str[x] && c[1] == 0 && !ft_isdigit(str[x]))
 			{

@@ -28,7 +28,7 @@ void	ft_clean_process(t_process *process)
 	}
 }
 
-int	ft_check_in_split(char **splitd, int x, int *y, char *c)
+void	ft_check_in_split(char **splitd, int x, int *y, char *c)
 {
 	if (splitd[x][(*y)] == '"' || splitd[x][(*y)] == '\'')
 	{

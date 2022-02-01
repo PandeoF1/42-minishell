@@ -16,12 +16,15 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <signal.h>
+# include <errno.h>  
 # include <limits.h>
 # include "../libft/libft.h"
 # include "../ft_printf/ft_printf.h"
 # include "pipex.h"
 # include "readline/history.h"
 # include "readline/readline.h"
+
+int	g_exit;
 
 typedef struct s_inout
 {
