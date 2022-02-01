@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 13:41:01 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 15:02:35 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@ int	ft_cd(t_data *data, int fd, char **path)
 		if (!tmp || ft_strlen(tmp) == 0)
 			ft_putstr_fd("cd: HOME not set\n", 2);
 		else
-			chdir(tmp);
+			if (chdir(tmp))
+				ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
 		free (tmp);
 	}
 	else if (ft_strstrlen(path) == 2)
-		chdir(path[1]);
+	{
+		if (chdir(path[1]))
+			ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
+	}
 	else
 		ft_putstr_fd("wrong number of args arguments\n", 2);
 	return (1);

@@ -27,7 +27,7 @@ char	*ft_remove_in(char *str, int a, int b)
 			new[j++] = str[i];
 		i++;
 	}
-	new[j] = '\0';
+	new[j - 1] = '\0';
 	free(str);
 	return (new);
 }

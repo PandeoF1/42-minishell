@@ -46,12 +46,8 @@ int	ft_env_len(char *env)
 	return (x);
 }
 
-void	ft_remove_env(char **tmp, char *arg)
+void	ft_remove_env(char **tmp, char *arg, int x, int y)
 {
-	int		x;
-	int		y;
-
-	x = -1;
 	while ((*tmp)[++x])
 	{
 		if ((*tmp)[x] != arg[0])
@@ -72,6 +68,8 @@ void	ft_remove_env(char **tmp, char *arg)
 				return ;
 			}
 		}
+		if (!(*tmp)[x])
+			break ;
 	}
 }
 
@@ -102,7 +100,7 @@ int	ft_export(t_data *data, char **arg)
 			if (ft_is_valid(ft_ddquote(arg[x], 0)))
 			{
 				env = ft_add_env(tmp, arg[x]);
-				ft_remove_env(tmp, env);
+				ft_remove_env(tmp, env, -1, 0);
 				ft_finish_export(tmp, env);
 			}
 			else

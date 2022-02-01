@@ -80,11 +80,12 @@ void	ft_add_shlvl(char **env)
 		x++;
 		free(tmp);
 		tmp = ft_itoa(x);
-		ft_remove_env(env, "SHLVL");
+		ft_remove_env(env, "SHLVL", -1, 0);
 		tmp1 = ft_strjoin("SHLVL=", tmp);
 		free(tmp);
 		(*env) = ft_strnjoin((*env), "\n", 1);
 		(*env) = ft_strnjoin((*env), tmp1, ft_strlen(tmp1));
+		free(tmp1);
 	}
 }
 
@@ -102,7 +103,7 @@ void	ft_remove_shlvl(char **env) //logiquement pas besoin car l'env ce detruit
 		x++;
 		free(tmp);
 		tmp = ft_itoa(x);
-		ft_remove_env(env, "SHLVL");
+		ft_remove_env(env, "SHLVL", -1, 0);
 		tmp1 = ft_strjoin("SHLVL=", tmp);
 		free(tmp);
 		if ((*env)[ft_strlen(*env) - 1] != '\n')

@@ -88,7 +88,7 @@ int			ft_pwd(int fd);
 int			ft_echo(char **args, int fd);
 int			ft_env(t_data *data, int fd);
 int			ft_export(t_data *data, char **arg);
-void		ft_remove_env(char **tmp, char *arg);
+void		ft_remove_env(char **tmp, char *arg, int x, int y);
 void		ft_exit(t_process *temp, t_data *data);
 int			ft_cd(t_data *data, int fd, char **path);
 int			ft_unset(t_data *data, char **arg, int fd);
@@ -103,7 +103,6 @@ int			ft_built_red(int i, t_data *data, t_process *temp);
 int			ft_built_red2(int i, t_data *data, t_process *temp);
 
 // built-in utils
-void		ft_remove_env(char **tmp, char *arg);
 char		*ft_remove_in(char *str, int a, int b);
 int			ft_env_len(char *env);
 int			ft_is_valid(char *str);

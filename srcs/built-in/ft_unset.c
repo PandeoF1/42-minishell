@@ -23,7 +23,7 @@ int	ft_unset(t_data *data, char **arg, int fd)
 	while (arg[++x])
 	{
 		if (ft_is_valid(ft_ddquote(arg[x], 0)))
-			ft_remove_env(tmp, arg[x]);
+			ft_remove_env(tmp, arg[x], -1, 0);
 		else
 		{
 			ft_putstr_fd("unset: ", 2);

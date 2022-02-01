@@ -105,7 +105,8 @@ char	*ft_add_env(char **tmp, char *arg)
 			str = ft_strnjoin(str, arg + x, ft_strlen(arg + x));
 			x = ft_strlen(arg);
 		}
-		x++;
+		if (arg[x])
+			x++;
 	}
 	if (str == NULL)
 	{

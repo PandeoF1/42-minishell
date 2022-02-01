@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/01 13:55:09 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/01 15:30:34 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,22 @@ char	*ft_penv(char *env, char *str, int x, int b)
 	int		c[2];
 	int		y;
 
+	c[0] = 0;
+	c[1] = 0;
 	while (str[x])
 	{
-		if (str[x] == '\"' && c[0] == 0 && c[1] == 0)
+		ft_printf("%d\n", x);
+		if (str[x] && str[x] == '\"' && c[0] == 0 && c[1] == 0)
 			c[0] = 1;
-		else if (str[x] == '\'' && c[0] == 0 && c[1] == 0)
+		else if (str[x] && str[x] == '\'' && c[0] == 0 && c[1] == 0)
 			c[1] = 1;
-		else if (str[x] == '\"' && c[0] == 1 && c[1] == 0)
+		else if (str[x] && str[x] == '\"' && c[0] == 1 && c[1] == 0)
 			c[0] = 0;
-		else if (str[x] == '\'' && c[0] == 0 && c[1] == 1)
+		else if (str[x] && str[x] == '\'' && c[0] == 0 && c[1] == 1)
 			c[1] = 0;
 		if (str[x] == '$')
 		{
+			ft_printf("%d\n", x);
 			b = 0;
 			y = x++;
 			if (str[x] && c[1] == 0 && str[x] == '?')
@@ -140,7 +144,7 @@ char	*ft_penv(char *env, char *str, int x, int b)
 				x = y;
 			}
 		}
-		else if (str[x] == '~' && c[0] == 0 && c[1] == 0 && ft_is_tild(str, x))
+		else if (str[x] && str[x] == '~' && c[0] == 0 && c[1] == 0 && ft_is_tild(str, x))
 		{
 			var = ft_search_env(env, "HOME");
 			tmp = ft_strndup(str, x++);
@@ -150,7 +154,8 @@ char	*ft_penv(char *env, char *str, int x, int b)
 			free(str);
 			str = tmp;
 		}
-		x++;
+		if (str[x])
+			x++;
 	}
 	return (str);
 }
