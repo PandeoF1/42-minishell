@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/02 13:15:35 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 13:44:27 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_env_default(char **str, int *x, int y, char *env)
 	(*x) = y;
 }
 
-void	ft_env_digit(char **str, int *x, int y, char *env)
+void	ft_env_digit(char **str, int *x, int y)
 {
 	char	*tmp;
 
@@ -48,7 +48,7 @@ void	ft_env_digit(char **str, int *x, int y, char *env)
 	(*x) = y;
 }
 
-void	ft_env_tild(char **str, int *x, int y, char *env)
+void	ft_env_tild(char **str, int *x, char *env)
 {
 	char	*var;
 	char	*tmp;
@@ -80,11 +80,11 @@ char	*ft_penv(char *env, char *str, int x, int y)
 				&& !ft_isdigit(str[x]) && ft_is_env_char(str[x]))
 				ft_env_default(&str, &x, y, env);
 			else if (str[x] && c[1] == 0 && ft_isdigit(str[x]))
-				ft_env_digit(&str, &x, y, env);
+				ft_env_digit(&str, &x, y);
 		}
 		else if (str[x] && str[x] == '~'
 			&& c[0] == 0 && c[1] == 0 && ft_is_tild(str, x))
-			ft_env_tild(&str, &x, y, env);
+			ft_env_tild(&str, &x, env);
 		if (str[x])
 			x++;
 	}

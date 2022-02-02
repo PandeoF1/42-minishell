@@ -52,6 +52,8 @@ typedef struct s_check
 }			t_check;
 
 // parsing and everything else
+void		sig_quit(int sig);
+void		action(int sig);
 char		*ft_get_input(int fd, int size, int len);
 void		ft_parse_command(char *str, char **env, char **penv);
 int			ft_check_quote(char *str);
