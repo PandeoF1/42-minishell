@@ -121,7 +121,7 @@ int			ft_is_charset(char str, t_data *data, int a);
 int			ft_wordcount(char *str, t_data *data, int a);
 int			ft_strdupp_util2(t_data *data, int a, char *dst, char *src);
 int			ft_strdupp_util3(t_data *data, int a, char *dst, char *src);
-char		*ft_remove(char *str, int c);
+char		*ft_remove(char **str, int c);
 char		**ft_dquote(char **split, int x, int y);
 char		*ft_ddquote(char *split, int x);
 char		*ft_check_arg(char *cmd, char **env);
