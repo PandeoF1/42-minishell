@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:52:49 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/02 13:49:51 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 13:51:34 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ char	*ft_ddquote(char *split, int x)
 		else if (c == split[x])
 		{
 			c = '\0';
-			split = ft_remove(split, a);
-			split = ft_remove(split, x - 1);
+			split = ft_remove(&split, a);
+			split = ft_remove(&split, x - 1);
 			x -= 2;
 		}
 	}
