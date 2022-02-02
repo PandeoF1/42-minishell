@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 15:02:35 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 09:10:19 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int	ft_cd(t_data *data, int fd, char **path)
 			ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
 	}
 	else
-		ft_putstr_fd("wrong number of args arguments\n", 2);
+		ft_putstr_fd("wrong number of arguments\n", 2);
 	return (1);
 }

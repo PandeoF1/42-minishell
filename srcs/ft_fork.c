@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 15:13:57 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 18:02:12 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	one_proc(t_data *data, t_process *temp, char **env)
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
 		close_pipes(data);
 		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
-			ft_perror("failed to exec in one_proc", 1);
+			ft_perror("minishell : unable to perform this command", 1);
 	}
 }
 
@@ -38,7 +38,7 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 		close_pipes(data);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (execve(data->tab_paths[i], data->tab_args[i], env) != 0)
-			ft_perror("failed to exec in pipe_proc", 1);
+			ft_perror("minishell : unable to perform this command", 1);
 	}
 }
 
@@ -81,7 +81,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 		{
 			if (data->inout->next == NULL)
 				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
-					ft_perror("failed to exec in red2_proc\n", 1);
+					ft_perror("minishell : unable to perform this command", 1);
 		}
 		exit (0);
 	}

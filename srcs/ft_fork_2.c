@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 15:08:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 18:02:50 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 		{
 			if (data->inout->next == NULL)
 				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
-					ft_perror("failed to exec in red_proc\n", 1);
+					ft_perror("minishell : unable to perform this command", 1);
 		}
 		exit(0);
 	}
@@ -84,7 +84,7 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
 			if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
-				ft_perror("failed to exec in red3_proc\n", 1);
+				ft_perror("minishell : unable to perform this command", 1);
 		exit(0);
 	}
 }
