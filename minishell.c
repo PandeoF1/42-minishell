@@ -89,35 +89,35 @@ void	ft_add_shlvl(char **env)
 	}
 }
 
-void	ft_remove_shlvl(char **env) //logiquement pas besoin car l'env ce detruit
+int	ft_while(char **penv)
 {
+	char	**splitd;
+	char	*readlin;
 	char	*tmp;
-	char	*tmp1;
-	int		x;
 
-	tmp = NULL;
-	tmp = ft_search_env(*env, "SHLVL");
-	if (tmp)
+	readlin = ft_readline();
+	tmp = readline(readlin);
+	free(readlin);
+	if (!tmp)
 	{
-		x = ft_atoi(tmp);
-		x++;
-		free(tmp);
-		tmp = ft_itoa(x);
-		ft_remove_env(env, "SHLVL", -1, 0);
-		tmp1 = ft_strjoin("SHLVL=", tmp);
-		free(tmp);
-		if ((*env)[ft_strlen(*env) - 1] != '\n')
-			(*env) = ft_strnjoin((*env), "\n", 1);
-		(*env) = ft_strnjoin((*env), tmp1, ft_strlen(tmp1));
+		ft_printf("exit\n");
+		return (0);
 	}
+	else if (ft_strlen(tmp) != 0)
+	{
+		add_history(tmp);
+		tmp = ft_penv((*penv), tmp, 0, 0);
+		splitd = ft_splitd((*penv), '\n');
+		ft_parse_command(tmp, splitd, penv);
+		ft_free_split(splitd);
+		free(tmp);
+	}
+	return (1);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*tmp;
 	char	*penv;
-	char	**splitd;
-	char	*readlin;
 
 	(void)argc;
 	(void)argv;
@@ -131,27 +131,12 @@ int	main(int argc, char **argv, char **envp)
 	ft_add_shlvl(&penv);
 	while (1)
 	{
-		readlin = ft_readline();
-		tmp = readline(readlin);
-		free(readlin);
-		if (!tmp)
-		{
-			ft_printf("exit\n");
-			exit (0);
-		}
-		if (ft_strlen(tmp) != 0)
-		{
-			add_history(tmp);
-			tmp = ft_penv(penv, tmp, 0, 0);
-			splitd = ft_splitd(penv, '\n');
-			ft_parse_command(tmp, splitd, &penv);
-			ft_free_split(splitd);
-			free(tmp);
-		}
+		if (ft_while(&penv))
+			continue;
+		else
+			break ;
 	}
 	free(penv);
-	if (tmp)
-		free(tmp);
 	rl_clear_history();
 	return (0);
 }

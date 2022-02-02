@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 17:10:29 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/02 13:23:41 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	t_inout		*temp2;
 	int			i;
 
-	// ft_printf("g : %d\n", g_exit);
 	data.status = g_exit;
 	g_exit = -1053;
 	data.tab_env = penv;

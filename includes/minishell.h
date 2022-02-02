@@ -82,6 +82,11 @@ void		ft_config_inout(t_inout *inout);
 void		ft_clear_process(t_process *process);
 void		ft_config_process(t_process *process, int x, int next, int inout);
 int			ft_space(char *str);
+int			ft_w_is_eon(char *str);
+int			ft_is_env_char(char c);
+int			ft_is_tild(char *str, int x);
+void		ft_env_c(char *str, int x, int *c);
+void		ft_env_return(char **str, int *x, int y);
 
 // built-in
 int			ft_pwd(int fd);

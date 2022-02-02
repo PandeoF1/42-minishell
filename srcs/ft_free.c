@@ -73,5 +73,4 @@ void	ft_free(t_process **process)
 		free(*process);
 		(*process) = tmp;
 	}
-	ft_printf("fin du free\n");
 }
