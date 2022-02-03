@@ -106,6 +106,7 @@ void		ft_display_export(char **splitd);
 char		*ft_add_env(char **tmp, char *arg);
 char		*ft_remove_in(char *str, int a, int b);
 int			ft_built(int i, t_data *data, t_process *temp);
+int			ft_built_one(int i, t_data *data, t_process *temp, char **splited);
 int			ft_built_red(int i, t_data *data, t_process *temp);
 int			ft_built_red2(int i, t_data *data, t_process *temp);
 
@@ -143,7 +144,7 @@ void		free_exec(t_data *data, int i);
 int			ft_status(t_data *data);
 
 // forks
-void		one_proc(t_data *data, t_process *temp, char **env);
+void		one_proc(t_data *data, t_process *temp, char **env, char **splited);
 void		pipe_proc(t_data *data, t_process *temp, char **env, int i);
 void		pipe_proc_2(t_process *temp, t_data *data, int i, char **env);
 void		red_proc(t_data *data, t_process *temp, char **env, int i);

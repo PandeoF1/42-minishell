@@ -6,13 +6,13 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/02 18:02:12 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 09:45:00 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-void	one_proc(t_data *data, t_process *temp, char **env)
+void	one_proc(t_data *data, t_process *temp, char **env, char **splited)
 {
 	data->pid1[0] = fork();
 	if (data->pid1[0] < 0)
@@ -21,7 +21,7 @@ void	one_proc(t_data *data, t_process *temp, char **env)
 	{
 		data->tab_paths[0] = ft_check_arg(temp->command, env);
 		close_pipes(data);
-		if (execve(data->tab_paths[0], data->tab_args[0], env) == -1)
+		if (execve(data->tab_paths[0], splited, env) == -1)
 			ft_perror("minishell : unable to perform this command", 1);
 	}
 }

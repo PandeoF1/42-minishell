@@ -6,11 +6,11 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/02 13:16:21 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 09:44:35 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 {

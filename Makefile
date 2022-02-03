@@ -30,9 +30,9 @@ SRCS		= minishell.c srcs/ft_dquote.c \
 				srcs/parsing/ft_splitd.c srcs/built-in/ft_echo.c srcs/built-in/ft_env.c srcs/built-in/ft_export.c \
 				srcs/built-in/ft_pwd.c srcs/built-in/ft_is_commad.c srcs/built-in/ft_exit.c srcs/built-in/ft_cd.c \
 				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c srcs/built-in/ft_export_utils.c \
-				srcs/built-in/ft_remove_in.c srcs/ft_exec_cmd.c srcs/ft_exec_cmd_2.c srcs/ft_exec_cmd_3.c \
-				srcs/ft_exec_utils.c srcs/ft_fork.c srcs/ft_fork_2.c srcs/ft_fork_3.c srcs/ft_free_exec.c \
-				srcs/ft_built_switch.c srcs/ft_init_exec.c srcs/parsing/ft_penv_utils.c srcs/ft_signal.c
+				srcs/built-in/ft_remove_in.c srcs/execs/ft_exec_cmd.c srcs/execs/ft_exec_cmd_2.c srcs/execs/ft_exec_cmd_3.c \
+				srcs/utils/ft_exec_utils.c srcs/forks/ft_fork.c srcs/forks/ft_fork_2.c srcs/forks/ft_fork_3.c \
+				srcs/utils/ft_free_exec.c srcs/utils/ft_built_switch.c srcs/utils/ft_init_exec.c srcs/parsing/ft_penv_utils.c srcs/ft_signal.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h
@@ -46,6 +46,9 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@mkdir -p $(OBJS_DIR)srcs
 	@mkdir -p $(OBJS_DIR)srcs/parsing
 	@mkdir -p $(OBJS_DIR)srcs/built-in
+	@mkdir -p $(OBJS_DIR)srcs/execs
+	@mkdir -p $(OBJS_DIR)srcs/forks
+	@mkdir -p $(OBJS_DIR)srcs/utils
 	@mkdir -p $(OBJS_DIR)get_next_line
 	@$(CC) $(READLINE_INC_DIR_FLAG) $(CC_FLAGS) -c $< -o $@
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"

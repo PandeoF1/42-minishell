@@ -6,11 +6,11 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/02 18:02:59 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 09:44:55 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 {

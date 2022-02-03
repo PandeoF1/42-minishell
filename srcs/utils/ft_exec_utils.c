@@ -6,11 +6,11 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:18:04 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/01 16:25:06 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 09:45:13 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 /*
 *int	find_path(char **env)

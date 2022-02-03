@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init_exec.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:16:35 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/02 08:59:24 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 09:45:22 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	ft_malloc_struct(t_data *data, int i)
 {
