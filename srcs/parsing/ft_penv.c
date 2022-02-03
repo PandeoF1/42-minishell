@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:12:22 by tnard             #+#    #+#             */
-/*   Updated: 2022/02/02 13:44:27 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 10:27:04 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,15 @@ void	ft_env_tild(char **str, int *x, char *env)
 	char	*tmp;
 
 	var = ft_search_env(env, "HOME");
-	tmp = ft_strndup((*str), (*x)++);
-	tmp = ft_strnjoin(tmp, var, ft_strlen(var));
-	tmp = ft_strnjoin(tmp, (*str) + (*x), ft_strlen((*str) + (*x)));
-	free(var);
-	free((*str));
-	(*str) = tmp;
+	if (var && ft_strlen(var) != 0)
+	{
+		tmp = ft_strndup((*str), (*x)++);
+		tmp = ft_strnjoin(tmp, var, ft_strlen(var));
+		tmp = ft_strnjoin(tmp, (*str) + (*x), ft_strlen((*str) + (*x)));
+		free(var);
+		free((*str));
+		(*str) = tmp;
+	}
 }
 
 char	*ft_penv(char *env, char *str, int x, int y)
