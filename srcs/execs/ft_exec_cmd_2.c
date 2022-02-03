@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 09:44:25 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 13:12:42 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,28 @@ int	ft_execute_cmd_6(t_data *data, t_process *temp, char **env, int i)
 
 int	ft_execute_cmd_7(t_data *data, t_process *temp, char **env, int i)
 {
+	int	check;
+	int	check2;
+
+	check = 0;
+	check2 = 0;
 	while (i >= 0 && data->inout != 0 && data->inout->type == 1)
 	{
-		red_proc(data, temp, env, i);
-		data->inout = data->inout->next;
+		if (check >= 0)
+		{
+			red_proc(data, temp, env, i);
+			check = open(ft_ddquote(data->inout->file, 0), O_RDONLY);
+			check2 = 1;
+		}
+		if (check2 == 1)
+		{
+			close(check);
+			check2 = 0;
+		}
 		if (!data->inout && !temp->out_next
 			&& !ft_is_command(temp->command, "exit"))
 			exit(0);
+		data->inout = data->inout->next;
 		i--;
 	}
 	return (i);

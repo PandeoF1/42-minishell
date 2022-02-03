@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 09:45:00 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/03 11:00:21 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 	{
 		data->file[i] = open(ft_ddquote(data->inout->file, 0), O_RDONLY);
 		if (data->file[i] < 0)
+		{
+			data->status = 1;
 			ft_perror("minishell : No such file or directory", 1);
+		}
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		red_proc_2(data, temp, env, i);
 		close_pipes(data);
