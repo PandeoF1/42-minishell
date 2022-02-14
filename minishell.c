@@ -33,11 +33,11 @@ char	*ft_readline(void)
 	char	*str;
 	char	*tmp;
 
-	str = ft_strdup("\e[0;32mminishell\e[0m:\e[0;34m");
+	str = ft_strdup("\001\e[0;32m\002minishell\001\e[0m\002:\001\e[0;34m\002");
 	tmp = getcwd(NULL, 0);
 	str = ft_strnjoin(str, tmp, ft_strlen(tmp));
 	free(tmp);
-	str = ft_strnjoin(str, "\e[0m$ ", ft_strlen("\e[0m$ "));
+	str = ft_strnjoin(str, "\001\e[0m\001$ ", ft_strlen("\001\e[0m\002$ "));
 	return (str);
 }
 
