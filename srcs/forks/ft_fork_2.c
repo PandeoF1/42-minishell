@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 09:44:41 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/14 10:38:27 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,12 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 			ft_perror("dup2 n1 failed in red3_proc", 1);
 		red3_proc_2(data, temp, env, i);
 		close_pipes(data);
-		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL && !data->inout->next)
+		{
+			data->tab_paths[i] = ft_check_arg(temp->command, env);
 			if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 				ft_perror("minishell : unable to perform this command", 1);
+		}
 		exit(0);
 	}
 }
@@ -92,14 +94,15 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
 	(void)env;
-	if (temp->out_next || (temp->inout->next && temp->inout->next->type != 3))
+	if (temp->out_next || (temp->inout && temp->inout->next
+			&& temp->inout->next->type != 3))
 	{
 		if (ft_built_red(i, data, temp))
 			exit(0);
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_proc", 1);
 	}
-	else if (!ft_is_command(temp->command, "exit"))
+	else if (temp->command != NULL && !ft_is_command(temp->command, "exit"))
 	{
 		write(2, "exit\n", 5);
 		exit(0);

@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 13:12:42 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/02/14 10:41:56 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ void	ft_execute_cmd_8(t_data *data, t_inout *tmp)
 		data->inout = data->inout->next;
 	if (!ft_is_command(tmp->file, data->inout->file))
 	{
-		data->line = readline("heredoc> ");
+		data->line = readline("> ");
+		// if (!data->line)
+		// 	return ;
 		if (ft_is_command(data->line, data->inout->file))
 		{
 			write(data->fd[2 * data->ind + 1], data->line,
@@ -85,7 +87,9 @@ void	ft_execute_cmd_8(t_data *data, t_inout *tmp)
 	}
 	while (ft_is_command(tmp->file, data->inout->file))
 	{
-		data->line = readline("heredoc> ");
+		data->line = readline("> ");
+		// if (!data->line)
+		// 	return ;
 		if (!ft_is_command(data->line, tmp->file)
 			&& tmp->next && tmp->next->type == 3)
 			tmp = tmp->next;
@@ -100,7 +104,9 @@ void	ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i)
 	{
 		if (data->line)
 			free (data->line);
-		data->line = readline("heredoc> ");
+		data->line = readline("> ");
+		// if (!data->line)
+		// 	return ;
 		if (ft_is_command(data->line, data->inout->file))
 		{
 			write(data->fd[2 * data->ind + 1], data->line,
@@ -111,6 +117,8 @@ void	ft_execute_cmd_9(t_data *data, t_process *temp, char **env, int i)
 	free(data->line);
 	red3_proc(data, temp, env, i);
 	data->inout = data->inout->next;
+	if (!data->inout && !temp->command)
+		return ;
 	if (!data->inout && !temp->out_next
 		&& !ft_is_command(temp->command, "exit"))
 		exit(0);
