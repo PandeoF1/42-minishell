@@ -37,7 +37,7 @@ char	*ft_readline(void)
 	tmp = getcwd(NULL, 0);
 	str = ft_strnjoin(str, tmp, ft_strlen(tmp));
 	free(tmp);
-	str = ft_strnjoin(str, "\001\e[0m\001$ ", ft_strlen("\001\e[0m\002$ "));
+	str = ft_strnjoin(str, "\001\e[0m\002$ ", ft_strlen("\001\e[0m\002$ "));
 	return (str);
 }
 

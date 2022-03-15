@@ -17,7 +17,6 @@ void	sig_quit(int sig)
 	(void)sig;
 	if (g_exit != -1053)
 	{
-		rl_replace_line("", 0);
 		ft_putstr_fd("\b\b  \b\b", 1);
 		g_exit = 131;
 	}
@@ -29,7 +28,6 @@ void	action(int sig)
 	(void)sig;
 	if (g_exit != -1053)
 	{
-		rl_replace_line("", 0);
 		ft_putstr_fd("\b\b  \b\b", 1);
 		g_exit = 130;
 	}
