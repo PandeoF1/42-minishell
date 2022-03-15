@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 13:14:07 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/15 13:43:10 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 				O_RDWR | O_APPEND | O_CREAT, 0644);
 		if (data->file[i] < 0)
 			ft_perror("\033[2K\r\033[0;31mError\033[0m : file creation failed", 1);
+		if (!temp->command)
+			exit(0);
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 		if (temp->in_prev != 0)
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)

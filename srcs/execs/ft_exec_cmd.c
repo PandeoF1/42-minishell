@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/03 09:44:35 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/15 13:46:02 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,15 +97,15 @@ void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 	{
 		if (!data->inout)
 			data->inout = temp->inout;
-		i = ft_execute_cmd_6(data, temp, env, i);
-		if (i >= 0 && data->inout != 0 && data->inout->type == 3)
+		i = ft_execute_cmd_6(data, &temp, env, i);
+		if (i >= 0 && data->inout && data->inout->type == 3)
 		{
 			tmp = data->inout;
 			ft_execute_cmd_8(data, tmp);
-			ft_execute_cmd_9(data, temp, env, i);
+			ft_execute_cmd_9(data, &temp, env, i);
 			i--;
 		}
-		if (i >= 0 && data->inout != 0 && data->inout->type == 4)
+		if (i >= 0 && data->inout && data->inout->type == 4)
 		{
 			ft_execute_cmd_10(data, temp, env, i);
 			i--;
