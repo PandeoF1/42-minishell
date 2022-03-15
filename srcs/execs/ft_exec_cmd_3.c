@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd_3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:31:23 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/14 09:59:47 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/03/15 14:19:52 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ int	ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env)
 {
 	char	**splited;
 
-	if (!ft_is_command(temp->command, "exit"))
-	{
-		write(2, "exit\n", 5);
-		free_exec(data, i);
-		exit(data->status);
-	}
+	// if (!ft_is_command(temp->command, "exit"))
+	// {
+	// 	write(2, "exit\n", 5);
+	// 	free_exec(data, i);
+	// 	exit(data->status);
+	// }
 	splited = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 	if (!ft_built_one(0, data, temp, splited))
 		one_proc(data, temp, env, splited);

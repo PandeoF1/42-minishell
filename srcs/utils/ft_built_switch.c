@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_switch.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:33:19 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/02/14 09:58:22 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/03/15 14:22:04 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_built(int i, t_data *data, t_process *temp)
 	if (!ft_is_command(temp->command, "env"))
 		return (ft_env(data, 1));
 	if (!ft_is_command(temp->command, "exit"))
-		exit(0);
+		ft_exit(temp, data);
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, 1, data->tab_args[i]));
 	if (!ft_is_command(temp->command, "export"))
@@ -38,7 +38,7 @@ int	ft_built_one(int i, t_data *data, t_process *temp, char **splited)
 	if (!ft_is_command(temp->command, "env"))
 		return (ft_env(data, 1));
 	if (!ft_is_command(temp->command, "exit"))
-		exit(0);
+		ft_exit(temp, data);
 	if (!ft_is_command(temp->command, "cd"))
 		return (ft_cd(data, 1, splited));
 	if (!ft_is_command(temp->command, "export"))
