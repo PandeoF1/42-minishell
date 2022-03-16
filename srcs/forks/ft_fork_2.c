@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/15 12:45:42 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 15:27:48 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
+	int check;
+
 	(void)env;
 	if (temp->in_prev != 0 || data->inout->red_prev == 1)
 	{
@@ -63,8 +65,13 @@ void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 			ft_perror("dup2 n3 failed in red_proc", 1);
 	}
 	else if (temp->command != NULL && !data->inout->next)
-		if (ft_built(i, data, temp))
+	{
+		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
+		if (check == 1)
 			exit (0);
+	}
 }
 
 void	red3_proc(t_data *data, t_process *temp, char **env, int i)
@@ -92,6 +99,8 @@ void	red3_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
+	int	check;
+
 	(void)env;
 	if (temp->out_next || (temp->inout && temp->inout->next
 			&& temp->inout->next->type != 3))
@@ -107,6 +116,11 @@ void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
 		exit(0);
 	}
 	else if (temp->command != NULL && !data->inout->next)
-		if (ft_built(i, data, temp))
-			exit(0);
+	{
+		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
+		if (check == 1)
+			exit (0);
+	}
 }

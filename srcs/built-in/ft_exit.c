@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:21:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 13:54:11 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 15:20:32 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_exit_error(int i, char **t, char ***splited, t_process *temp)
 	if (i != 0)
 		free(*t);
 	ft_free_split(*splited);
-	if (!temp->out_next && !temp->in_prev)
+	if (!temp->out_next)
 		write(2, "minishell: numeric argument required\n", 37);
 	exit(255);
 }
@@ -76,18 +76,23 @@ void	ft_exit_switch(char **t, char ***splited, t_process *temp)
 		ft_exit_error(1, &(*t), &(*splited), temp);
 }
 
-void	ft_exit(t_process *temp, t_data *data)
+int	ft_exit(t_process *temp, t_data *data)
 {
 	char		**splited;
 	char		*t;
 	long long	ret;
 	int			i;
 
-	if (!temp->out_next && !temp->in_prev)
+	if (!temp->out_next)
 		write(2, "exit\n", 5);
 	splited = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 	if (splited[1] && splited[2])
-		ft_exit_error(0, &t, &splited, temp);
+	{
+		if (!temp->out_next)
+			write(2, "minishell: exit: too many arguments\n", 36);
+		ft_free_split(splited);
+		return (2);
+	}
 	if (temp->cmd_arg[5])
 	{
 		ft_check_exit(0, &t, &splited, temp);

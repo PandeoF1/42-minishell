@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/15 10:34:13 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 15:28:10 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	pipe_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
 {
+	int	check;
+
 	(void)env;
 	if (temp->in_prev != 0)
 	{
@@ -58,8 +60,13 @@ void	pipe_proc_2(t_process *temp, t_data *data, int i, char **env)
 			ft_perror("dup2 n2 failed in pipe_proc", 1);
 	}
 	else
-		if (ft_built(i, data, temp))
+	{
+		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
+		if (check == 1)
 			exit (0);
+	}
 }
 
 void	red_proc(t_data *data, t_process *temp, char **env, int i)
@@ -92,6 +99,8 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
+	int check;
+
 	(void)env;
 	if (data->inout->next == NULL)
 	{
@@ -108,6 +117,11 @@ void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 			ft_perror("dup2 n1 failed in red_proc", 1);
 	}
 	else if (temp->command != NULL && !data->inout->next)
-		if (ft_built(i, data, temp))
-			exit(0);
+	{
+		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
+		if (check == 1)
+			exit (0);
+	}
 }

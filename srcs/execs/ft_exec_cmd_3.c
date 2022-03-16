@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:31:23 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 10:27:03 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 15:07:42 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,18 @@
 int	ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env)
 {
 	char	**splited;
+	int		check;
 
 	splited = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-	if (!ft_built_one(0, data, temp, splited))
+	check = ft_built_one(0, data, temp, splited);
+	if (check == 0)
 		one_proc(data, temp, env, splited);
 	else
 	{
-		data->status = 0;
+		if (check == 2)
+			data->status = 1;
+		else
+			data->status = 0;
 		ft_free_split(splited);
 		free_exec(data, i);
 		return (0);

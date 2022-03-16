@@ -96,7 +96,7 @@ int			ft_echo(char **args, int fd);
 int			ft_env(t_data *data, int fd);
 int			ft_export(t_data *data, char **arg);
 void		ft_remove_env(char **tmp, char *arg, int x, int y);
-void		ft_exit(t_process *temp, t_data *data);
+int			ft_exit(t_process *temp, t_data *data);
 void		ft_exit_error(int i, char **t, char ***splited, t_process *temp);
 void		ft_check_exit(int i, char **t, char ***splited, t_process *temp);
 void		ft_return_exit(char **t, char ***splited);

@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 09:26:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 15:28:18 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
+	int	check;
+
 	(void)env;
 	if (data->inout->next == NULL)
 	{
@@ -52,8 +54,13 @@ void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
 			ft_perror("dup2 n1 failed in red_proc", 1);
 	}
 	else
-		if (ft_built_red(i, data, temp))
-			exit(0);
+	{
+		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
+		if (check == 1)
+			exit (0);
+	}
 	close_pipes(data);
 	close(data->file[i]);
 }
