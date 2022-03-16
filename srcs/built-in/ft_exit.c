@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:21:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/15 17:55:19 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 13:54:11 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,65 +38,62 @@ long long	ft_atol(const char *str)
 	return (nbr);
 }
 
+void	ft_exit_error(int i, char **t, char ***splited, t_process *temp)
+{
+	if (i != 0)
+		free(*t);
+	ft_free_split(*splited);
+	if (!temp->out_next && !temp->in_prev)
+		write(2, "minishell: numeric argument required\n", 37);
+	exit(255);
+}
+
+void	ft_exit_switch(char **t, char ***splited, t_process *temp)
+{
+	char	*llmax;
+	char	*llmax_plus;
+
+	llmax = "9223372036854775807";
+	llmax_plus = "+9223372036854775807";
+	if ((((*splited)[0][0] == '-' || (*splited)[0][0] == '+')
+		&& ft_strlen((*splited)[0]) == ft_strlen(llmax_plus))
+		|| (ft_strlen((*splited)[0]) == ft_strlen(llmax)))
+	{
+		if ((*splited)[0][0] == '-')
+			ft_llmin(1, &(*t), &(*splited), temp);
+		else if ((*splited)[0][0] == '+')
+			ft_llmax_plus(1, &(*t), &(*splited), temp);
+		else
+			ft_llmax(1, &(*t), &(*splited), temp);
+	}
+	else if ((((*splited)[0][0] == '-' || (*splited)[0][0] == '+')
+		&& ft_strlen((*splited)[0]) < ft_strlen("+9223372036854775807"))
+		|| (ft_strlen((*splited)[0]) < ft_strlen("9223372036854775807")))
+	{
+		ft_return_exit(&(*t), &(*splited));
+	}
+	else
+		ft_exit_error(1, &(*t), &(*splited), temp);
+}
+
 void	ft_exit(t_process *temp, t_data *data)
 {
-	char	**splited;
-	char	*t;
-	int		i;
-	int		sign;
+	char		**splited;
+	char		*t;
+	long long	ret;
+	int			i;
 
 	if (!temp->out_next && !temp->in_prev)
 		write(2, "exit\n", 5);
 	splited = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-	if (splited[2])
-	{
-		free(splited);
-		if (!temp->out_next && !temp->in_prev)
-			write(2, "minishell: numeric argument required\n", 37);
-		exit(255);
-	}
+	if (splited[1] && splited[2])
+		ft_exit_error(0, &t, &splited, temp);
 	if (temp->cmd_arg[5])
 	{
-		t = splited[1];
-		free(splited);
-		splited = ft_splitd(t, ' ');
-		if (splited[1])
-		{
-			free(splited);
-			if (!temp->out_next && !temp->in_prev)
-				write(2, "minishell: numeric argument required\n", 37);
-			exit(255);
-		}
-		i = 0;
-		sign = 1;
-		while (splited[0][i])
-		{
-			if (i == 0 && splited[0][i] == '-')
-				sign = -1;
-			if (!((i == 0 && (((splited[0][i] == '-' || splited[0][i] == '+') && splited[0][1]) || (splited[0][i] - 48 >= 0 && splited[0][i] - 48 <= 9))) || (i != 0 && splited[0][i] - 48 >= 0 && splited[0][i] - 48 <= 9)))
-			{
-				free(splited);
-				if (!temp->out_next && !temp->in_prev)
-					write(2, "minishell: numeric argument required\n", 37);
-				exit(255);
-			}
-			i++;
-		}
-		if (((splited[0][0] == '-' || splited[0][0] == '+')
-			&& ft_strlen(splited[0]) <= ft_strlen("+9223372036854775807"))
-			|| (ft_strlen(splited[0]) <= ft_strlen("9223372036854775807")))
-		{
-			free(splited);
-			exit(ft_atol(splited[0]) % 256);
-		}
-		else
-		{
-			free(splited);
-			if (!temp->out_next && !temp->in_prev)
-				write(2, "minishell: numeric argument required\n", 37);
-			exit(255);
-		}
+		ft_check_exit(0, &t, &splited, temp);
+		i = 1;
+		ft_exit_switch(&t, &splited, temp);
 	}
-	free(splited);
+	ft_free_split(splited);
 	exit(data->status);
 }

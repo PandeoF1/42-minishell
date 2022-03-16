@@ -92,7 +92,7 @@ int	ft_export(t_data *data, char **arg)
 	env = NULL;
 	tmp = data->tab_env;
 	if (ft_split_len(arg) == 1)
-		ft_display_export(ft_sort(*tmp, 0, 0, 1));
+		ft_display_export(ft_sort(*tmp, 0, 0, 1), 0, 0, 0);
 	else
 	{
 		while (arg[++x])

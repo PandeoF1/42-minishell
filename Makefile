@@ -28,7 +28,7 @@ SRCS		= minishell.c srcs/ft_dquote.c \
 				srcs/parsing/ft_penv.c srcs/parsing/ft_parse.c srcs/parsing/ft_process.c \
 				srcs/parsing/ft_quote.c srcs/parsing/ft_replace.c srcs/parsing/ft_search_env.c \
 				srcs/parsing/ft_splitd.c srcs/built-in/ft_echo.c srcs/built-in/ft_env.c srcs/built-in/ft_export.c \
-				srcs/built-in/ft_pwd.c srcs/built-in/ft_is_commad.c srcs/built-in/ft_exit.c srcs/built-in/ft_cd.c \
+				srcs/built-in/ft_pwd.c srcs/built-in/ft_is_commad.c srcs/built-in/ft_exit.c srcs/built-in/ft_exit_2.c srcs/built-in/ft_cd.c \
 				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c srcs/built-in/ft_export_utils.c \
 				srcs/built-in/ft_remove_in.c srcs/execs/ft_exec_cmd.c srcs/execs/ft_exec_cmd_2.c srcs/execs/ft_exec_cmd_3.c \
 				srcs/utils/ft_exec_utils.c srcs/forks/ft_fork.c srcs/forks/ft_fork_2.c srcs/forks/ft_fork_3.c \

@@ -61,28 +61,30 @@ char	**ft_sort(char *env, int x, int y, int a)
 	return (splitd);
 }
 
-void	ft_display_export(char **splitd)
+void	ft_display_export(char **splitd, int x, int y, int a)
 {
-	int		x;
-	int		y;
-
-	x = 0;
 	while (splitd[x])
 	{
 		y = 0;
+		a = 0;
 		ft_putstr("declare -x ");
 		while (splitd[x][y])
 		{
-			if (splitd[x][y] == '=')
+			if (splitd[x][y] == '=' && splitd[x][y + 1])
 			{
+				a = 1;
 				ft_putstr("=\"");
 				y++;
 			}
+			else if (splitd[x][y] == '=')
+				y++;
 			if (splitd[x][y])
 				ft_putchar(splitd[x][y]);
 			y++;
 		}
-		ft_putstr("\"\n");
+		if (a)
+			ft_putstr("\"");
+		ft_putstr("\n");
 		x++;
 	}
 	ft_free_split(splitd);

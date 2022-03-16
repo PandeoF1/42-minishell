@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/15 13:43:10 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/03/16 09:26:18 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 			if (dup2(data->fd[2 * data->ind - 2], STDIN_FILENO) == -1)
 				ft_perror("dup2 n1 failed in pipe_proc", 1);
 		red4_proc_2(data, temp, env, i);
-		close_pipes(data);
-		close(data->file[i]);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
 		{
@@ -56,4 +54,6 @@ void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
 	else
 		if (ft_built_red(i, data, temp))
 			exit(0);
+	close_pipes(data);
+	close(data->file[i]);
 }
