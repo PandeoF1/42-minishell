@@ -149,6 +149,7 @@ void		ft_execute_cmd_10(t_data *data, t_process *temp, char **env, int i);
 int			ft_execute_cmd_11(t_process *temp, t_data *data, int i, char **env);
 void		free_exec(t_data *data, int i);
 int			ft_status(t_data *data);
+char		*ft_readline(void);
 
 // forks
 void		one_proc(t_data *data, t_process *temp, char **env, char **splited);
