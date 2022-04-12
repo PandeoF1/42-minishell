@@ -67,6 +67,55 @@ int	ft_check_split(char	*str, int x, int y, int test)
 	return (ft_free_split_r(splitd, 1));
 }
 
+void	ft_heredoc_process(t_process *process)
+{
+	t_process	*tmp;
+	t_inout		*inout;
+	char		*rd;
+	char		*ctmp;
+
+	tmp = process;
+	ctmp = NULL;
+	while (tmp)
+	{
+		if (tmp->command && tmp->inout)
+		{
+			inout = tmp->inout;
+			while (inout)
+			{
+				inout->heredoc = NULL;
+				if (inout->type == 3)
+				{
+					rd = readline("> ");
+					if (ctmp)
+						free(ctmp);
+					ctmp = ft_strdup("");
+					while (rd)
+					{
+						if (!ft_is_command(rd, inout->file))
+						{
+							inout->heredoc = ctmp;
+							free(rd);
+							break ;
+						}
+						else
+						{
+							ctmp = ft_strnjoin(ctmp, rd, ft_strlen(rd));
+							ctmp = ft_strnjoin(ctmp, "\n", 1);
+						}
+						free(rd);
+						rd = readline("> ");
+					}
+					if (!rd)
+						inout->heredoc = ctmp;
+				}
+				inout = inout->next;
+			}
+		}
+		tmp = tmp->next;
+	}
+}
+
 /*
 * ft_parse_command(str)
 * desc : parse the command and return the struct
@@ -89,6 +138,7 @@ void	ft_parse_command(char *str, char **env, char **penv)
 		{
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
+			ft_heredoc_process(process);
 			g_exit = ft_execute_cmd(process, env, penv);
 			x = 1;
 		}

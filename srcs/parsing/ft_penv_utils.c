@@ -85,6 +85,7 @@ void	ft_env_return(char **str, int *x, int y)
 
 	tmp = ft_itoa(g_exit);
 	(*x) += ft_strlen(tmp);
+	tmp[ft_strlen(tmp)] = '\0';
 	tmp = ft_replace((*str), tmp, (*x), y);
 	free((*str));
 	(*str) = tmp;

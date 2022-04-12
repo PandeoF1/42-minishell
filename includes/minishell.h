@@ -30,6 +30,7 @@ typedef struct s_inout
 {
 	int				type;
 	int				red_prev;
+	char			*heredoc;
 	char			*file;
 	struct s_inout	*next;
 }			t_inout;
@@ -89,6 +90,7 @@ int			ft_is_env_char(char c);
 int			ft_is_tild(char *str, int x);
 void		ft_env_c(char *str, int x, int *c);
 void		ft_env_return(char **str, int *x, int y);
+int			ft_is_herdoc(char *str, char *cmd);
 
 // built-in
 int			ft_pwd(int fd);

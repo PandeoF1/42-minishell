@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/30 12:21:55 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 13:35:20 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
-	int check;
+	int	check;
 
 	(void)env;
 	if (data->inout->next == NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_built_switch.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:33:19 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 14:57:31 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 11:04:09 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	ft_built(int i, t_data *data, t_process *temp)
 
 int	ft_built_one(int i, t_data *data, t_process *temp, char **splited)
 {
+	i = 0;
 	if (!ft_is_command(temp->command, "pwd"))
 		return (ft_pwd(1));
 	if (!ft_is_command(temp->command, "env"))

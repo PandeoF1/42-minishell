@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:21:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 15:20:32 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 11:11:53 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,9 @@ int	ft_exit(t_process *temp, t_data *data)
 {
 	char		**splited;
 	char		*t;
-	long long	ret;
 	int			i;
 
-	if (!temp->out_next)
+	if (!temp->out_next && !temp->in_prev)
 		write(2, "exit\n", 5);
 	splited = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
 	if (splited[1] && splited[2])

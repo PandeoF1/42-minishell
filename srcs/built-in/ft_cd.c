@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 14:55:26 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/30 18:55:04 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 11:26:10 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	ft_update_cd(char **env)
+{
+	char	*tmp;
+	char	*tmp2;
+
+	tmp2 = getcwd(NULL, 0);
+	ft_remove_env(env, "PWD", -1, 0);
+	tmp = ft_strjoin("PWD=", tmp2);
+	(*env) = ft_strnjoin((*env), "\n", 1);
+	(*env) = ft_strnjoin((*env), tmp, ft_strlen(tmp));
+	free(tmp2);
+	free(tmp);
+}
 
 int	ft_cd(t_data *data, int fd, char **path)
 {
@@ -36,5 +50,6 @@ int	ft_cd(t_data *data, int fd, char **path)
 	}
 	else
 		ft_putstr_fd("wrong number of arguments\n", 2);
+	ft_update_cd(env);
 	return (1);
 }

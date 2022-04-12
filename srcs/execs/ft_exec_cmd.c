@@ -3,14 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 15:09:03 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 15:06:08 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	ft_fake_cmd_8(t_data *data)
+{
+	while (data->inout->next != NULL && data->inout->next->type == 3)
+		data->inout = data->inout->next;
+}
+
+void	ft_fake_cmd_10(t_data *data)
+{
+	data->inout = data->inout->next;
+}
+
+int	ft_fake_cmd_7(t_data *data, int i)
+{
+	while (i >= 0 && data->inout && data->inout->type == 1)
+	{
+		data->inout = data->inout->next;
+		i--;
+	}
+	return (i);
+}
+
+int	ft_fake_cmd_6(t_data *data, t_process **temp, int i)
+{
+	while (i >= 0 && (!data->inout))
+	{
+		(*temp) = (*temp)->next;
+		data->ind++;
+		i--;
+		if ((*temp))
+			data->inout = (*temp)->inout;
+	}
+	while (i >= 0 && data->inout != 0 && data->inout->type == 2)
+	{
+		data->inout = data->inout->next;
+		i--;
+	}
+	i = ft_fake_cmd_7(data, i);
+	return (i);
+}
+
+void	ft_heredoc(t_data *data, t_process *temp, char **env, int i)
+{
+	t_inout		*tmp;
+
+	while (i >= 0)
+	{
+		if (!data->inout)
+			data->inout = temp->inout;
+		i = ft_fake_cmd_6(data, &temp, i);
+		if (i >= 0 && data->inout && data->inout->type == 3)
+		{
+			tmp = data->inout;
+			ft_execute_cmd_8(data, tmp);
+			ft_execute_cmd_9(data, &temp, env, i);
+			i--;
+		}
+		if (i >= 0 && data->inout && data->inout->type == 4)
+		{
+			ft_fake_cmd_10(data);
+			i--;
+		}
+		if (temp && temp->inout && !data->inout)
+		{
+			temp = temp->next;
+			data->ind++;
+		}
+	}
+}
 
 int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 {
@@ -91,7 +160,7 @@ int	ft_execute_cmd_3(t_process *temp, t_inout *temp2, int i)
 
 void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 {
-	t_inout		*tmp;
+	t_inout 	*tmp;
 
 	while (i >= 0)
 	{
@@ -120,6 +189,9 @@ void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 
 int	ft_execute_cmd_5(t_data *data, t_process *temp, char **env, int i)
 {
+	t_process	*proc;
+
+	proc = temp;
 	if (i == 1 && temp->inout == 0)
 	{
 		if (ft_execute_cmd_11(temp, data, i, env) != 1)
@@ -128,6 +200,11 @@ int	ft_execute_cmd_5(t_data *data, t_process *temp, char **env, int i)
 	else
 	{
 		i--;
+		// data->j = i;
+		// data->ind = 0;
+		// data->inout = NULL;
+		// ft_heredoc(data, temp, env, i);
+		// temp = proc;
 		data->j = i;
 		data->ind = 0;
 		data->inout = NULL;

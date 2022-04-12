@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 15:27:48 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 14:33:30 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 	if (data->pid1[i] == 0)
 	{
 		data->tab_args[i] = ft_dquote(ft_splitd(temp->cmd_arg, ' '), 0, 0);
-		// if (temp->out_next)
-		// 	data->fd[2 * (data->ind + 1) + 1] = open(ft_ddquote
-		// 			(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
 		data->file[i] = open(ft_ddquote
 				(data->inout->file, 0), O_RDWR | O_TRUNC | O_CREAT, 0644);
 		if (data->file[i] < 0)
@@ -42,7 +39,7 @@ void	red2_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
-	int check;
+	int	check;
 
 	(void)env;
 	if (temp->in_prev != 0 || data->inout->red_prev == 1)
@@ -50,13 +47,6 @@ void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
 			ft_perror("dup2 n1 failed in pipe_proc", 1);
 	}
-	// if (data->inout->next == NULL && temp->out_next)
-	// {
-	// 	if (ft_built_red(i, data, temp))
-	// 		exit (0);
-	// 	if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-	// 		ft_perror("dup2 n2 failed in red_proc", 1);
-	// }
 	if (data->inout->next == NULL)
 	{
 		if (ft_built_red2(i, data, temp))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 13:54:30 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 13:56:25 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/12 11:03:59 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_llmax_plus(int i, char **t, char ***splited, t_process *temp)
 	char		*llmax_plus;
 
 	llmax_plus = "+9223372036854775807";
-	while (i < ft_strlen(llmax_plus))
+	while (i < (int)ft_strlen(llmax_plus))
 	{
 		if ((*splited)[0][i] > llmax_plus[i])
 			ft_exit_error(1, &(*t), &(*splited), temp);
@@ -60,7 +60,7 @@ void	ft_llmax(int i, char **t, char ***splited, t_process *temp)
 	char		*llmax;
 
 	llmax = "9223372036854775807";
-	while (i < ft_strlen(llmax))
+	while (i < (int)ft_strlen(llmax))
 	{
 		if ((*splited)[0][i] > llmax[i])
 			ft_exit_error(1, &(*t), &(*splited), temp);
@@ -74,7 +74,7 @@ void	ft_llmin(int i, char **t, char ***splited, t_process *temp)
 	char		*llmin;
 
 	llmin = "-9223372036854775808";
-	while (i < ft_strlen(llmin))
+	while (i < (int)ft_strlen(llmin))
 	{
 		if ((*splited)[0][i] > llmin[i])
 			ft_exit_error(1, &(*t), &(*splited), temp);
