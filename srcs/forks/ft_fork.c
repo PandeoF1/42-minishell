@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/04/12 13:35:20 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/13 14:09:54 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,29 +99,19 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
-	int	check;
-
 	(void)env;
 	if (data->inout->next == NULL)
 	{
 		if (ft_built_red2(i, data, temp))
 			exit(0);
 		if (dup2(data->file[i], STDIN_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red2_proc", 1);
+			ft_perror("dup2 n1 failed in red2_proc_2", 1);
 	}
 	if (data->inout->next == NULL && temp->out_next)
 	{
 		if (ft_built_red(i, data, temp))
 			exit(0);
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red_proc", 1);
-	}
-	else if (temp->command != NULL && !data->inout->next)
-	{
-		check = ft_built(i, data, temp);
-		if (check == 2)
-			exit (1);
-		if (check == 1)
-			exit (0);
+			ft_perror("dup2 n1 failed in red2_proc_2", 1);
 	}
 }

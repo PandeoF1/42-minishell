@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 10:25:16 by tnard             #+#    #+#             */
-/*   Updated: 2022/04/13 10:28:06 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/13 11:23:56 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_heredoc_process(t_process *process)
 	rd = NULL;
 	while (tmp)
 	{
-		if (tmp->command && tmp->inout)
+		if (tmp->inout)
 		{
 			inout = tmp->inout;
 			while (inout)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork_3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/03/16 15:28:18 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/13 14:10:36 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,18 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 
 void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
-	int	check;
-
 	(void)env;
+	if (data->inout->red_prev == 1)
+	{
+		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+			ft_perror("dup2 n1 failed in red_4_proc_2", 1);
+	}
 	if (data->inout->next == NULL)
 	{
 		if (ft_built_red2(i, data, temp))
 			exit(0);
 		if (dup2(data->file[i], STDOUT_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red_proc", 1);
-	}
-	else
-	{
-		check = ft_built(i, data, temp);
-		if (check == 2)
-			exit (1);
-		if (check == 1)
-			exit (0);
+			ft_perror("dup2 n1 failed in red_4_proc_2", 1);
 	}
 	close_pipes(data);
 	close(data->file[i]);

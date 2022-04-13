@@ -49,10 +49,10 @@ void	ft_config_inout(t_inout *inout)
 		if (x)
 		{
 			x = 0;
-			tmp->red_prev = 1;
 		}
 		if (tmp->type == 3)
-			x = 1;
+			tmp->red_prev = 1;
+		x = 1;
 		tmp = tmp->next;
 	}
 }
