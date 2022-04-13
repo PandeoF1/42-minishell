@@ -32,7 +32,7 @@ SRCS		= minishell.c srcs/ft_dquote.c \
 				srcs/built-in/ft_unset.c srcs/parsing/ft_parse_utils.c srcs/built-in/ft_export_utils.c \
 				srcs/built-in/ft_remove_in.c srcs/execs/ft_exec_cmd.c srcs/execs/ft_exec_cmd_2.c srcs/execs/ft_exec_cmd_3.c \
 				srcs/utils/ft_exec_utils.c srcs/forks/ft_fork.c srcs/forks/ft_fork_2.c srcs/forks/ft_fork_3.c \
-				srcs/utils/ft_free_exec.c srcs/utils/ft_built_switch.c srcs/utils/ft_init_exec.c srcs/parsing/ft_penv_utils.c srcs/ft_signal.c
+				srcs/utils/ft_free_exec.c srcs/utils/ft_built_switch.c srcs/utils/ft_init_exec.c srcs/parsing/ft_penv_utils.c srcs/ft_signal.c srcs/parsing/ft_here_doc.c
 NAME		= minishell
 OBJS_DIR	= objs/
 PROJECT_H	= includes/minishell.h

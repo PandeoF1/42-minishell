@@ -70,6 +70,8 @@ int	ft_while(char **penv)
 	char	*readlin;
 	char	*tmp;
 
+	signal(SIGINT, sig_quit);
+	signal(SIGQUIT, action);
 	readlin = ft_readline();
 	tmp = readline(readlin);
 	free(readlin);
@@ -97,8 +99,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	g_exit = 0;
-	signal(SIGINT, sig_quit);
-	signal(SIGQUIT, action);
 	if (!envp[0])
 		penv = ft_strdup("MINISHELL=1");
 	else

@@ -47,9 +47,9 @@ void	ft_free_inout(t_inout **inout)
 	tmp = *inout;
 	while (tmp)
 	{
-		//if (!tmp->next && tmp->heredoc)
-		//	free(tmp->heredoc);
 		tmp2 = tmp->next;
+		if (tmp->type == 3 && tmp->heredoc)
+			free(tmp->heredoc);
 		free(tmp->file);
 		free(tmp);
 		tmp = tmp2;

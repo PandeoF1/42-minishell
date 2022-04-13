@@ -6,7 +6,7 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:06:17 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/04/12 15:51:17 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/13 10:09:52 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	ft_execute_cmd_8(t_data *data, t_inout *tmp)
 		data->inout = data->inout->next;
 	write(data->fd[2 * data->ind + 1], data->inout->heredoc,
 		ft_strlen(data->inout->heredoc));
-	free(data->inout->heredoc);
 }
 
 void	ft_execute_cmd_9(t_data *data, t_process **temp, char **env, int i)
