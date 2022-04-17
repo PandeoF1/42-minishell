@@ -6,7 +6,7 @@
 /*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/04/14 14:59:24 by asaffroy         ###   ########lyon.fr   */
+/*   Updated: 2022/04/17 18:32:42 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 		red4_proc_2(data, temp, env, i);
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
-			if (data->inout->next == NULL \
-			|| (data->inout->next && data->inout->next->type != 2))
+			if (data->inout->next == NULL)
 				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 					ft_perror("minishell : unable to perform this command", 1);
 		exit(0);
@@ -43,13 +42,14 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 void	red4_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
 	(void)env;
-	if (data->inout->red_prev == 1)
+	if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+		ft_perror("dup2 n1 failed in red_4_proc_2", 1);
+	if (data->inout->next != NULL)
 	{
-		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+		if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red_4_proc_2", 1);
 	}
-	if (data->inout->next == NULL \
-	|| (data->inout->next && data->inout->next->type != 2))
+	else if (data->inout->next == NULL)
 	{
 		if (ft_built_red2(i, data, temp))
 			exit(0);
