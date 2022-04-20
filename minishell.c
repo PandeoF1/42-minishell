@@ -85,7 +85,7 @@ int	ft_while(char **penv)
 		add_history(tmp);
 		tmp = ft_penv((*penv), tmp, 0, 0);
 		splitd = ft_splitd((*penv), '\n');
-		ft_parse_command(tmp, splitd, penv);
+		ft_parse_command(tmp, splitd, penv, *penv);
 		ft_free_split(splitd);
 		free(tmp);
 	}
