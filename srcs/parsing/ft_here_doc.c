@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -22,8 +23,7 @@ void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd, char *tmp)
 	{
 		if (!ft_is_command(rd, inout->file))
 		{
-			ctmp = ft_penv(tmp, ctmp, 0, 0);
-			inout->heredoc = ctmp;
+			inout->heredoc = ft_penv(tmp, ctmp, 0, 0);
 			free(rd);
 			break ;
 		}
@@ -37,8 +37,7 @@ void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd, char *tmp)
 	}
 	if (!rd)
 	{
-		ctmp = ft_penv(tmp, ctmp, 0, 0);
-		inout->heredoc = ctmp;
+		inout->heredoc = ft_penv(tmp, ctmp, 0, 0);
 		free(rd);
 	}
 }

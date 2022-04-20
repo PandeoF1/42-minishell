@@ -3,18 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork_3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-/*   Updated: 2022/04/13 14:10:36 by tnard            ###   ########lyon.fr   */
-=======
-/*   Updated: 2022/04/05 09:50:11 by asaffroy         ###   ########lyon.fr   */
->>>>>>> Stashed changes
-=======
-/*   Updated: 2022/04/17 18:32:42 by asaffroy         ###   ########lyon.fr   */
->>>>>>> main
+/*   Created: 2022/04/20 11:02:34 by tnard             #+#    #+#             */
+/*   Updated: 2022/04/20 11:02:37 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -53,7 +53,7 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H)
 	@$(CC) $(READLINE_INC_DIR_FLAG) $(CC_FLAGS) -c $< -o $@
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 
-$(NAME): $(OBJECTS_PREFIXED) maker
+$(NAME): $(OBJECTS_PREFIXED) maker Makefile
 	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) $(READLINE_LIB_DIR_FLAG) libft/libft.a ft_printf/libftprintf.a -lreadline 
 	@printf "\033[2K\r\033[0;32m[END]\033[0m $(NAME)$(END)\n"
 

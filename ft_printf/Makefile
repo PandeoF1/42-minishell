@@ -28,11 +28,7 @@ ECHO = echo "`expr " [\`expr $C '*' 100 / $T\`" : '.*\(....\)$$'`%]"
 
 CC = gcc
 
-<<<<<<< Updated upstream
 CC_FLAGS = -Wall -Werror -Wextra	
-=======
-CC_FLAGS = -Wall -Werror -Wextra #-fsanitize=address -g3
->>>>>>> Stashed changes
 
 $(OBJS_DIR)%.o : %.c ft_printf.h
 	@mkdir -p $(OBJS_DIR)
