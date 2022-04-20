@@ -6,7 +6,11 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:15:24 by asaffroy          #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2022/04/13 14:10:36 by tnard            ###   ########lyon.fr   */
+=======
+/*   Updated: 2022/04/05 09:50:11 by asaffroy         ###   ########lyon.fr   */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +20,7 @@ void	red4_proc(t_data *data, t_process *temp, char **env, int i)
 {
 	data->pid1[i] = fork();
 	if (data->pid1[i] < 0)
-		ft_perror("forking failed\n", 1);
+		ft_perror("forking failed", 1);
 	if (data->pid1[i] == 0)
 	{
 		data->file[i] = open(ft_ddquote(data->inout->file, 0),
