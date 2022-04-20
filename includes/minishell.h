@@ -92,6 +92,7 @@ void		ft_env_c(char *str, int x, int *c);
 void		ft_env_return(char **str, int *x, int y);
 int			ft_is_herdoc(char *str, char *cmd);
 void		ft_heredoc_process(t_process *process);
+void		ft_ffailed(char *str, int code, t_data *data);
 
 // built-in
 int			ft_pwd(int fd);

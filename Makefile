@@ -39,9 +39,9 @@ PROJECT_H	= includes/minishell.h
 OBJS		= $(SRCS:.c=.o)
 OBJECTS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
 CC			= gcc
-CC_FLAGS	= -Wall -Werror -Wextra#-Wall -Werror -Wextra
+CC_FLAGS	= -Wall -Werror -Wextra -g #-Wall -Werror -Wextra
 
-$(OBJS_DIR)%.o : %.c $(PROJECT_H)
+$(OBJS_DIR)%.o : %.c $(PROJECT_H) Makefile
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)srcs
 	@mkdir -p $(OBJS_DIR)srcs/parsing

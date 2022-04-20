@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 16:35:48 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/04/12 12:22:59 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/20 10:51:26 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_data
 	int				status;
 	char			*line;
 	struct s_inout	*inout;
+	int				fork_status;
 }	t_data;
 
 #endif

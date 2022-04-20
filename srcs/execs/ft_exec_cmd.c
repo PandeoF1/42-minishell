@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:00:08 by asaffroy          #+#    #+#             */
-/*   Updated: 2022/04/13 11:16:23 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/20 10:58:06 by asaffroy         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	data.status = g_exit;
 	g_exit = -1053;
 	data.tab_env = penv;
+	data.fork_status = 0;
 	temp = proc;
 	temp2 = temp->inout;
 	i = ft_execute_cmd_2(temp, proc, temp2);
@@ -30,9 +31,8 @@ int	ft_execute_cmd(t_process *proc, char **env, char **penv)
 	create_pipes(&data);
 	if (ft_execute_cmd_5(&data, temp, env, i) == 0)
 		return (data.status);
-	i = data.j;
 	close_pipes(&data);
-	while (data.j >= 0)
+	while (data.fork_status == 0 && data.j >= 0)
 	{
 		waitpid(data.pid1[data.j], &data.status, 0);
 		data.j--;
@@ -110,7 +110,7 @@ void	ft_execute_cmd_4(t_data *data, t_process *temp, char **env, int i)
 			ft_execute_cmd_10(data, temp, env, i);
 			i--;
 		}
-		if (temp && temp->inout && !data->inout)
+		if (i >= 0 && temp && temp->inout && !data->inout)
 		{
 			temp = temp->next;
 			data->ind++;
