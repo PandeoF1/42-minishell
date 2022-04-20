@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:10:13 by asaffroy          #+#    #+#             */
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 /*   Updated: 2022/04/13 14:09:54 by tnard            ###   ########lyon.fr   */
 =======
 /*   Updated: 2022/04/05 09:50:19 by asaffroy         ###   ########lyon.fr   */
 >>>>>>> Stashed changes
+=======
+/*   Updated: 2022/04/17 18:45:05 by asaffroy         ###   ########lyon.fr   */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +97,8 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 		data->tab_paths[i] = ft_check_arg(temp->command, env);
 		if (temp->command != NULL)
 		{
-			if (data->inout->next == NULL)
+			if (data->inout->next == NULL || \
+			(data->inout->next && data->inout->next->type != 1))
 				if (execve(data->tab_paths[i], data->tab_args[i], env) == -1)
 					ft_perror("minishell : unable to perform this command", 1);
 		}
@@ -104,18 +109,24 @@ void	red_proc(t_data *data, t_process *temp, char **env, int i)
 void	red_proc_2(t_data *data, t_process *temp, char **env, int i)
 {
 	(void)env;
-	if (data->inout->next == NULL)
+	if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+		ft_perror("dup2 n1 failed in red_4_proc_2", 1);
+	if (data->inout->next == NULL || \
+	(data->inout->next && data->inout->next->type != 1))
 	{
 		if (ft_built_red2(i, data, temp))
 			exit(0);
 		if (dup2(data->file[i], STDIN_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red2_proc_2", 1);
+			ft_perror("dup2 n1 failed in red_proc_2", 1);
+		if (data->inout->next)
+			if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
+				ft_perror("dup2 n1 failed in red2_proc_2", 1);
 	}
 	if (data->inout->next == NULL && temp->out_next)
 	{
 		if (ft_built_red(i, data, temp))
 			exit(0);
 		if (dup2(data->fd[2 * (data->ind + 1) + 1], STDOUT_FILENO) == -1)
-			ft_perror("dup2 n1 failed in red2_proc_2", 1);
+			ft_perror("dup2 n1 failed in red_proc_2", 1);
 	}
 }

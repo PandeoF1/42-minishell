@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fork_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
+/*   By: asaffroy <asaffroy@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 09:13:33 by asaffroy          #+#    #+#             */
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 /*   Updated: 2022/04/13 13:07:41 by tnard            ###   ########lyon.fr   */
 =======
 /*   Updated: 2022/04/05 09:50:05 by asaffroy         ###   ########lyon.fr   */
 >>>>>>> Stashed changes
+=======
+/*   Updated: 2022/04/17 18:31:52 by asaffroy         ###   ########lyon.fr   */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +50,14 @@ void	red2_proc_2(t_data *data, t_process *temp, char **env, int i)
 	int	check;
 
 	(void)env;
-	if (temp->in_prev != 0 || data->inout->red_prev == 1)
+	if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+		ft_perror("dup2 n1 failed in red2_proc_2", 1);
+	if (data->inout->next)
 	{
-		if (dup2(data->fd[2 * data->ind], STDIN_FILENO) == -1)
+		if (dup2(data->fd[2 * data->ind + 1], STDOUT_FILENO) == -1)
 			ft_perror("dup2 n1 failed in red2_proc_2", 1);
 	}
-	if (data->inout->next == NULL)
+	else if (data->inout->next == NULL)
 	{
 		if (ft_built_red2(i, data, temp))
 			exit (0);
@@ -112,6 +118,8 @@ void	red3_proc_2(t_data *data, t_process *temp, char **env, int i)
 	else if (temp->command != NULL && !data->inout->next)
 	{
 		check = ft_built(i, data, temp);
+		if (check == 2)
+			exit (1);
 		if (check == 1)
 			exit (0);
 	}
