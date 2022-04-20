@@ -56,7 +56,7 @@ typedef struct s_check
 void		sig_quit(int sig);
 void		action(int sig);
 char		*ft_get_input(int fd, int size, int len);
-void		ft_parse_command(char *str, char **env, char **penv);
+void		ft_parse_command(char *str, char **env, char **penv, char *tmp);
 int			ft_check_quote(char *str);
 int			ft_check_process(t_process *process);
 void		ft_free_split(char **split);
@@ -91,8 +91,12 @@ int			ft_is_tild(char *str, int x);
 void		ft_env_c(char *str, int x, int *c);
 void		ft_env_return(char **str, int *x, int y);
 int			ft_is_herdoc(char *str, char *cmd);
+<<<<<<< HEAD
 void		ft_heredoc_process(t_process *process);
 void		ft_ffailed(char *str, int code, t_data *data);
+=======
+void		ft_heredoc_process(t_process *process, char *tmpa);
+>>>>>>> 1da7584259af7d7a8c6385fb139aa6e78979e4cc
 
 // built-in
 int			ft_pwd(int fd);

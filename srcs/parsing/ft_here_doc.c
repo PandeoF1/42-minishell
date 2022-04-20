@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,13 +7,13 @@
 /*   By: tnard <tnard@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 10:25:16 by tnard             #+#    #+#             */
-/*   Updated: 2022/04/13 11:23:56 by tnard            ###   ########lyon.fr   */
+/*   Updated: 2022/04/20 10:37:44 by tnard            ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd)
+void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd, char *tmp)
 {
 	rd = readline("> ");
 	if (ctmp)
@@ -22,7 +23,7 @@ void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd)
 	{
 		if (!ft_is_command(rd, inout->file))
 		{
-			inout->heredoc = ctmp;
+			inout->heredoc = ft_penv(tmp, ctmp, 0, 0);
 			free(rd);
 			break ;
 		}
@@ -36,12 +37,12 @@ void	ft_heredoc_process_2(t_inout *inout, char *ctmp, char *rd)
 	}
 	if (!rd)
 	{
-		inout->heredoc = ctmp;
+		inout->heredoc = ft_penv(tmp, ctmp, 0, 0);
 		free(rd);
 	}
 }
 
-void	ft_heredoc_process(t_process *process)
+void	ft_heredoc_process(t_process *process, char *tmpa)
 {
 	t_process	*tmp;
 	t_inout		*inout;
@@ -60,7 +61,7 @@ void	ft_heredoc_process(t_process *process)
 			{
 				inout->heredoc = NULL;
 				if (inout->type == 3)
-					ft_heredoc_process_2(inout, ctmp, rd);
+					ft_heredoc_process_2(inout, ctmp, rd, tmpa);
 				inout = inout->next;
 			}
 		}

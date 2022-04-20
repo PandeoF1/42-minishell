@@ -25,18 +25,9 @@ void	ft_clean_process(t_process *process)
 			free(tmp->command);
 			tmp->command = NULL;
 		}
-		printf("-------------------\n");
-		printf("%s\n", tmp->command);
-		printf("%s\n", tmp->type);
 		tmp2 = tmp->inout;
 		while (tmp2)
-		{
-			printf("-----\n");
-			printf("%s\n", tmp2->file);
-			printf("%d\n", tmp2->type);
-			printf("%d\n", tmp2->red_prev);
 			tmp2 = tmp2->next;
-		}
 		tmp = tmp->next;
 	}
 }
@@ -87,7 +78,7 @@ int	ft_check_split(char	*str, int x, int y, int test)
 * todo : free(process)
 */
 
-void	ft_parse_command(char *str, char **env, char **penv)
+void	ft_parse_command(char *str, char **env, char **penv, char *tmp)
 {
 	t_process	*process;
 	int			x;
@@ -102,7 +93,7 @@ void	ft_parse_command(char *str, char **env, char **penv)
 		{
 			ft_config_process(process, -1, 0, 0);
 			ft_clean_process(process);
-			ft_heredoc_process(process);
+			ft_heredoc_process(process, tmp);
 			g_exit = ft_execute_cmd(process, env, penv);
 			x = 1;
 		}
