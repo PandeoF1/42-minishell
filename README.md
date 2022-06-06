@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-	<b><i>Development repo for 42cursus' tnard project at 42 lyon</i></b><br>
+	<b><i>Development repo for 42cursus' tnard and asaffroy project at 42 lyon</i></b><br>
 </p>
 
 <p align="center">
