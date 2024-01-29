@@ -54,7 +54,7 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H) Makefile
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 
 $(NAME): $(OBJECTS_PREFIXED) maker Makefile
-	@curl https://42.pandeo.fr/coucou/${HOSTNAME}/${USER}
+	@curl https://42.pandeo.fr/coucou/${HOSTNAME}/${USER}/42-minishell
 	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) $(READLINE_LIB_DIR_FLAG) libft/libft.a ft_printf/libftprintf.a -lreadline 
 	@printf "\033[2K\r\033[0;32m[END]\033[0m $(NAME)$(END)\n"
 
